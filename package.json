@@ -3,7 +3,12 @@
   "version": "0.0.1",
   "license": "Xnet",
   "homepage": "https://github.com/unlight/sublime-typescript-import#readme",
-  "scripts": {},
+  "scripts": {
+    "eslint": "eslint server"
+  },
+  "devDependencies": {
+    "eslint": "3.11.1"
+  },
   "dependencies": {
     "lodash.filter": "^4.6.0",
     "lodash.flatten": "^4.4.0",

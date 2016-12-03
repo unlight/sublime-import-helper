@@ -48,7 +48,7 @@ const server = net.createServer()
     .on("error", err => {
         console.error("Server error", err.message);
     })
-    .listen(server_port, server_address, (err) => {
+    .listen(server_port, server_address, () => {
         const addr = server.address();
         console.log("Listening: %s:%s (%s)", addr.address, addr.port, addr.family);
     });
