@@ -48,7 +48,7 @@ def setup_callback(err, result):
     global PROJECT_DIRECTORY
     PROJECT_DIRECTORY = get_project_directory(project_file)
     debug('PROJECT_DIRECTORY', PROJECT_DIRECTORY)
-    serverCmd = ["node", SERVER_PATH, SERVER_ADDRESS, str(SERVER_PORT)]
+    serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
     debug("Starting server", " ".join(serverCmd))
     exec_async(serverCmd, server_start_callback)
 
@@ -142,7 +142,7 @@ class EventListener(sublime_plugin.EventListener):
         if window is None or not window.views():
             send_command("shutdown")
 
-# =============================================== add_statement
+# =============================================== Command add_import_statement
 # view.run_command("add_statement")
 
 class AddImportStatementCommand(sublime_plugin.TextCommand):

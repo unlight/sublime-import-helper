@@ -7,8 +7,8 @@ const tse = require("typescript-exports");
 const readPkgUp = require("read-pkg-up");
 const _ = require("lodash");
 
-const server_address = process.argv[2] || "127.0.0.1";
-const server_port = process.argv[3];
+const server_address = "127.0.0.1";
+const server_port = process.argv[2];
 
 const server = net.createServer()
     .on("connection", socket => {
