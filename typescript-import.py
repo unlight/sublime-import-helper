@@ -17,7 +17,8 @@ SETTINGS_FILE = PROJECT_NAME + ".sublime-settings"
 KEYMAP_FILE = "Default ($PLATFORM).sublime-keymap"
 IS_WINDOWS = platform.system() == 'Windows'
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__));
-SERVER_PATH = "server.js"
+SERVER_PATH = "server/main.js"
+SETUP_PATH = "server/setup.js"
 SERVER_ADDRESS = "127.0.0.1"
 SERVER_PORT = 6778
 
@@ -125,7 +126,7 @@ def exec_async(cmd, done=None):
 def plugin_loaded():
     print()
     debug("Plugin loaded", PROJECT_NAME)
-    exec_async(["node", "setup.js"], setup_callback)
+    exec_async(["node", SETUP_PATH], setup_callback)
     
 def plugin_unloaded():
     if DEBUG_NO_SHUTDOWN: return
