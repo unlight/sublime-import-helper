@@ -2,3 +2,4 @@
 /.sublime/
 ~*
 *.sublime*
+/npm-debug.log

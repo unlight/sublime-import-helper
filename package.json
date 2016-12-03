@@ -4,9 +4,12 @@
   "license": "Xnet",
   "homepage": "https://github.com/unlight/sublime-typescript-import#readme",
   "scripts": {
-    "eslint": "eslint server"
+    "eslint": "eslint server",
+    "test": "ava server/test.js --serial --verbose",
+    "test:w": "ava server/test.js --serial --verbose --watch"
   },
   "devDependencies": {
+    "ava": "0.17.0",
     "eslint": "3.11.1"
   },
   "dependencies": {
@@ -15,8 +18,7 @@
     "lodash.get": "^4.4.2",
     "lodash.keys": "^4.2.0",
     "read-pkg-up": "2.0.0",
-    "typescript": "2.1.1",
-    "typescript-exports": "0.0.9"
+    "typescript-exports": "0.0.13"
   },
   "repository": {
     "type": "git",
