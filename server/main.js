@@ -1,5 +1,7 @@
 "use strict";
 
+console.time("Server start time");
+
 const net = require("net");
 const _get = require("lodash.get");
 const server_address = "127.0.0.1";
@@ -51,4 +53,5 @@ const server = net.createServer()
     .listen(server_port, server_address, () => {
         const addr = server.address();
         console.log("Listening: %s:%s (%s)", addr.address, addr.port, addr.family);
+        console.timeEnd("Server start time");
     });

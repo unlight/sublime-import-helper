@@ -52,7 +52,7 @@ def setup_callback(err, result):
     serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
     debug("Starting server", " ".join(serverCmd))
     exec_async(serverCmd)
-    sublime.set_timeout(initialize_project, 1000)
+    sublime.set_timeout(initialize_project, 800)
 
 def get_project_directory(project_file, window = None):
     if (window is None): window = sublime.active_window()
