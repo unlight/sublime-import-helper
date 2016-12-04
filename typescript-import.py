@@ -51,7 +51,8 @@ def setup_callback(err, result):
     debug('PROJECT_DIRECTORY', PROJECT_DIRECTORY)
     serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
     debug("Starting server", " ".join(serverCmd))
-    exec_async(serverCmd, server_start_callback)
+    exec_async(serverCmd)
+    sublime.set_timeout(initialize_project, 1000)
 
 def get_project_directory(project_file, window = None):
     if (window is None): window = sublime.active_window()
@@ -64,9 +65,10 @@ def get_project_directory(project_file, window = None):
     return result
 
 def read_packages_callback(err, result):
-    debug('Read packages result', len(result));
+    if (bool(err) == False):
+        debug('Read packages result', len(result))
 
-def server_start_callback(err, result):
+def initialize_project():
     data = {'projectDirectory': PROJECT_DIRECTORY}
     send_command_async("read_packages", data, read_packages_callback)
 
@@ -86,13 +88,13 @@ def send_command(command, data = None, callback = None):
         client.close()
     except Exception as err:
         debug("Send command error", err)
-        pass
+        callback(err, None)
+        return
     response = None
     if (bool(recv)):
         debug("Trying to parse", recv)
         response = sublime.decode_value(recv)
     if callback is not None:
-        # TODO: Pass error.
         callback(None, response)
         return
     return response
@@ -104,7 +106,6 @@ def exec(cmd):
         proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=si)
     else:
         proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    proc.wait()
     outs, errs = proc.communicate()
     err = errs.decode().strip();
     if (bool(err)):
