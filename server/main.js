@@ -14,7 +14,7 @@ const commands = {
     ping: require('./commands/ping'),
     shutdown: require('./commands/shutdown'),
     read_packages: require('./commands/read_packages'),
-    add_import_statement: require('./commands/add_import_statement'),
+    insert_import_statement: require('./commands/insert_import_statement'),
 };
 
 const server = net.createServer()

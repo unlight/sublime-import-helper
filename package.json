@@ -1,8 +1,8 @@
 {
-  "name": "sublime-typescript-import",
+  "name": "sublime-import-helper",
   "version": "0.0.1",
   "license": "Xnet",
-  "homepage": "https://github.com/unlight/sublime-typescript-import#readme",
+  "homepage": "https://github.com/unlight/sublime-import-helper#readme",
   "scripts": {
     "eslint": "eslint server",
     "test": "ava server/test.js --serial --verbose",
@@ -13,18 +13,18 @@
     "eslint": "3.11.1"
   },
   "dependencies": {
+    "esm-exports": "0.0.14",
     "lodash.filter": "^4.6.0",
     "lodash.flatten": "^4.4.0",
     "lodash.get": "^4.4.2",
     "lodash.keys": "^4.2.0",
-    "read-pkg-up": "2.0.0",
-    "typescript-exports": "0.0.13"
+    "read-pkg-up": "2.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/unlight/sublime-typescript-import.git"
+    "url": "https://github.com/unlight/sublime-import-helper.git"
   },
   "bugs": {
-    "url": "https://github.com/unlight/sublime-typescript-import/issues"
+    "url": "https://github.com/unlight/sublime-import-helper/issues"
   }
 }

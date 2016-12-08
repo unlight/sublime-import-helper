@@ -12,10 +12,10 @@ import socket
 DEBUG_NO_SHUTDOWN = True
 DEBUG_MESSAGES = True
 
-PROJECT_NAME = "typescript-import"
+PROJECT_NAME = "import-helper"
 SETTINGS_FILE = PROJECT_NAME + ".sublime-settings"
-KEYMAP_FILE = "Default ($PLATFORM).sublime-keymap"
-IS_WINDOWS = platform.system() == 'Windows'
+# KEYMAP_FILE = "Default ($PLATFORM).sublime-keymap"
+# IS_WINDOWS = platform.system() == 'Windows'
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__));
 SERVER_PATH = "server/main.js"
 SETUP_PATH = "server/setup.js"
@@ -26,10 +26,12 @@ PROJECT_DIRECTORY = None
 settings = sublime.load_settings(SETTINGS_FILE)
 # TODO: Load and get settings value = settings.get("name")
 
+SOURCE_ROOT = None
+
 def debug(s, data = None, force = False):
     if (DEBUG_MESSAGES or force == True):
         message = str(s)
-        if (bool(data)):
+        if (data is not None):
             message = message + ': ' + str(data)
         print(message)
 
@@ -46,34 +48,39 @@ def setup_callback(err, result):
         debug(message, force = True)
         status_message(message)
         return
+    project_data = window.project_data()
+    
     global PROJECT_DIRECTORY
-    PROJECT_DIRECTORY = get_project_directory(project_file)
+    folder = project_data['folders'][0]
+    # TODO: Other folders not handled.
+    folder_path = os.path.join(os.path.dirname(project_file), folder['path'])
+    PROJECT_DIRECTORY = os.path.normpath(folder_path)
     debug('PROJECT_DIRECTORY', PROJECT_DIRECTORY)
+    
+    global SOURCE_ROOT
+    sourceRoot = project_data.get('sourceRoot')
+    if not sourceRoot:
+        sourceRoot = PROJECT_DIRECTORY
+    folder_path = os.path.join(os.path.dirname(project_file), sourceRoot)
+    SOURCE_ROOT = os.path.normpath(folder_path)
+    debug('SOURCE_ROOT', SOURCE_ROOT)
+    
     serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
     debug("Starting server", " ".join(serverCmd))
     exec_async(serverCmd)
     sublime.set_timeout(initialize_project, 800)
-
-def get_project_directory(project_file, window = None):
-    if (window is None): window = sublime.active_window()
-    project_data = window.project_data()
-    folder = project_data['folders'][0]
-    # TODO: Other folders not handled.
-    folder_path = folder['path']
-    project_folder = os.path.join(os.path.dirname(project_file), folder_path)
-    result = os.path.normpath(project_folder)
-    return result
 
 def read_packages_callback(err, result):
     if (bool(err) == False):
         debug('Read packages result', len(result))
 
 def initialize_project():
-    data = {'projectDirectory': PROJECT_DIRECTORY}
+    data = {'projectDirectory': SOURCE_ROOT}
     send_command_async("read_packages", data, read_packages_callback)
 
 def send_command_async(command, data = None, callback = None):
     thread = threading.Thread(target=send_command, args=(command, data, callback))
+    thread.daemon = True
     thread.start()
 
 def send_command(command, data = None, callback = None):
@@ -144,10 +151,9 @@ class EventListener(sublime_plugin.EventListener):
         if window is None or not window.views():
             send_command("shutdown")
 
-# =============================================== Command add_import_statement
-# view.run_command("add_statement")
+# =============================================== Command insert_import_statement
 
-class AddImportStatementCommand(sublime_plugin.TextCommand):
+class InsertImportStatementCommand(sublime_plugin.TextCommand):
     """ Adds import of identifier near cursor """
     def run(self, edit):
         view = self.view
@@ -157,7 +163,7 @@ class AddImportStatementCommand(sublime_plugin.TextCommand):
             cursor_region = view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
             selected_str = view.substr(cursor_region)
         debug("selected_str", selected_str)
-        statements = send_command("add_import_statement", selected_str)
+        statements = send_command("insert_import_statement", selected_str)
         items = []
         item_modules = []
         for item in statements:
@@ -188,14 +194,15 @@ class AddImportStatementCommand(sublime_plugin.TextCommand):
                 if (selected_index == -1): return
                 selected_item = items[selected_index]
                 debug('Selected item', selected_item)
-                view.run_command('insert_import_statement', {'item': selected_item})
+                view.run_command('do_insert_import_statement', {'item': selected_item})
             window.show_quick_panel(item_modules, on_select)
 
-# TEST: connection Author Photo PhotoMetadata
-class InsertImportStatementCommand(sublime_plugin.TextCommand):
+# TEST: connection Author Photo PhotoMetadata Date
+class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
     def run(self, edit, item):
+        module_path = item['module_path']
         import_string = "import {{ {0} }} from '{1}';\n".format(
-            item['name'], item['module_path']
+            item['name'], module_path
         )
         debug('Import string', import_string)
         pos = 0

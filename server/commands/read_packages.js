@@ -1,4 +1,4 @@
-const tse = require("typescript-exports");
+const esm = require("esm-exports");
 const _keys = require("lodash.keys");
 const _flatten = require("lodash.flatten");
 const readPkgUp = require("read-pkg-up");
@@ -7,14 +7,14 @@ module.exports = (payload, callback) => {
     var state = payload._state;
     var projectDirectory = payload.data.projectDirectory;
     Promise.all([
-        tse.directory(projectDirectory),
+        esm.directory(projectDirectory),
         readPkgUp({
             cwd: projectDirectory,
             normalize: false
         })
         .then(p => [_keys(p.pkg.dependencies), _keys(p.pkg.devDependencies)])
         .then(dependencies => _flatten(dependencies))
-        .then(names => Promise.all(names.map(n => tse.node(n, {
+        .then(names => Promise.all(names.map(n => esm.node(n, {
             baseDir: projectDirectory
         }))))
         .then(data => _flatten(data))
