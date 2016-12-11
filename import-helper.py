@@ -1,27 +1,13 @@
 import sublime
 import sublime_plugin
 import os
-import platform
-import subprocess
-import threading
-import socket
+from .utils import *
 
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
-DEBUG_NO_SHUTDOWN = True
-DEBUG_MESSAGES = True
-
 PROJECT_NAME = "import-helper"
 SETTINGS_FILE = PROJECT_NAME + ".sublime-settings"
-# KEYMAP_FILE = "Default ($PLATFORM).sublime-keymap"
-# IS_WINDOWS = platform.system() == 'Windows'
-PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__));
-SERVER_PATH = "backend/server.js"
-SETUP_PATH = "backend/setup.js"
-RUN_PATH = "backend/run.js"
-SERVER_ADDRESS = "127.0.0.1"
-SERVER_PORT = 6778
 
 PROJECT_DIRECTORY = None
 settings = sublime.load_settings(SETTINGS_FILE)
@@ -30,18 +16,9 @@ settings = sublime.load_settings(SETTINGS_FILE)
 SOURCE_ROOT = None
 IMPORT_NODES = []
 
-def debug(s, data = None, force = False):
-    if (DEBUG_MESSAGES or force == True):
-        message = str(s)
-        if (data is not None):
-            message = message + ': ' + str(data)
-        print(message)
-
-def status_message(message):
-    sublime.status_message(message)
-
 def setup_callback(err, result):
-    if (bool(err)): return
+    if (bool(err)):
+        return
     debug("Setup result", "OK")
     window = sublime.active_window()
     project_file = window.project_file_name()
@@ -66,112 +43,18 @@ def setup_callback(err, result):
     folder_path = os.path.join(os.path.dirname(project_file), sourceRoot)
     SOURCE_ROOT = os.path.normpath(folder_path)
     debug('SOURCE_ROOT', SOURCE_ROOT)
-    
     run_command_async('get_packages', {'projectDirectory': SOURCE_ROOT}, get_packages_callback)
-    
-    # serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
-    # debug("Starting server", " ".join(serverCmd))
-    # exec_async(serverCmd)
-    # sublime.set_timeout(initialize_project, 800)
 
 def get_packages_callback(err, result):
-    if err: return
+    if err:
+        return
     debug('Get packages result', len(result))
     global IMPORT_NODES
     IMPORT_NODES = result
-    for item in IMPORT_NODES:
-        item['module_path'] = module_path(item['filepath'])
 
 def read_packages_callback(err, result):
     if (bool(err) == False):
         debug('Read packages result', len(result))
-
-def initialize_project():
-    data = {'projectDirectory': SOURCE_ROOT}
-    send_command_async("read_packages", data, read_packages_callback)
-
-def run_command(command, data = None, callback = None):
-    debug("Run command", command)
-    json = sublime.encode_value(data)
-    (err, out) = exec(["node", RUN_PATH, command, json])
-    if (bool(err)):
-        if callback is not None:
-            return callback(err, None)
-        raise err
-    debug("Trying to decode", out)
-    result = sublime.decode_value(out)
-    if callback is not None:
-        return callback(None, result)
-    return result
-
-def run_command_async(command, data = None, callback = None):
-    thread = threading.Thread(target=run_command, args=(command, data, callback))
-    thread.daemon = True
-    thread.start()
-    
-def send_command_async(command, data = None, callback = None):
-    thread = threading.Thread(target=send_command, args=(command, data, callback))
-    thread.daemon = True
-    thread.start()
-
-def send_command(command, data = None, callback = None):
-    debug("Send command", command)
-    client = socket.socket()
-    recv = ""
-    try:
-        client.connect((SERVER_ADDRESS, SERVER_PORT))
-        message = sublime.encode_value({"command": command, "data": data}, True)
-        client.send(message.encode('utf-8'))
-        recv = client.recv(128 * 1024).decode('utf-8')
-        client.close()
-    except Exception as err:
-        debug("Send command error", err)
-        callback(err, None)
-        return
-    response = None
-    if (bool(recv)):
-        debug("Trying to parse", recv)
-        response = sublime.decode_value(recv)
-    if callback is not None:
-        callback(None, response)
-        return
-    return response
-
-def exec(cmd):
-    if os.name == "nt":
-        si = subprocess.STARTUPINFO()
-        si.dwFlags |= subprocess.SW_HIDE | subprocess.STARTF_USESHOWWINDOW
-        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=si)
-    else:
-        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    outs, errs = proc.communicate()
-    err = errs.decode().strip();
-    if (bool(err)):
-        debug("Exec error", err)
-    return (err, outs.decode().strip())
-
-def exec_async(cmd, done=None):
-    def runInThread(cmd, done):
-        (err, result) = exec(cmd)
-        if (done is not None):
-            done(err, result)
-        return
-    thread = threading.Thread(target=runInThread, args=(cmd, done))
-    thread.start()
-    return thread
-    
-# =============================================== Helper functions
-
-def module_path(filepath):
-    filepath = os.path.normpath(filepath)
-    filepath = filepath[len(SOURCE_ROOT) + 1:]
-    return unixify(filepath)
-
-def unixify(path):
-    path = path.replace('\\', '/')
-    if (path[-3:] == '.ts'): 
-        path = path[0:-3]
-    return path
 
 # =============================================== Plugin Lifecycle
 
@@ -180,21 +63,6 @@ def plugin_loaded():
     debug("Plugin loaded", PROJECT_NAME)
     exec_async(["node", SETUP_PATH], setup_callback)
     
-def plugin_unloaded():
-    if DEBUG_NO_SHUTDOWN: return
-    debug("Plugin unloaded, kill server", PROJECT_NAME)
-    send_command("shutdown")
-    
-# =============================================== sublime_plugin.EventListener
-
-class EventListener(sublime_plugin.EventListener):
-
-    def on_close(self, view):
-        if DEBUG_NO_SHUTDOWN: return
-        window = sublime.active_window()
-        if window is None or not window.views():
-            send_command("shutdown")
-
 # =============================================== Command insert_import_statement
 
 class InsertImportStatementCommand(sublime_plugin.TextCommand):
@@ -213,7 +81,7 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
         for item in IMPORT_NODES:
             if (item['name'] == selected_str):
                 items.append(item)
-                panel_item = module_path(item['filepath'])
+                panel_item = module_path(SOURCE_ROOT, item['filepath'])
                 panel_items.append(panel_item)
                 item['module_path'] = panel_item
         if (len(panel_items) == 0):
@@ -237,6 +105,8 @@ class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
         file_name = self.view.file_name()
         module_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
         module_path = unixify(module_path)
+        if module_path[0] != ".":
+            module_path = "./" + module_path
         if item['isDefault']:
             import_string = "import {0} from '{1}';\n"
         else:
