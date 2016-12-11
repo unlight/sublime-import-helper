@@ -176,23 +176,25 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
                 if (module_path[-3:] == '.ts'): module_path = module_path[0:-3]
                 item_modules.append(module_path)
                 item['module_path'] = module_path
-                
         if (len(item_modules) == 0):
             view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected_str))
-
-        if (len(item_modules) > 0):
-            window = view.window()
-            def on_select(selected_index):
-                debug('Selected index', selected_index)
-                if (selected_index == -1): return
-                selected_item = items[selected_index]
-                debug('Selected item', selected_item)
-                view.run_command('do_insert_import_statement', {'item': selected_item})
-            window.show_quick_panel(item_modules, on_select)
+            return
+        window = view.window()
+        if (len(item_modules) == 1):
+            view.run_command('do_insert_import_statement', {'item': items[0]})
+            return
+        def on_select(selected_index):
+            debug('Selected index', selected_index)
+            if (selected_index == -1): return
+            selected_item = items[selected_index]
+            debug('Selected item', selected_item)
+            view.run_command('do_insert_import_statement', {'item': selected_item})
+        window.show_quick_panel(item_modules, on_select)
 
 # TEST: connection Author Photo PhotoMetadata Date findFile
 class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
     def run(self, edit, item):
+        # debug('item', item)
         module_path = item['module_path']
         if item['isDefault']:
             import_string = "import {0} from '{1}';\n"
