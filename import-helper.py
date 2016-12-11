@@ -17,8 +17,9 @@ SETTINGS_FILE = PROJECT_NAME + ".sublime-settings"
 # KEYMAP_FILE = "Default ($PLATFORM).sublime-keymap"
 # IS_WINDOWS = platform.system() == 'Windows'
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__));
-SERVER_PATH = "server/main.js"
-SETUP_PATH = "server/setup.js"
+SERVER_PATH = "backend/server.js"
+SETUP_PATH = "backend/setup.js"
+RUN_PATH = "backend/run.js"
 SERVER_ADDRESS = "127.0.0.1"
 SERVER_PORT = 6778
 
@@ -27,6 +28,7 @@ settings = sublime.load_settings(SETTINGS_FILE)
 # TODO: Load and get settings value = settings.get("name")
 
 SOURCE_ROOT = None
+IMPORT_NODES = []
 
 def debug(s, data = None, force = False):
     if (DEBUG_MESSAGES or force == True):
@@ -65,10 +67,20 @@ def setup_callback(err, result):
     SOURCE_ROOT = os.path.normpath(folder_path)
     debug('SOURCE_ROOT', SOURCE_ROOT)
     
-    serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
-    debug("Starting server", " ".join(serverCmd))
-    exec_async(serverCmd)
-    sublime.set_timeout(initialize_project, 800)
+    run_command_async('get_packages', {'projectDirectory': SOURCE_ROOT}, get_packages_callback)
+    
+    # serverCmd = ["node", SERVER_PATH, str(SERVER_PORT)]
+    # debug("Starting server", " ".join(serverCmd))
+    # exec_async(serverCmd)
+    # sublime.set_timeout(initialize_project, 800)
+
+def get_packages_callback(err, result):
+    if err: return
+    debug('Get packages result', len(result))
+    global IMPORT_NODES
+    IMPORT_NODES = result
+    for item in IMPORT_NODES:
+        item['module_path'] = module_path(item['filepath'])
 
 def read_packages_callback(err, result):
     if (bool(err) == False):
@@ -78,6 +90,25 @@ def initialize_project():
     data = {'projectDirectory': SOURCE_ROOT}
     send_command_async("read_packages", data, read_packages_callback)
 
+def run_command(command, data = None, callback = None):
+    debug("Run command", command)
+    json = sublime.encode_value(data)
+    (err, out) = exec(["node", RUN_PATH, command, json])
+    if (bool(err)):
+        if callback is not None:
+            return callback(err, None)
+        raise err
+    debug("Trying to decode", out)
+    result = sublime.decode_value(out)
+    if callback is not None:
+        return callback(None, result)
+    return result
+
+def run_command_async(command, data = None, callback = None):
+    thread = threading.Thread(target=run_command, args=(command, data, callback))
+    thread.daemon = True
+    thread.start()
+    
 def send_command_async(command, data = None, callback = None):
     thread = threading.Thread(target=send_command, args=(command, data, callback))
     thread.daemon = True
@@ -128,6 +159,19 @@ def exec_async(cmd, done=None):
     thread = threading.Thread(target=runInThread, args=(cmd, done))
     thread.start()
     return thread
+    
+# =============================================== Helper functions
+
+def module_path(filepath):
+    filepath = os.path.normpath(filepath)
+    filepath = filepath[len(SOURCE_ROOT) + 1:]
+    return unixify(filepath)
+
+def unixify(path):
+    path = path.replace('\\', '/')
+    if (path[-3:] == '.ts'): 
+        path = path[0:-3]
+    return path
 
 # =============================================== Plugin Lifecycle
 
@@ -164,23 +208,19 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
             cursor_region = view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
             selected_str = view.substr(cursor_region)
         debug("selected_str", selected_str)
-        statements = send_command("insert_import_statement", selected_str)
         items = []
-        item_modules = []
-        for item in statements:
+        panel_items = []
+        for item in IMPORT_NODES:
             if (item['name'] == selected_str):
                 items.append(item)
-                module_path = os.path.normpath(item['filepath'])
-                module_path = module_path[len(SOURCE_ROOT) + 1:]
-                module_path = module_path.replace('\\', '/')
-                if (module_path[-3:] == '.ts'): module_path = module_path[0:-3]
-                item_modules.append(module_path)
-                item['module_path'] = module_path
-        if (len(item_modules) == 0):
+                panel_item = module_path(item['filepath'])
+                panel_items.append(panel_item)
+                item['module_path'] = panel_item
+        if (len(panel_items) == 0):
             view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected_str))
             return
         window = view.window()
-        if (len(item_modules) == 1):
+        if (len(panel_items) == 1):
             view.run_command('do_insert_import_statement', {'item': items[0]})
             return
         def on_select(selected_index):
@@ -189,13 +229,14 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
             selected_item = items[selected_index]
             debug('Selected item', selected_item)
             view.run_command('do_insert_import_statement', {'item': selected_item})
-        window.show_quick_panel(item_modules, on_select)
+        window.show_quick_panel(panel_items, on_select)
 
 # TEST: connection Author Photo PhotoMetadata Date findFile
 class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
     def run(self, edit, item):
-        # debug('item', item)
-        module_path = item['module_path']
+        file_name = self.view.file_name()
+        module_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
+        module_path = unixify(module_path)
         if item['isDefault']:
             import_string = "import {0} from '{1}';\n"
         else:
@@ -204,3 +245,15 @@ class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
         debug('Import string', import_string)
         pos = 0
         self.view.insert(edit, pos, import_string)
+
+# view.run_command('test')
+# class TestCommand(sublime_plugin.TextCommand):
+#     def run(self, edit):
+#         # pong = run_command('ping')
+#         # debug('pong', pong)
+#         def callback(err, result):
+#             debug('err', err)
+#             if (bool(err)): return
+#             debug('result', result)
+#         pong = run_command_async('ping',data=None, callback=callback)
+#         # debug('pong', pong)

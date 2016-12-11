@@ -1,6 +1,7 @@
 # sublime-import-helper
 
 ## TODO
+- import node_modules
 - describe sourceFolder
 - write readme
 	* node 4.0+
