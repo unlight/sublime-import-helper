@@ -14,9 +14,7 @@ module.exports = (payload, callback) => {
         })
         .then(p => [_keys(p.pkg.dependencies), _keys(p.pkg.devDependencies)])
         .then(dependencies => _flatten(dependencies))
-        .then(names => Promise.all(names.map(n => esm.node(n, {
-            baseDir: projectDirectory
-        }))))
+        .then(names => Promise.all(names.map(n => esm.parseModule(n, {dirname: projectDirectory}))))
         .then(data => _flatten(data))
     ])
     .then(results => {

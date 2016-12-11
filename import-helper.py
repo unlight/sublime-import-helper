@@ -157,6 +157,7 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
     """ Adds import of identifier near cursor """
     def run(self, edit):
         view = self.view
+        # TODO: Handle all selections.
         selected_region = view.sel()[0]
         selected_str = view.substr(selected_region)
         if (bool(selected_str) == False):
@@ -169,23 +170,15 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
         for item in statements:
             if (item['name'] == selected_str):
                 items.append(item)
-                module_path = item['module']
-                # if (module_path[0:2] == './'): module_path = module_path[2:]
+                module_path = os.path.normpath(item['filepath'])
+                module_path = module_path[len(SOURCE_ROOT) + 1:]
+                module_path = module_path.replace('\\', '/')
                 if (module_path[-3:] == '.ts'): module_path = module_path[0:-3]
                 item_modules.append(module_path)
                 item['module_path'] = module_path
                 
         if (len(item_modules) == 0):
             view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected_str))
-        # debug('statements', statements)
-        # def on_navigate(href):
-        #     debug('on_navigate href', href);
-        # if (len(item_modules) > 0):
-        #     import_items = "\n".join(['<a href="{0}">{0}</a>'.format(item['module']) for item in statements])
-        #     debug('import_items', import_items)
-        #     view.show_popup("<body>Import <strong>{0}</strong> from:\n{1}</body>".format(selected_str, import_items),
-        #         on_navigate=on_navigate, max_width=500)
-        # if (len(item_modules) > 0):
 
         if (len(item_modules) > 0):
             window = view.window()
@@ -197,13 +190,15 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
                 view.run_command('do_insert_import_statement', {'item': selected_item})
             window.show_quick_panel(item_modules, on_select)
 
-# TEST: connection Author Photo PhotoMetadata Date
+# TEST: connection Author Photo PhotoMetadata Date findFile
 class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
     def run(self, edit, item):
         module_path = item['module_path']
-        import_string = "import {{ {0} }} from '{1}';\n".format(
-            item['name'], module_path
-        )
+        if item['isDefault']:
+            import_string = "import {0} from '{1}';\n"
+        else:
+            import_string = "import {{ {0} }} from '{1}';\n"
+        import_string = import_string.format(item['name'], module_path)
         debug('Import string', import_string)
         pos = 0
         self.view.insert(edit, pos, import_string)
