@@ -1,5 +1,5 @@
 /node_modules/
-/.sublime/
 ~*
-*.sublime*
+*.sublime-workspace
+*.sublime-project
 /npm-debug.log
