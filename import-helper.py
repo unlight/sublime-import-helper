@@ -81,9 +81,8 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
         for item in IMPORT_NODES:
             if (item['name'] == selected_str):
                 items.append(item)
-                panel_item = module_path(SOURCE_ROOT, item['filepath'])
+                panel_item = get_panel_item(SOURCE_ROOT, item)
                 panel_items.append(panel_item)
-                item['module_path'] = panel_item
         if (len(panel_items) == 0):
             view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected_str))
             return
@@ -102,11 +101,14 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
 # TEST: connection Author Photo PhotoMetadata Date findFile
 class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
     def run(self, edit, item):
-        file_name = self.view.file_name()
-        module_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
-        module_path = unixify(module_path)
-        if module_path[0] != ".":
-            module_path = "./" + module_path
+        if (item.get('module')):
+            module_path = item['module']
+        else:
+            file_name = self.view.file_name()
+            module_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
+            module_path = unixify(module_path)
+            if module_path[0] != ".":
+                module_path = "./" + module_path
         if item['isDefault']:
             import_string = "import {0} from '{1}';\n"
         else:
@@ -115,6 +117,22 @@ class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
         debug('Import string', import_string)
         pos = 0
         self.view.insert(edit, pos, import_string)
+
+# =============================================== Command list_imports
+# view.run_command('list_imports')
+class ListImportsCommand(sublime_plugin.TextCommand):
+    """ Show all available imports """
+    def run(self, edit):
+        view = self.view;
+        window = view.window()
+        items = [get_panel_item(SOURCE_ROOT, item) for item in IMPORT_NODES]
+        def on_select(index):
+            debug('Selected index', index)
+            if (index == -1): return
+            selected_item = IMPORT_NODES[index]
+            debug('Selected item', selected_item)
+            view.run_command('do_insert_import_statement', {'item': selected_item})
+        window.show_quick_panel(items, on_select)
 
 # view.run_command('test')
 # class TestCommand(sublime_plugin.TextCommand):

@@ -1,5 +1,4 @@
 import sublime
-import sublime_plugin
 import os
 import platform
 import subprocess
@@ -100,7 +99,10 @@ def unixify(path):
         path = path[0:-3]
     return path
     
-def module_path(root, filepath):
-    filepath = os.path.normpath(filepath)
-    filepath = filepath[len(root) + 1:]
-    return unixify(filepath)
+def get_panel_item(root, item):
+    module = item.get('module')
+    if (module is not None):
+        return module + '/' + item['name']
+    filepath = os.path.normpath(item['filepath'])[len(root) + 1:]
+    return unixify(filepath) + '/' + item['name']
+    

@@ -23,24 +23,18 @@ git clone https://github.com/unlight/sublime-import-helper ImportHelper
 
 Usage
 ---
+#### Insert import
+1. Set cursor or select word
+2. Press `ctrl+alt+i`, or select `Import Helper: Insert import` from command panel.
+
+#### List imports
+1. Press `alt+i, alt+l`, or select `Import Helper: List imports` from command panel.
 
 Project Settings
 ---
 #### `sourceRoot`
-
-Keybinds
----
+Path to source folder. If not set, directory of `folders[0].path` will be used.
 
 TODO
 ---
-- import node_modules names
-- describe sourceFolder
-- write readme
-	* node 4.0+
-	* gif
-	* keymaps
-- browserify node dependencies
-- add command reread packages
-- think about project settings, folders
-- using view.show_popup(content, <flags>, <location>, <max_width>, <max_height>, <on_navigate>, <on_hide>)
-- to build deps https://github.com/unlight/esm-exports
+* add re-read packages command
