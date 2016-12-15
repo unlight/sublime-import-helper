@@ -22,7 +22,7 @@ def setup():
     if (bool(project_file) == False):
         message = 'There is no project file, {0} will not work without project.'.format(PROJECT_NAME)
         debug(message, force = True)
-        status_message(message)
+        sublime.status_message(message)
         return
     project_data = window.project_data()
     
@@ -46,6 +46,7 @@ def get_packages_callback(err, result):
     if err:
         return
     debug('Get packages result', len(result))
+    sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(result)))
     global IMPORT_NODES
     IMPORT_NODES = result
 
@@ -110,6 +111,13 @@ class ListImportsCommand(sublime_plugin.TextCommand):
             debug('Selected item', selected_item)
             view.run_command('do_insert_import', {'item': selected_item})
         window.show_quick_panel(items, on_select)
+
+# window.run_command('update_imports')
+# sublime.active_window().run_command('update_imports', args={'a':'bar'})
+class UpdateImportsCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        setup()
+
 
 # view.run_command('test')
 # class TestCommand(sublime_plugin.TextCommand):

@@ -1,4 +1,5 @@
 [
     { "caption": "Import Helper: Inser import", "command": "insert_import" },
-    { "caption": "Import Helper: List imports", "command": "list_imports" }
+    { "caption": "Import Helper: List imports", "command": "list_imports" },
+    { "caption": "Import Helper: Update imports", "command": "update_imports" },
 ]

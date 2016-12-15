@@ -21,9 +21,6 @@ def debug(s, data = None, force = False):
             message = message + ': ' + str(data)
         print(message)
         
-def status_message(message):
-    sublime.status_message(message)
-    
 def run_command(command, data = None, callback = None):
     debug("Run command", command)
     json = sublime.encode_value(data)
