@@ -25,10 +25,17 @@ Usage
 ---
 #### Insert import
 1. Set cursor or select word
-2. Press `ctrl+alt+i`, or select `Import Helper: Insert import` from command panel.
+2. Press `ctrl+alt+i`, or select the command from command palette
 
 #### List imports
-1. Press `alt+i, alt+l`, or select `Import Helper: List imports` from command panel.
+1. Press `alt+i, alt+l`, or select the command from command palette
+
+#### Update imports
+1. Select the command from command palette
+
+#### Import from clipboard
+1. Copy text to clipboard `ctrl+c`
+2. Press `alt+i, alt+k`, or select the command from command palette
 
 Project Settings
 ---
@@ -38,5 +45,4 @@ Path to source folder. If not set, directory of `folders[0].path` will be used.
 TODO
 ---
 * TODO in *.py files
-* add re-read packages command
 * watch for project file changes

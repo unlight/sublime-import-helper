@@ -65,24 +65,25 @@ def plugin_loaded():
 
 class InsertImportCommand(sublime_plugin.TextCommand):
     """ Adds import of identifier near cursor """
-    def run(self, edit):
+    def run(self, edit, selected = None):
         view = self.view
         # TODO: Handle all selections.
-        selected_region = view.sel()[0]
-        selected_str = view.substr(selected_region)
-        if (bool(selected_str) == False):
+        if (selected is None):
+            selected_region = view.sel()[0]
+            selected = view.substr(selected_region)
+        if (bool(selected) == False):
             cursor_region = view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
-            selected_str = view.substr(cursor_region)
-        debug("selected_str", selected_str)
+            selected = view.substr(cursor_region)
+        debug("Selected", selected)
         items = []
         panel_items = []
         for item in IMPORT_NODES:
-            if (item['name'] == selected_str):
+            if (item['name'] == selected):
                 items.append(item)
                 panel_item = get_panel_item(SOURCE_ROOT, item)
                 panel_items.append(panel_item)
         if (len(panel_items) == 0):
-            view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected_str))
+            view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected))
             return
         window = view.window()
         if (len(panel_items) == 1):
@@ -118,6 +119,10 @@ class UpdateImportsCommand(sublime_plugin.WindowCommand):
     def run(self):
         setup()
 
+# view.run_command('import_from_clipboard')
+class ImportFromClipboardCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command('insert_import', args=({'selected': sublime.get_clipboard()}))
 
 # view.run_command('test')
 # class TestCommand(sublime_plugin.TextCommand):
