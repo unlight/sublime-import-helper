@@ -16,10 +16,7 @@ settings = sublime.load_settings(SETTINGS_FILE)
 SOURCE_ROOT = None
 IMPORT_NODES = []
 
-def setup_callback(err, result):
-    if (bool(err)):
-        return
-    debug("Setup result", "OK")
+def setup():
     window = sublime.active_window()
     project_file = window.project_file_name()
     if (bool(project_file) == False):
@@ -61,11 +58,11 @@ def read_packages_callback(err, result):
 def plugin_loaded():
     print()
     debug("Plugin loaded", PROJECT_NAME)
-    exec_async(["node", SETUP_PATH], setup_callback)
+    setup()
     
-# =============================================== Command insert_import_statement
+# =============================================== Command insert_import
 
-class InsertImportStatementCommand(sublime_plugin.TextCommand):
+class InsertImportCommand(sublime_plugin.TextCommand):
     """ Adds import of identifier near cursor """
     def run(self, edit):
         view = self.view
@@ -88,35 +85,15 @@ class InsertImportStatementCommand(sublime_plugin.TextCommand):
             return
         window = view.window()
         if (len(panel_items) == 1):
-            view.run_command('do_insert_import_statement', {'item': items[0]})
+            view.run_command('do_insert_import', {'item': items[0]})
             return
         def on_select(selected_index):
             debug('Selected index', selected_index)
             if (selected_index == -1): return
             selected_item = items[selected_index]
             debug('Selected item', selected_item)
-            view.run_command('do_insert_import_statement', {'item': selected_item})
+            view.run_command('do_insert_import', {'item': selected_item})
         window.show_quick_panel(panel_items, on_select)
-
-# TEST: connection Author Photo PhotoMetadata Date findFile
-class DoInsertImportStatementCommand(sublime_plugin.TextCommand):
-    def run(self, edit, item):
-        if (item.get('module')):
-            module_path = item['module']
-        else:
-            file_name = self.view.file_name()
-            module_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
-            module_path = unixify(module_path)
-            if module_path[0] != ".":
-                module_path = "./" + module_path
-        if item['isDefault']:
-            import_string = "import {0} from '{1}';\n"
-        else:
-            import_string = "import {{ {0} }} from '{1}';\n"
-        import_string = import_string.format(item['name'], module_path)
-        debug('Import string', import_string)
-        pos = 0
-        self.view.insert(edit, pos, import_string)
 
 # =============================================== Command list_imports
 # view.run_command('list_imports')
@@ -131,7 +108,7 @@ class ListImportsCommand(sublime_plugin.TextCommand):
             if (index == -1): return
             selected_item = IMPORT_NODES[index]
             debug('Selected item', selected_item)
-            view.run_command('do_insert_import_statement', {'item': selected_item})
+            view.run_command('do_insert_import', {'item': selected_item})
         window.show_quick_panel(items, on_select)
 
 # view.run_command('test')

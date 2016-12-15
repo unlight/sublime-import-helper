@@ -7,7 +7,8 @@ import socket
 
 DEBUG_MESSAGES = True
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
-RUN_PATH = "backend/run.js"
+# RUN_PATH = "backend/run.js"
+RUN_PATH = "backend_run.js"
 SERVER_PATH = "backend/server.js"
 SETUP_PATH = "backend/setup.js"
 SERVER_ADDRESS = "127.0.0.1"

@@ -37,4 +37,6 @@ Path to source folder. If not set, directory of `folders[0].path` will be used.
 
 TODO
 ---
+* TODO in *.py files
 * add re-read packages command
+* watch for project file changes

@@ -14,7 +14,7 @@ const commands = {
     ping: () => require('./commands/ping'),
     shutdown: () => require('./commands/shutdown'),
     read_packages: () => require('./commands/read_packages'),
-    insert_import_statement: () => require('./commands/insert_import_statement'),
+    insert_import: () => require('./commands/insert_import'),
     get_packages: () => require('./commands/get_packages'),
 };
 
