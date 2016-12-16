@@ -6,8 +6,8 @@ from .utils import *
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
-PROJECT_NAME = "import-helper"
-SETTINGS_FILE = PROJECT_NAME + ".sublime-settings"
+PROJECT_NAME = 'import-helper'
+SETTINGS_FILE = PROJECT_NAME + '.sublime-settings'
 
 PROJECT_DIRECTORY = None
 settings = sublime.load_settings(SETTINGS_FILE)
@@ -71,7 +71,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         if (selected is None):
             selected_region = view.sel()[0]
             selected = view.substr(selected_region)
-        if (bool(selected) == False):
+        if not bool(selected):
             cursor_region = view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
             selected = view.substr(cursor_region)
         debug("Selected", selected)
@@ -83,7 +83,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
                 panel_item = get_panel_item(SOURCE_ROOT, item)
                 panel_items.append(panel_item)
         if (len(panel_items) == 0):
-            view.show_popup("No imports found for `<strong>{0}</strong>`".format(selected))
+            view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
             return
         window = view.window()
         if (len(panel_items) == 1):
