@@ -41,18 +41,16 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         view = self.view
         row = -1
         found = False
-        while row < 255:
+        last_row = view.rowcol(view.size())[0]
+        while row <= last_row:
             row = row + 1
-            point = view.text_point(row, 0)
-            line_region = view.full_line(point)
+            line_region = view.full_line(view.text_point(row, 0))
             line_contents = view.substr(line_region)
             # match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
             match = re.search(r"import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
-            if match:
-                match_from = match.group(3)
-                if from_path == match_from:
-                    found = True
-                    break
+            if match and match.group(3) == from_path:
+                found = True
+                break
         if not found:
             debug('Do insert command (find_line row)', row)
             return None

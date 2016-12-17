@@ -44,5 +44,9 @@ Path to source folder. If not set, directory of `folders[0].path` will be used.
 
 TODO
 ---
+* insert to the end of imports block
+* Use status_message for errors (node not found, etc.)
+* support js
 * TODO in *.py files
 * watch for project file changes
+* update imports on adding file
