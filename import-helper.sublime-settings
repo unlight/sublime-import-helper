@@ -1,4 +1,5 @@
 {
+	"insert_position": "end"
 	// Max length, if length > 80 start new import
 	// from singlequote or dq
 	// Space before and after braces

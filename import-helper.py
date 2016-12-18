@@ -10,7 +10,9 @@ PROJECT_NAME = 'import-helper'
 SETTINGS_FILE = PROJECT_NAME + '.sublime-settings'
 
 PROJECT_DIRECTORY = None
-settings = sublime.load_settings(SETTINGS_FILE)
+SETTINGS = sublime.load_settings(SETTINGS_FILE)
+debug('SETTINGS', SETTINGS)
+debug('SETTINGS', SETTINGS.get('insert_position'))
 # TODO: Load and get settings value = settings.get("name")
 
 SOURCE_ROOT = None
