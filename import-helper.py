@@ -21,20 +21,20 @@ IMPORT_NODES = []
 def setup():
     window = sublime.active_window()
     project_file = window.project_file_name()
-    if (bool(project_file) == False):
+    if not bool(project_file):
         message = 'There is no project file, {0} will not work without project.'.format(PROJECT_NAME)
-        debug(message, force = True)
+        debug(message, force=True)
         sublime.status_message(message)
         return
     project_data = window.project_data()
-    
+
     global PROJECT_DIRECTORY
     folder = project_data['folders'][0]
     # TODO: Other folders not handled.
     folder_path = os.path.join(os.path.dirname(project_file), folder['path'])
     PROJECT_DIRECTORY = os.path.normpath(folder_path)
     debug('PROJECT_DIRECTORY', PROJECT_DIRECTORY)
-    
+
     global SOURCE_ROOT
     sourceRoot = project_data.get('sourceRoot')
     if not sourceRoot:
@@ -53,7 +53,7 @@ def get_packages_callback(err, result):
     IMPORT_NODES = result
 
 def read_packages_callback(err, result):
-    if (bool(err) == False):
+    if not bool(err):
         debug('Read packages result', len(result))
 
 # =============================================== Plugin Lifecycle
@@ -62,12 +62,12 @@ def plugin_loaded():
     print()
     debug("Plugin loaded", PROJECT_NAME)
     setup()
-    
+
 # =============================================== Command insert_import
 
 class InsertImportCommand(sublime_plugin.TextCommand):
     """ Adds import of identifier near cursor """
-    def run(self, edit, selected = None):
+    def run(self, edit, selected=None):
         view = self.view
         # TODO: Handle all selections.
         if (selected is None):
@@ -91,6 +91,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         if (len(panel_items) == 1):
             view.run_command('do_insert_import', {'item': items[0]})
             return
+
         def on_select(selected_index):
             debug('Selected index', selected_index)
             if (selected_index == -1): return
@@ -104,9 +105,10 @@ class InsertImportCommand(sublime_plugin.TextCommand):
 class ListImportsCommand(sublime_plugin.TextCommand):
     """ Show all available imports """
     def run(self, edit):
-        view = self.view;
+        view = self.view
         window = view.window()
         items = [get_panel_item(SOURCE_ROOT, item) for item in IMPORT_NODES]
+
         def on_select(index):
             debug('Selected index', index)
             if (index == -1): return

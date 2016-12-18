@@ -1,4 +1,3 @@
-import sublime
 import sublime_plugin
 import os
 import re
@@ -8,8 +7,9 @@ from .utils import unixify, debug
 insert_position = "end"
 
 # view.run_command('do_insert_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}}))
+
 class DoInsertImportCommand(sublime_plugin.TextCommand):
-    
+
     def run(self, edit, item):
         view = self.view
         if (item.get('module')):
@@ -26,7 +26,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         import_info = self.get_import_info(from_path)
         if not import_info.get('line_region') or item['isDefault']:
             if not item['isDefault']:
-                name = '{ ' + name + ' }';
+                name = '{ ' + name + ' }'
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
             pos = 0
@@ -43,7 +43,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
             view.replace(edit, line_region, import_string)
-    
+
     def get_import_info(self, from_path):
         view = self.view
         row = -1
@@ -70,4 +70,4 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             return {'last_import_row': last_import_row}
         else:
             imports = re.findall(r"(\w+)", dirty_names)
-            return {'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row} 
+            return {'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
