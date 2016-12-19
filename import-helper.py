@@ -7,7 +7,6 @@ from .utils import *
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
 PROJECT_NAME = 'import-helper'
-# settings = sublime.load_settings('import-helper')
 
 PROJECT_DIRECTORY = None
 
@@ -56,7 +55,7 @@ def read_packages_callback(err, result):
 
 def plugin_loaded():
     print()
-    debug("Plugin loaded", PROJECT_NAME)
+    debug('Plugin loaded', PROJECT_NAME)
     setup()
 
 # =============================================== Command insert_import
@@ -72,7 +71,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         if not bool(selected):
             cursor_region = view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
             selected = view.substr(cursor_region)
-        debug("Selected", selected)
+        debug('Selected', selected)
         items = []
         panel_items = []
         for item in IMPORT_NODES:

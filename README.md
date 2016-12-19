@@ -45,9 +45,10 @@ Path to source folder. If not set, directory of `folders[0].path` will be used.
 
 CHANGELOG
 ---
-| Version | Description   |
-|:--------|:--------------|
-| 1.0.0   | First release |
+| Version | Date        | Description                |
+|:--------|:------------|:---------------------------|
+| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug |
+| 1.0.0   | 18 Dec 2016 | First release              |
 
 TODO
 ---
