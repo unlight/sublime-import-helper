@@ -1,10 +1,10 @@
+import sublime
 import sublime_plugin
 import os
 import re
 from .utils import unixify, debug
 
-# TODO: Get from settings.
-insert_position = "end"
+settings = sublime.load_settings('import-helper')
 
 # view.run_command('do_insert_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}}))
 
@@ -20,8 +20,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             from_path = unixify(from_path)
             if from_path[0] != '.':
                 from_path = './' + from_path
-        import_string = "import {0} from '{1}';\n"
-
+        import_string = "import {{0}} from {0}{{1}}{0};\n".format(settings.get('from_quote', "'"))
         name = item['name']
         import_info = self.get_import_info(from_path)
         if not import_info.get('line_region') or item['isDefault']:
@@ -30,7 +29,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
             pos = 0
-            if "end" == insert_position:
+            if "end" == settings.get('insert_position', 'end'):
                 pos = view.text_point(import_info['last_import_row'] + 1, 0)
             view.insert(edit, pos, import_string)
         else:

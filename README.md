@@ -45,12 +45,13 @@ Path to source folder. If not set, directory of `folders[0].path` will be used.
 
 CHANGELOG
 ---
-1.0.0 - first release
+| Version | Description   |
+|:--------|:--------------|
+| 1.0.0   | First release |
 
 TODO
 ---
-* insert to the end of imports block
-* Use status_message for errors (node not found, etc.)
+* settings: insert to the end of imports block
 * TODO in *.py files
 * watch for project file changes
 * update imports on adding file

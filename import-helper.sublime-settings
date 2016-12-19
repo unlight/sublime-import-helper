@@ -1,6 +1,6 @@
 {
-	"insert_position": "end"
-	// Max length, if length > 80 start new import
-	// from singlequote or dq
-	// Space before and after braces
+	"insert_position": "end",
+	"import_max_length": 120,
+	"from_quote": "'",
+	"space_around_braces": true
 }

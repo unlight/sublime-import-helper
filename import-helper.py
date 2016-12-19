@@ -7,13 +7,9 @@ from .utils import *
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
 PROJECT_NAME = 'import-helper'
-SETTINGS_FILE = PROJECT_NAME + '.sublime-settings'
+# settings = sublime.load_settings('import-helper')
 
 PROJECT_DIRECTORY = None
-SETTINGS = sublime.load_settings(SETTINGS_FILE)
-debug('SETTINGS', SETTINGS)
-debug('SETTINGS', SETTINGS.get('insert_position'))
-# TODO: Load and get settings value = settings.get("name")
 
 SOURCE_ROOT = None
 IMPORT_NODES = []
