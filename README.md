@@ -38,6 +38,10 @@ Usage
 1. Copy text to clipboard `ctrl+c`
 2. Press `alt+i, alt+k`, or select the command from command palette
 
+Screenshots
+---
+![](https://raw.githubusercontent.com/unlight/sublime-import-helper/master/screenshots/insert-import.gif)
+
 Project Settings
 ---
 #### `sourceRoot`
