@@ -1,13 +1,11 @@
 import sublime
 import sublime_plugin
-import os
 from .utils import *
 
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
-PROJECT_NAME = os.path.splitext(os.path.basename(__file__))[0]
-PROJECT_DIRECTORY = None
+PROJECT_NAME = 'Import Helper'
 IMPORT_NODES = []
 
 def setup():
@@ -32,7 +30,7 @@ def get_import_root():
     if bool(test_path):
         result = test_path
     else:
-        result = project_data['folders'][0]
+        result = project_data['folders'][0]['path']
     return norm_path(project_file, result)
 
 def get_source_folders():
@@ -50,16 +48,11 @@ def get_source_folders():
     return result
 
 def get_packages_callback(err, result):
-    if err:
-        return
+    if err: return
     debug('Get packages result', len(result))
     sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(result)))
     global IMPORT_NODES
     IMPORT_NODES = result
-
-def read_packages_callback(err, result):
-    if not bool(err):
-        debug('Read packages result', len(result))
 
 # =============================================== Plugin Lifecycle
 
@@ -107,9 +100,8 @@ class InsertImportCommand(sublime_plugin.TextCommand):
 
 # =============================================== Command list_imports
 # view.run_command('list_imports')
-# Show all available imports
 class ListImportsCommand(sublime_plugin.TextCommand):
-
+    # Show all available imports
     def __init__(self, view):
         super().__init__(view)
         self.import_root = get_import_root()
