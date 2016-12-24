@@ -1,6 +1,6 @@
 {
 	"insert_position": "end",
-	"import_max_length": 120,
 	"from_quote": "'",
+	"import_max_length": 120,
 	"space_around_braces": true
 }

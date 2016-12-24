@@ -44,8 +44,25 @@ Screenshots
 
 Project Settings
 ---
-#### `sourceRoot`
-Path to source folder. If not set, directory of `folders[0].path` will be used.
+#### `import_root`
+Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
+
+#### `folders[i].path_source`
+Path to your source. If not set `folders[i].path` will be used.
+
+Plugin Settings
+---
+#### `insert_position`
+Specifies where new import statement should be inserted, at the beginning ('start')
+or at the end of imports block ('end').
+- Type: `string`
+- Enum: `['end', 'start']`
+- Default: `end`
+
+#### `from_quote`
+What kind of quotes will be used in import statement.
+- Type: `string`
+- Default: `'`
 
 CHANGELOG
 ---
@@ -56,7 +73,9 @@ CHANGELOG
 
 TODO
 ---
-* settings: insert to the end of imports block
+* Handle all selections
+* settings: import_max_length
+* settings: space_around_braces
 * TODO in *.py files
 * watch for project file changes
 * update imports on adding file

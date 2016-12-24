@@ -64,10 +64,13 @@ def plugin_loaded():
 # =============================================== Command insert_import
 
 class InsertImportCommand(sublime_plugin.TextCommand):
-    """ Adds import of identifier near cursor """
+    # Adds import of identifier near cursor
+    def __init__(self, view):
+        super().__init__(view)
+        self.import_root = get_import_root()
+
     def run(self, edit, selected=None):
         view = self.view
-        # TODO: Handle all selections.
         if (selected is None):
             selected_region = view.sel()[0]
             selected = view.substr(selected_region)
@@ -80,7 +83,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         for item in IMPORT_NODES:
             if (item['name'] == selected):
                 items.append(item)
-                panel_item = get_panel_item(import_root, item)
+                panel_item = get_panel_item(self.import_root, item)
                 panel_items.append(panel_item)
         if (len(panel_items) == 0):
             view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))

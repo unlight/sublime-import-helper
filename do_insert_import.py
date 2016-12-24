@@ -55,9 +55,8 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             row = row + 1
             line_region = view.full_line(view.text_point(row, 0))
             line_contents = view.substr(line_region)
-            # match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
-            # TODO: Use expr above.
-            match = re.search(r"import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
+            match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
+            # match = re.search(r"import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
             if match:
                 last_import_row = row
                 if match.group(3) == from_path:
