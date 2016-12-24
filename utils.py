@@ -25,7 +25,7 @@ def run_command(command, data=None, callback=None):
     debug("Run command", command)
     json = sublime.encode_value(data)
     (err, out) = exec(["node", RUN_PATH, command, json])
-    if (bool(err)):
+    if bool(err):
         if callback is not None:
             return callback(err, None)
         raise err
@@ -37,7 +37,6 @@ def run_command(command, data=None, callback=None):
 
 def run_command_async(command, data=None, callback=None):
     thread = threading.Thread(target=run_command, args=(command, data, callback))
-    thread.daemon = True
     thread.start()
 
 def send_command_async(command, data=None, callback=None):
@@ -103,3 +102,6 @@ def get_panel_item(root, item):
         return module + '/' + item['name']
     filepath = os.path.normpath(item['filepath'])[len(root) + 1:]
     return unixify(filepath) + '/' + item['name']
+
+def norm_path(base, to):
+    return os.path.normpath(os.path.join(os.path.dirname(base), to))

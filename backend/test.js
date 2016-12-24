@@ -31,6 +31,8 @@ test.cb('Read packages', t => {
         t.truthy(Array.isArray(response));
         var emptyItems = response.filter(v => !v);
         t.truthy(emptyItems.length === 0);
+        var [connection] = response.filter(item => item.name === 'connection');
+        t.truthy(connection);
         t.end();
     });
 });

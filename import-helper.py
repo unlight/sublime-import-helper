@@ -6,38 +6,48 @@ from .utils import *
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
-PROJECT_NAME = 'import-helper'
-
+PROJECT_NAME = os.path.splitext(os.path.basename(__file__))[0]
 PROJECT_DIRECTORY = None
-
-SOURCE_ROOT = None
 IMPORT_NODES = []
 
 def setup():
-    window = sublime.active_window()
-    project_file = window.project_file_name()
+    project_file = sublime.active_window().project_file_name()
     if not bool(project_file):
         message = 'There is no project file, {0} will not work without project.'.format(PROJECT_NAME)
         debug(message, force=True)
         sublime.status_message(message)
         return
+    import_root = get_import_root()
+    debug('import_root', import_root)
+    source_folders = get_source_folders()
+    debug('source_folders', source_folders)
+    data = {'importRoot': import_root, 'folders': source_folders}
+    run_command_async('get_packages', data, get_packages_callback)
+
+def get_import_root():
+    window = sublime.active_window()
+    project_file = window.project_file_name()
     project_data = window.project_data()
+    test_path = project_data.get('import_root')
+    if bool(test_path):
+        result = test_path
+    else:
+        result = project_data['folders'][0]
+    return norm_path(project_file, result)
 
-    global PROJECT_DIRECTORY
-    folder = project_data['folders'][0]
-    # TODO: Other folders not handled.
-    folder_path = os.path.join(os.path.dirname(project_file), folder['path'])
-    PROJECT_DIRECTORY = os.path.normpath(folder_path)
-    debug('PROJECT_DIRECTORY', PROJECT_DIRECTORY)
-
-    global SOURCE_ROOT
-    sourceRoot = project_data.get('sourceRoot')
-    if not sourceRoot:
-        sourceRoot = PROJECT_DIRECTORY
-    folder_path = os.path.join(os.path.dirname(project_file), sourceRoot)
-    SOURCE_ROOT = os.path.normpath(folder_path)
-    debug('SOURCE_ROOT', SOURCE_ROOT)
-    run_command_async('get_packages', {'projectDirectory': SOURCE_ROOT}, get_packages_callback)
+def get_source_folders():
+    window = sublime.active_window()
+    project_file = window.project_file_name()
+    project_data = window.project_data()
+    result = []
+    for folder in project_data['folders']:
+        folder_path = folder['path']
+        path_source = project_data.get('path_source')
+        if bool(path_source):
+            folder_path = path_source
+        folder_path = norm_path(project_file, folder_path)
+        result.append(folder_path)
+    return result
 
 def get_packages_callback(err, result):
     if err:
@@ -77,7 +87,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         for item in IMPORT_NODES:
             if (item['name'] == selected):
                 items.append(item)
-                panel_item = get_panel_item(SOURCE_ROOT, item)
+                panel_item = get_panel_item(import_root, item)
                 panel_items.append(panel_item)
         if (len(panel_items) == 0):
             view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
@@ -97,12 +107,17 @@ class InsertImportCommand(sublime_plugin.TextCommand):
 
 # =============================================== Command list_imports
 # view.run_command('list_imports')
+# Show all available imports
 class ListImportsCommand(sublime_plugin.TextCommand):
-    """ Show all available imports """
+
+    def __init__(self, view):
+        super().__init__(view)
+        self.import_root = get_import_root()
+
     def run(self, edit):
         view = self.view
         window = view.window()
-        items = [get_panel_item(SOURCE_ROOT, item) for item in IMPORT_NODES]
+        items = [get_panel_item(self.import_root, item) for item in IMPORT_NODES]
 
         def on_select(index):
             debug('Selected index', index)
@@ -134,3 +149,64 @@ class ImportFromClipboardCommand(sublime_plugin.TextCommand):
 #             debug('result', result)
 #         pong = run_command_async('ping',data=None, callback=callback)
 #         # debug('pong', pong)
+
+# class EventListener(sublime_plugin.EventListener):
+#     def on_new(self, view):
+#         debug('on_new')
+
+#     def on_new_async(self, view):
+#         debug('on_new_async')
+
+#     def on_clone(self, view):
+#         debug('on_clone')
+
+#     def on_clone_async(self, view):
+#         debug('on_clone_async')
+
+#     def on_load(self, view):
+#         debug('on_load')
+
+#     def on_load_async(self, view):
+#         debug('on_load_async')
+
+#     def on_pre_close(self, view):
+#         debug('on_pre_close')
+
+#     def on_close(self, view):
+#         debug('on_close')
+
+#     def on_pre_save(self, view):
+#         debug('on_pre_save')
+
+#     def on_pre_save_async(self, view):
+#         debug('on_pre_save_async')
+
+#     def on_post_save(self, view):
+#         debug('on_post_save')
+
+#     def on_post_save_async(self, view):
+#         debug('on_post_save_async')
+
+#     # def on_modified(self, view):
+#     #     debug('on_modified')
+
+#     # def on_modified_async(self, view):
+#     #     debug('on_modified_async')
+
+#     # def on_selection_modified(self, view):
+#     #     debug('on_selection_modified')
+
+#     # def on_selection_modified_async(self, view):
+#     #     debug('on_selection_modified_async')
+
+#     def on_activated(self, view):
+#         debug('on_activated')
+
+#     def on_activated_async(self, view):
+#         debug('on_activated_async')
+
+#     def on_deactivated(self, view):
+#         debug('on_deactivated')
+
+#     def on_deactivated_async(self, view):
+#         debug('on_deactivated_async')

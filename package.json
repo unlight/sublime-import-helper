@@ -4,15 +4,16 @@
   "license": "Xnet",
   "homepage": "https://github.com/unlight/sublime-import-helper#readme",
   "scripts": {
-    "eslint": "eslint server",
-    "test": "ava server/test.js --serial --verbose",
-    "test:w": "ava server/test.js --serial --verbose --watch",
+    "eslint": "eslint backend",
+    "test": "ava backend/test.js --serial --verbose",
+    "test:w": "ava backend/test.js --serial --verbose --watch",
     "build:backend": "browserify --bare backend/run.js > backend_run.js"
   },
   "devDependencies": {
     "ava": "0.17.0",
     "browserify": "13.1.1",
-    "eslint": "3.12.2"
+    "eslint": "3.12.2",
+    "preprocess": "3.1.0"
   },
   "dependencies": {
     "esm-exports": "0.2.0",
