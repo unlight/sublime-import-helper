@@ -64,18 +64,23 @@ What kind of quotes will be used in import statement.
 - Type: `string`
 - Default: `'`
 
+#### `space_around_braces`
+Paste space before opening and after closing curly brackets.
+- Type: `boolean`
+- Default: `true`
+
 CHANGELOG
 ---
-| Version | Date        | Description                |
-|:--------|:------------|:---------------------------|
-| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug |
-| 1.0.0   | 18 Dec 2016 | First release              |
+| Version | Date        | Description                   |
+|:--------|:------------|:------------------------------|
+| 1.0.3   | 26 Dec 2016 | Setting `space_around_braces` |
+| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug    |
+| 1.0.0   | 18 Dec 2016 | First release                 |
 
 TODO
 ---
 * Handle all selections
 * settings: import_max_length
-* settings: space_around_braces
 * TODO in *.py files
 * watch for project file changes
 * update imports on adding file

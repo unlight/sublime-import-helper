@@ -27,7 +27,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         import_info = self.get_import_info(from_path)
         if not import_info.get('line_region') or item['isDefault']:
             if not item['isDefault']:
-                name = '{ ' + name + ' }'
+                name = self.wrap_imports([name])
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
             pos = 0
@@ -40,7 +40,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             try: imports.remove(name)
             except: pass
             imports.append(name)
-            name = '{ ' + ', '.join(imports) + ' }'
+            name = self.wrap_imports(imports)
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
             view.replace(edit, line_region, import_string)
@@ -71,3 +71,9 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         else:
             imports = re.findall(r"(\w+)", dirty_names)
             return {'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
+
+    def wrap_imports(self, imports):
+        if self.settings.get('space_around_braces', True):
+            return '{ ' + ', '.join(imports) + ' }'
+        else:
+            return '{' + ', '.join(imports) + '}'
