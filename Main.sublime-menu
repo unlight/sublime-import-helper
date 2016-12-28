@@ -13,16 +13,10 @@
                 [
                     {
                         "caption": "Import Helper",
-                        "children":
-                        [
-                            {
-                                "command": "edit_settings",
-                                "args": {
-                                    "base_file": "${packages}/ImportHelper/import-helper.sublime-settings"
-                                },
-                                "caption": "Settings"
-                            }
-                        ]
+                        "command": "edit_settings",
+                        "args": {
+                            "base_file": "${packages}/ImportHelper/import-helper.sublime-settings"
+                        }
                     }
                 ]
             }
