@@ -73,6 +73,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                          |
 |:--------|:------------|:-------------------------------------|
+| 1.0.6   | 10 Jan 2017 | Updated esm-exports modules to 0.3.2 |
 | 1.0.5   | 10 Jan 2017 | Updated esm-exports modules to 0.3.1 |
 | 1.0.3   | 26 Dec 2016 | Setting `space_around_braces`        |
 | 1.0.1   | 19 Dec 2016 | Fixed loading settings bug           |

@@ -16,7 +16,7 @@
     "preprocess": "3.1.0"
   },
   "dependencies": {
-    "esm-exports": "0.3.1",
+    "esm-exports": "0.3.2",
     "lodash.filter": "4.6.0",
     "lodash.flatten": "4.4.0",
     "lodash.get": "4.4.2",
