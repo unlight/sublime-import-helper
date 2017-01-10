@@ -48,7 +48,9 @@ def get_source_folders():
     return result
 
 def get_packages_callback(err, result):
-    if err: return
+    if err: 
+        sublime.error_message(PROJECT_NAME + '\n' + err)
+        return
     debug('Get packages result', len(result))
     sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(result)))
     global IMPORT_NODES
