@@ -69,7 +69,9 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             # Found unexpected statement.
             return {'last_import_row': last_import_row}
         else:
-            imports = re.findall(r"(\w+)", dirty_names)
+            imports = []
+            for m in re.finditer(r"(\w+(\s+as\s+\w+)?)", dirty_names):
+                imports.append(m.group(1))
             return {'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
 
     def wrap_imports(self, imports):

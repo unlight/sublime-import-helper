@@ -76,17 +76,17 @@ def exec(cmd):
         proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outs, errs = proc.communicate()
     err = errs.decode().strip()
-    if (bool(err)):
+    if bool(err):
         debug("Exec error", err)
     return (err, outs.decode().strip())
 
 def exec_async(cmd, done=None):
-    def runInThread(cmd, done):
+    def run_thread(cmd, done):
         (err, result) = exec(cmd)
         if (done is not None):
             done(err, result)
         return
-    thread = threading.Thread(target=runInThread, args=(cmd, done))
+    thread = threading.Thread(target=run_thread, args=(cmd, done))
     thread.start()
     return thread
 

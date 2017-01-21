@@ -3,7 +3,7 @@ const pkgDir = require('pkg-dir');
 var rootPath;
 var _state = { packages: [] };
 
-test.before(t => {
+test.before(() => {
     return pkgDir(__dirname).then(value => {
         rootPath = value;
     });

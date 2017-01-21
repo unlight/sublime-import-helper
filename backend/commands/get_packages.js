@@ -8,7 +8,7 @@ module.exports = (data, callback) => {
     var requests = folderList.map(d => esm.directory(d));
     var importRoot = data.importRoot;
     if (importRoot) {
-        npmModules = readPkgUp({ cwd: importRoot, normalize: false })
+        var npmModules = readPkgUp({ cwd: importRoot, normalize: false })
             .then(p => [_keys(p.pkg.dependencies), _keys(p.pkg.devDependencies)])
             .then(dependencies => _flatten(dependencies))
             .then(names => Promise.all(names.map(n => esm.parseModule(n, {dirname: importRoot}))))

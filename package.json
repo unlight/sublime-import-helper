@@ -1,18 +1,19 @@
 {
   "name": "sublime-import-helper",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "license": "Xnet",
   "homepage": "https://github.com/unlight/sublime-import-helper#readme",
   "scripts": {
     "eslint": "eslint backend",
     "test": "ava backend/test.js --serial --verbose",
     "test:w": "ava backend/test.js --serial --verbose --watch",
-    "build:backend": "browserify --bare backend/run.js > backend_run.js"
+    "build:backend": "browserify --bare backend/run.js > backend_run.js",
+    "release": "npm run eslint && npm run test && npm run build:backend && npm version patch && git add package.json"
   },
   "devDependencies": {
     "ava": "0.17.0",
     "browserify": "13.3.0",
-    "eslint": "3.13.1",
+    "eslint": "3.14.0",
     "preprocess": "3.1.0"
   },
   "dependencies": {

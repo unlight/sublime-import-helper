@@ -11,11 +11,11 @@ if (data) {
 }
 
 const commands = {
-    ping: () => require('./commands/ping'),
-    shutdown: () => require('./commands/shutdown'),
-    read_packages: () => require('./commands/read_packages'),
-    insert_import: () => require('./commands/insert_import'),
-    get_packages: () => require('./commands/get_packages'),
+	ping: () => require("./commands/ping"),
+	shutdown: () => require("./commands/shutdown"),
+	read_packages: () => require("./commands/read_packages"),
+	insert_import: () => require("./commands/insert_import"),
+	get_packages: () => require("./commands/get_packages")
 };
 
 const runCommand = commands[cmd]();
@@ -26,3 +26,4 @@ runCommand(data, function(err, result) {
 	}
 	console.log(JSON.stringify(result));
 });
+

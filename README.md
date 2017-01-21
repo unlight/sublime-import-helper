@@ -71,13 +71,14 @@ Paste space before opening and after closing curly brackets.
 
 CHANGELOG
 ---
-| Version | Date        | Description                          |
-|:--------|:------------|:-------------------------------------|
-| 1.0.6   | 10 Jan 2017 | Updated esm-exports modules to 0.3.2 |
-| 1.0.5   | 10 Jan 2017 | Updated esm-exports modules to 0.3.1 |
-| 1.0.3   | 26 Dec 2016 | Setting `space_around_braces`        |
-| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug           |
-| 1.0.0   | 18 Dec 2016 | First release                        |
+| Version | Date        | Description                               |
+|:--------|:------------|:------------------------------------------|
+| 1.0.7   | 21 Jan 2017 | Fixed #10 incorrect adding to `import as` |
+| 1.0.6   | 10 Jan 2017 | Updated esm-exports modules to 0.3.2      |
+| 1.0.5   | 10 Jan 2017 | Updated esm-exports modules to 0.3.1      |
+| 1.0.3   | 26 Dec 2016 | Setting `space_around_braces`             |
+| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug                |
+| 1.0.0   | 18 Dec 2016 | First release                             |
 
 TODO
 ---
