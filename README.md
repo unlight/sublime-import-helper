@@ -12,8 +12,9 @@ Supported Languages
 
 Installation
 ---
-#### PackageControl
-Not yet.
+#### [PackageControl](https://packagecontrol.io/packages/ImportHelper)
+* Select `Package Control: Install Package` from command palette
+* Select `ImportHelper`
 
 #### Manual Installation
 You can install `sublime-import-helper` manually using git by running the following command
@@ -25,18 +26,18 @@ git clone https://github.com/unlight/sublime-import-helper ImportHelper
 Usage
 ---
 #### Insert import
-1. Set cursor or select word
-2. Press `ctrl+alt+i`, or select the command from command palette
+* Set cursor or select word
+* Press `ctrl+alt+i`, or select the command from command palette
 
 #### List imports
-1. Press `alt+i, alt+l`, or select the command from command palette
+* Press `alt+i, alt+l`, or select the command from command palette
 
 #### Update imports
-1. Select the command from command palette
+* Select the command from command palette
 
 #### Import from clipboard
-1. Copy text to clipboard `ctrl+c`
-2. Press `alt+i, alt+k`, or select the command from command palette
+* Copy text to clipboard `ctrl+c`
+* Press `alt+i, alt+k`, or select the command from command palette
 
 Screenshots
 ---
