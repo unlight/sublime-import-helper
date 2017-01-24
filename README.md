@@ -74,6 +74,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                               |
 |:--------|:------------|:------------------------------------------|
+| 1.0.8   | 24 Jan 2017 | Added .no-sublime-package                 |
 | 1.0.7   | 21 Jan 2017 | Fixed #10 incorrect adding to `import as` |
 | 1.0.6   | 10 Jan 2017 | Updated esm-exports modules to 0.3.2      |
 | 1.0.5   | 10 Jan 2017 | Updated esm-exports modules to 0.3.1      |

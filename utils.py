@@ -4,13 +4,14 @@ import platform
 import subprocess
 import threading
 import socket
+import traceback
 
 DEBUG_MESSAGES = True
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
-# RUN_PATH = "backend/run.js"
-RUN_PATH = "backend_run.js"
-SERVER_PATH = "backend/server.js"
-SETUP_PATH = "backend/setup.js"
+RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
+# if DEBUG
+# RUN_PATH = os.path.join(PACKAGE_PATH, "backend", "run.js")
+# endif
 SERVER_ADDRESS = "127.0.0.1"
 SERVER_PORT = 6778
 
@@ -24,7 +25,12 @@ def debug(s, data=None, force=False):
 def run_command(command, data=None, callback=None):
     debug("Run command", command)
     json = sublime.encode_value(data)
-    (err, out) = exec(["node", RUN_PATH, command, json])
+    err = None
+    out = None
+    try:
+        (err, out) = exec(["node", RUN_PATH, command, json])
+    except Exception as e:
+        err = traceback.format_exc()
     if bool(err):
         if callback is not None:
             return callback(err, None)

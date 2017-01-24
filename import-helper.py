@@ -48,8 +48,8 @@ def get_source_folders():
     return result
 
 def get_packages_callback(err, result):
-    if err: 
-        sublime.error_message(PROJECT_NAME + '\n' + err)
+    if err:
+        sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
     debug('Get packages result', len(result))
     sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(result)))
@@ -146,64 +146,3 @@ class ImportFromClipboardCommand(sublime_plugin.TextCommand):
 #             debug('result', result)
 #         pong = run_command_async('ping',data=None, callback=callback)
 #         # debug('pong', pong)
-
-# class EventListener(sublime_plugin.EventListener):
-#     def on_new(self, view):
-#         debug('on_new')
-
-#     def on_new_async(self, view):
-#         debug('on_new_async')
-
-#     def on_clone(self, view):
-#         debug('on_clone')
-
-#     def on_clone_async(self, view):
-#         debug('on_clone_async')
-
-#     def on_load(self, view):
-#         debug('on_load')
-
-#     def on_load_async(self, view):
-#         debug('on_load_async')
-
-#     def on_pre_close(self, view):
-#         debug('on_pre_close')
-
-#     def on_close(self, view):
-#         debug('on_close')
-
-#     def on_pre_save(self, view):
-#         debug('on_pre_save')
-
-#     def on_pre_save_async(self, view):
-#         debug('on_pre_save_async')
-
-#     def on_post_save(self, view):
-#         debug('on_post_save')
-
-#     def on_post_save_async(self, view):
-#         debug('on_post_save_async')
-
-#     # def on_modified(self, view):
-#     #     debug('on_modified')
-
-#     # def on_modified_async(self, view):
-#     #     debug('on_modified_async')
-
-#     # def on_selection_modified(self, view):
-#     #     debug('on_selection_modified')
-
-#     # def on_selection_modified_async(self, view):
-#     #     debug('on_selection_modified_async')
-
-#     def on_activated(self, view):
-#         debug('on_activated')
-
-#     def on_activated_async(self, view):
-#         debug('on_activated_async')
-
-#     def on_deactivated(self, view):
-#         debug('on_deactivated')
-
-#     def on_deactivated_async(self, view):
-#         debug('on_deactivated_async')
