@@ -52,6 +52,20 @@ test.cb('Read packages projectDirectory null', t => {
     });
 });
 
+test.cb('Get packages', t => {
+    var importRoot = Path.join(rootPath, 'test_playground');
+    getPackagesCmd({
+        _state: _state,
+        folders: [],
+        importRoot: importRoot
+    }, (err, response) => {
+        t.falsy(err);
+        t.truthy(response);
+        t.truthy(response.length > 0);
+        t.end();
+    });
+});
+
 test.cb('Get packages no pkg', t => {
     var importRoot = Path.join(rootPath, 'test_playground/no_pkg');
     getPackagesCmd({
@@ -94,6 +108,19 @@ test.cb('Get packages with empty_pkg', t => {
 
 test.cb('Get packages with empty_file', t => {
     var importRoot = Path.join(rootPath, 'test_playground/empty_file');
+    getPackagesCmd({
+        _state: _state,
+        folders: [],
+        importRoot: importRoot
+    }, (err, response) => {
+        t.falsy(err);
+        t.deepEqual(response, []);
+        t.end();
+    });
+});
+
+test.cb('Get packages for root (no package found)', t => {
+    var importRoot = '/';
     getPackagesCmd({
         _state: _state,
         folders: [],

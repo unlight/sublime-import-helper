@@ -1,7 +1,8 @@
-const esm = require("esm-exports");
-const _keys = require("lodash.keys");
-const _flatten = require("lodash.flatten");
-const readPkgUp = require("read-pkg-up");
+const esm = require('esm-exports');
+const _keys = require('lodash.keys');
+const _flatten = require('lodash.flatten');
+const _get = require('lodash.get');
+const readPkgUp = require('read-pkg-up');
 
 const emptyPkg = {
     dependencies: [],
@@ -14,8 +15,9 @@ module.exports = (data, callback) => {
     var importRoot = data.importRoot;
     if (importRoot) {
         var npmModules = readPkgUp({ cwd: importRoot, normalize: false })
-            .catch(() => Promise.resolve({pkg: emptyPkg}))
-            .then(p => [_keys(p.pkg.dependencies), _keys(p.pkg.devDependencies)])
+            .catch(() => Promise.resolve(emptyPkg))
+            .then(p => _get(p, 'pkg', emptyPkg))
+            .then(p => [_keys(p.dependencies), _keys(p.devDependencies)])
             .then(dependencies => _flatten(dependencies))
             .then(names => Promise.all(names.map(n => esm.parseModule(n, {dirname: importRoot}))))
             .then(data => _flatten(data));
