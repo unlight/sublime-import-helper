@@ -2,5 +2,4 @@
 ~*
 .*.sublime-workspace
 .*.sublime-project
-/npm-debug.log
-/test_playground/
+/npm-debug.*
