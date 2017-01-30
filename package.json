@@ -8,12 +8,12 @@
     "test": "ava backend/test.js --serial --verbose",
     "test:w": "ava backend/test.js --serial --verbose --watch",
     "build:backend": "browserify --bare backend/run.js > backend_run.js",
-    "release": "npm run eslint && npm run test && npm run build:backend && npm version patch && git add package.json"
+    "release": "npm run eslint && npm run test && npm run build:backend && npm version patch"
   },
   "devDependencies": {
     "ava": "0.17.0",
-    "browserify": "13.3.0",
-    "eslint": "3.14.0",
+    "browserify": "14.0.0",
+    "eslint": "3.14.1",
     "preprocess": "3.1.0"
   },
   "dependencies": {
