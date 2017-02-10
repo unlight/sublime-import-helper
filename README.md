@@ -86,7 +86,5 @@ CHANGELOG
 TODO
 ---
 * Handle all selections
-* settings: import_max_length
-* TODO in *.py files
 * watch for project file changes
 * update imports on adding file

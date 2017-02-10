@@ -6,17 +6,15 @@ import threading
 import socket
 import traceback
 
-DEBUG_MESSAGES = True
+DEBUG_MESSAGES = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
 # if DEBUG
 # RUN_PATH = os.path.join(PACKAGE_PATH, "backend", "run.js")
 # endif
-SERVER_ADDRESS = "127.0.0.1"
-SERVER_PORT = 6778
 
 def debug(s, data=None, force=False):
-    if (DEBUG_MESSAGES or force):
+    if (DEBUG or force):
         message = str(s)
         if (data is not None):
             message = message + ': ' + str(data)
@@ -45,34 +43,6 @@ def run_command_async(command, data=None, callback=None):
     thread = threading.Thread(target=run_command, args=(command, data, callback))
     thread.start()
 
-def send_command_async(command, data=None, callback=None):
-    thread = threading.Thread(target=send_command, args=(command, data, callback))
-    thread.daemon = True
-    thread.start()
-
-def send_command(command, data=None, callback=None):
-    debug("Send command", command)
-    client = socket.socket()
-    recv = ""
-    try:
-        client.connect((SERVER_ADDRESS, SERVER_PORT))
-        message = sublime.encode_value({"command": command, "data": data}, True)
-        client.send(message.encode('utf-8'))
-        recv = client.recv(128 * 1024).decode('utf-8')
-        client.close()
-    except Exception as err:
-        debug("Send command error", err)
-        callback(err, None)
-        return
-    response = None
-    if (bool(recv)):
-        debug("Trying to parse", recv)
-        response = sublime.decode_value(recv)
-    if callback is not None:
-        callback(None, response)
-        return
-    return response
-
 def exec(cmd):
     if os.name == "nt":
         si = subprocess.STARTUPINFO()
@@ -83,7 +53,7 @@ def exec(cmd):
     outs, errs = proc.communicate()
     err = errs.decode().strip()
     if bool(err):
-        debug("Exec error", err)
+        debug("Exec error", err, True)
     return (err, outs.decode().strip())
 
 def exec_async(cmd, done=None):

@@ -11,17 +11,14 @@
     "release": "npm run eslint && npm run test && npm run build:backend && npm version patch"
   },
   "devDependencies": {
-    "ava": "0.17.0",
+    "ava": "0.18.1",
     "browserify": "14.0.0",
-    "eslint": "3.14.1",
+    "eslint": "3.15.0",
     "preprocess": "3.1.0"
   },
   "dependencies": {
     "esm-exports": "0.3.2",
-    "lodash.filter": "4.6.0",
-    "lodash.flatten": "4.4.0",
-    "lodash.get": "4.4.2",
-    "lodash.keys": "4.2.0",
+    "lodash": "4.17.4",
     "read-pkg-up": "2.0.0"
   },
   "repository": {

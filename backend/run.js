@@ -12,9 +12,6 @@ if (data) {
 
 const commands = {
 	ping: () => require("./commands/ping"),
-	shutdown: () => require("./commands/shutdown"),
-	read_packages: () => require("./commands/read_packages"),
-	insert_import: () => require("./commands/insert_import"),
 	get_packages: () => require("./commands/get_packages")
 };
 

@@ -8,7 +8,7 @@ export class Greeter<T> {
     }
 }
 
-let greeter = new Greeter<string>("Hello, world");
+export let greeter = new Greeter<string>("Hello, world");
 
 let button = document.createElement('button');
 button.textContent = "Say Hello";

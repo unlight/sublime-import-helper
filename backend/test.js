@@ -20,37 +20,7 @@ test.cb('Ping', t => {
     });
 });
 
-var readPackagesCmd = require('./commands/read_packages');
 var getPackagesCmd = require('./commands/get_packages');
-
-test.cb('Read packages', t => {
-    var projectDirectory = rootPath;
-    readPackagesCmd({
-        _state: _state,
-        data: { projectDirectory }
-    }, (err, response) => {
-        if (err) throw err;
-        t.truthy(Array.isArray(response));
-        var emptyItems = response.filter(v => !v);
-        t.truthy(emptyItems.length === 0);
-        var [Greeter] = response.filter(item => item.name === 'Greeter');
-        t.truthy(Greeter);
-        t.end();
-    });
-});
-
-test.cb('Read packages projectDirectory null', t => {
-    readPackagesCmd({
-        _state: _state,
-        data: {
-            projectDirectory: null
-        }
-    }, (err, response) => {
-        t.truthy(err);
-        t.falsy(response);
-        t.end();
-    });
-});
 
 test.cb('Get packages', t => {
     var importRoot = Path.join(rootPath, 'test_playground');

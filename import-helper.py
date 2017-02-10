@@ -15,12 +15,14 @@ def setup():
         debug(message, force=True)
         sublime.status_message(message)
         return
+    del IMPORT_NODES[:]
     import_root = get_import_root()
-    debug('import_root', import_root)
     source_folders = get_source_folders()
     debug('source_folders', source_folders)
-    data = {'importRoot': import_root, 'folders': source_folders}
-    run_command_async('get_packages', data, get_packages_callback)
+    debug('import_root', import_root)
+    run_command_async('get_packages', {'folders': source_folders}, get_packages_callback)
+    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_packages_callback)
+    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)
 
 def get_import_root():
     window = sublime.active_window()
@@ -51,10 +53,9 @@ def get_packages_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
-    debug('Get packages result', len(result))
-    sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(result)))
-    global IMPORT_NODES
-    IMPORT_NODES = result
+    IMPORT_NODES.extend(result)
+    sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(IMPORT_NODES)))
+    debug('Get packages result', '{0} ({1})'.format(len(result), len(IMPORT_NODES)))
 
 # =============================================== Plugin Lifecycle
 
@@ -101,6 +102,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             selected_item = items[selected_index]
             debug('Selected item', selected_item)
             view.run_command('do_insert_import', {'item': selected_item})
+
         window.show_quick_panel(panel_items, on_select)
 
 # =============================================== Command list_imports
