@@ -11,6 +11,7 @@
     "release": "npm run eslint && npm run test && npm run build:backend && npm version patch"
   },
   "devDependencies": {
+    "@types/node": "7.0.5",
     "ava": "0.18.1",
     "browserify": "14.0.0",
     "eslint": "3.15.0",

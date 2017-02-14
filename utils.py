@@ -6,12 +6,11 @@ import threading
 import socket
 import traceback
 
-DEBUG_MESSAGES = False
+DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
-# if DEBUG
-# RUN_PATH = os.path.join(PACKAGE_PATH, "backend", "run.js")
-# endif
+if DEBUG:
+    RUN_PATH = os.path.join(PACKAGE_PATH, "backend", "run.js")
 
 def debug(s, data=None, force=False):
     if (DEBUG or force):
