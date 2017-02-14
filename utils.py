@@ -6,6 +6,7 @@ import threading
 import socket
 import traceback
 
+DEBUG = True
 DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")

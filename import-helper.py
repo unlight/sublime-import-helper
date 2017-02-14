@@ -10,7 +10,7 @@ IMPORT_NODES = []
 
 def setup():
     project_file = sublime.active_window().project_file_name()
-    if not bool(project_file):
+    if project_file is None:
         message = 'There is no project file, {0} will not work without project.'.format(PROJECT_NAME)
         debug(message, force=True)
         sublime.status_message(message)
@@ -27,6 +27,8 @@ def setup():
 def get_import_root():
     window = sublime.active_window()
     project_file = window.project_file_name()
+    if project_file is None:
+	    return
     project_data = window.project_data()
     test_path = project_data.get('import_root')
     if bool(test_path):
