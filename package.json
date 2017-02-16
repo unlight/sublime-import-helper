@@ -6,20 +6,24 @@
   "scripts": {
     "eslint": "eslint backend",
     "build:backend": "browserify --bare backend/run.js > backend_run.js",
-    "release": "npm run eslint && npm run test && npm run build:backend && npm version patch",
+    "prerelease": "npm run eslint && npm run test:r && npm run build:backend",
+    "release": "npm version patch",
+    "test": "npm run eslint && npm run test:r",
     "test:r": "mocha backend/test.js",
     "test:w": "mocha --watch backend/test.js"
   },
   "devDependencies": {
     "@types/node": "^7.0.5",
-    "browserify": "^14.0.0",
+    "browserify": "^14.1.0",
     "eslint": "^3.15.0",
+    "eslint-plugin-mocha": "^4.8.0",
     "esm-exports": "0.3.2",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "pkg-dir": "^1.0.0",
     "preprocess": "^3.1.0",
-    "read-pkg-up": "^2.0.0"
+    "read-pkg-up": "^2.0.0",
+    "source-map-support": "^0.4.11"
   },
   "dependencies": {},
   "repository": {

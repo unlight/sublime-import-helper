@@ -3,17 +3,19 @@
         "browser": true,
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module"
     },
+    "plugins": [
+        "mocha"
+    ],
     "rules": {
+        "mocha/no-exclusive-tests": 2,
         "no-console": 0,
-        "semi": [
-            "error",
-            "always"
-        ]
+        "semi": [2, "always"]
     }
 }
