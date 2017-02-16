@@ -7,6 +7,7 @@ from .utils import *
 
 PROJECT_NAME = 'Import Helper'
 IMPORT_NODES = []
+source_modules = [];
 
 def setup():
     project_file = sublime.active_window().project_file_name()
@@ -15,14 +16,25 @@ def setup():
         debug(message, force=True)
         sublime.status_message(message)
         return
-    del IMPORT_NODES[:]
+    IMPORT_NODES.clear()
+    update_source_modules()
     import_root = get_import_root()
-    source_folders = get_source_folders()
-    debug('source_folders', source_folders)
     debug('import_root', import_root)
-    run_command_async('get_packages', {'folders': source_folders}, get_packages_callback)
     run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_packages_callback)
     run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)
+
+def update_source_modules():
+    source_folders = get_source_folders()
+    debug('source_folders', source_folders)
+    def get_source_modules_callback(err, result):
+        if err:
+            sublime.error_message(PROJECT_NAME + '\n' + str(err))
+            return
+        source_modules.clear();
+        source_modules.extend(result)
+        sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
+        debug('Update source modules', len(source_modules))
+    run_command_async('get_packages', {'folders': source_folders}, get_source_modules_callback)
 
 def get_import_root():
     window = sublime.active_window()
@@ -85,6 +97,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         debug('Selected', selected)
         items = []
         panel_items = []
+        # TODO: Add source_modules to IMPORT_NODES.
         for item in IMPORT_NODES:
             if (item['name'] == selected):
                 items.append(item)
@@ -139,6 +152,22 @@ class ImportFromClipboardCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.view.run_command('insert_import', args=({'selected': sublime.get_clipboard()}))
 
+class UpdateSourceEventListener(sublime_plugin.EventListener):
+    
+    def on_new(self, view):
+        debug('on_new', [view, view.id(), view.buffer_id()])
+
+    def on_new_async(self, view):
+        debug('on_new_async', [view, view.id(), view.buffer_id()])
+
+    def on_post_save(self, view):
+        debug('on_post_save', [view, view.id(), view.buffer_id()])
+
+    def on_post_save_async(self, view):
+        debug('on_post_save_async', [view, view.id(), view.buffer_id()])
+        source_folders = get_source_folders()
+        run_command_async('get_packages', {'folders': source_folders}, get_packages_callback)
+
 # view.run_command('test')
 # class TestCommand(sublime_plugin.TextCommand):
 #     def run(self, edit):
@@ -150,3 +179,4 @@ class ImportFromClipboardCommand(sublime_plugin.TextCommand):
 #             debug('result', result)
 #         pong = run_command_async('ping',data=None, callback=callback)
 #         # debug('pong', pong)
+
