@@ -1,103 +1,102 @@
-import test from 'ava';
-import * as Path from 'path';
+'use strict';
+const assert = require('assert');
+const Path = require('path');
 const pkgDir = require('pkg-dir');
 var rootPath;
-var _state = { packages: [] };
+const _state = { packages: [] };
 
-test.before(() => {
+const getPackagesCmd = require('./commands/get_packages');
+const ping = require('./commands/ping');
+
+it('smoke test', () => {
+    assert(true);
+});
+
+beforeEach(() => {
     return pkgDir(__dirname).then(value => {
         rootPath = value;
-    });
+    });    
 });
-
-test.cb('Ping', t => {
-    var ping = require('./commands/ping');
+    
+it('Ping', done => {
     ping({}, (err, response) => {
         if (err) throw err;
-        t.is(response.message, 'Pong');
-        t.truthy(response.date);
-        t.end();
+        assert(response.message === 'Pong');
+        assert(response.date);
+        done();
     });
 });
 
-var getPackagesCmd = require('./commands/get_packages');
-
-test.cb('Get packages', t => {
+it('Get packages', () => {
     var importRoot = Path.join(rootPath, 'test_playground');
-    getPackagesCmd({
+    return getPackagesCmd({
         _state: _state,
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
-        t.falsy(err);
-        t.truthy(response);
-        t.truthy(response.length > 0);
-        t.end();
+        assert.ifError(err);
+        assert(response);
+        assert(response.length > 0);
     });
 });
 
-test.cb('Get packages no pkg', t => {
+it('Get packages no pkg', () => {
     var importRoot = Path.join(rootPath, 'test_playground/no_pkg');
-    getPackagesCmd({
+    return getPackagesCmd({
         _state: _state,
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
-        t.falsy(err);
-        t.truthy(response);
-        t.truthy(response.length > 0);
-        t.end();
+        assert.ifError(err);
+        assert(response);
+        assert(response.length > 0);
     });
 });
 
-test.cb('Get packages with broken json', t => {
+it('Get packages with broken json', () => {
     var importRoot = Path.join(rootPath, 'test_playground/bad_json');
-    getPackagesCmd({
+    return getPackagesCmd({
         _state: _state,
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
-        t.falsy(err);
-        t.deepEqual(response, []);
-        t.end();
+        assert.ifError(err);
+        assert.deepEqual(response, []);
     });
 });
 
-test.cb('Get packages with empty_pkg', t => {
+it('Get packages with empty_pkg', () => {
     var importRoot = Path.join(rootPath, 'test_playground/empty_pkg');
-    getPackagesCmd({
+    return getPackagesCmd({
         _state: _state,
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
-        t.falsy(err);
-        t.deepEqual(response, []);
-        t.end();
+        assert.ifError(err);
+        assert.deepEqual(response, []);
     });
 });
 
-test.cb('Get packages with empty_file', t => {
+it('Get packages with empty_file', () => {
     var importRoot = Path.join(rootPath, 'test_playground/empty_file');
-    getPackagesCmd({
+    return getPackagesCmd({
         _state: _state,
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
-        t.falsy(err);
-        t.deepEqual(response, []);
-        t.end();
+        assert.ifError(err);
+        assert.deepEqual(response, []);
     });
 });
 
-test.cb('Get packages for root (no package found)', t => {
+it('Get packages for root (no package found)', () => {
     var importRoot = '/';
-    getPackagesCmd({
+    return getPackagesCmd({
         _state: _state,
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
-        t.falsy(err);
-        t.deepEqual(response, []);
-        t.end();
+        assert.ifError(err);
+        assert.deepEqual(response, []);
     });
 });

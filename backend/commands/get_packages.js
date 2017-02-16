@@ -27,9 +27,8 @@ module.exports = (data, callback) => {
             .then(data => _flatten(data));
         requests.push(npmModules);
     }
-    Promise.all(requests)
+    return Promise.all(requests)
         .then(results => _flatten(results))
         .then(results => callback(null, results))
         .catch(err => callback(err));
 };
-// 
