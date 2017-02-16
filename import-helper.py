@@ -154,19 +154,16 @@ class ImportFromClipboardCommand(sublime_plugin.TextCommand):
 
 class UpdateSourceEventListener(sublime_plugin.EventListener):
     
-    def on_new(self, view):
-        debug('on_new', [view, view.id(), view.buffer_id()])
+    def __init__(self):
+        self.viewIds = []
 
-    def on_new_async(self, view):
-        debug('on_new_async', [view, view.id(), view.buffer_id()])
+    def on_new(self, view):
+        self.viewIds.append(view.id())
 
     def on_post_save(self, view):
-        debug('on_post_save', [view, view.id(), view.buffer_id()])
-
-    def on_post_save_async(self, view):
-        debug('on_post_save_async', [view, view.id(), view.buffer_id()])
-        source_folders = get_source_folders()
-        run_command_async('get_packages', {'folders': source_folders}, get_packages_callback)
+        if view.id() in self.viewIds:
+            self.viewIds.remove(view.id())
+            update_source_modules()
 
 # view.run_command('test')
 # class TestCommand(sublime_plugin.TextCommand):
