@@ -6,7 +6,7 @@ from .utils import *
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
 PROJECT_NAME = 'Import Helper'
-IMPORT_NODES = []
+node_modules = []
 source_modules = [];
 
 def setup():
@@ -16,12 +16,8 @@ def setup():
         debug(message, force=True)
         sublime.status_message(message)
         return
-    IMPORT_NODES.clear()
     update_source_modules()
-    import_root = get_import_root()
-    debug('import_root', import_root)
-    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_packages_callback)
-    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)
+    update_node_modules()
 
 def update_source_modules():
     source_folders = get_source_folders()
@@ -35,6 +31,13 @@ def update_source_modules():
         sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
         debug('Update source modules', len(source_modules))
     run_command_async('get_packages', {'folders': source_folders}, get_source_modules_callback)
+
+def update_node_modules():
+    node_modules.clear()
+    import_root = get_import_root()
+    debug('import_root', import_root)
+    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_packages_callback)
+    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)    
 
 def get_import_root():
     window = sublime.active_window()
@@ -67,9 +70,9 @@ def get_packages_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
-    IMPORT_NODES.extend(result)
-    sublime.status_message('{0}: {1} imports found'.format(PROJECT_NAME, len(IMPORT_NODES)))
-    debug('Get packages result', '{0} ({1})'.format(len(result), len(IMPORT_NODES)))
+    node_modules.extend(result)
+    sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
+    debug('Get packages result', len(result))
 
 # =============================================== Plugin Lifecycle
 
@@ -87,39 +90,37 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         self.import_root = get_import_root()
 
     def run(self, edit, selected=None):
-        view = self.view
         if (selected is None):
-            selected_region = view.sel()[0]
-            selected = view.substr(selected_region)
+            selected_region = self.view.sel()[0]
+            selected = self.view.substr(selected_region)
         if not bool(selected):
-            cursor_region = view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
-            selected = view.substr(cursor_region)
-        debug('Selected', selected)
-        items = []
+            cursor_region = self.view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
+            selected = self.view.substr(cursor_region)
+        debug('Selected word region', selected)
+        match_items = []
         panel_items = []
-        # TODO: Add source_modules to IMPORT_NODES.
-        for item in IMPORT_NODES:
+        # Iterate through source modules
+        for item in source_modules:
             if (item['name'] == selected):
-                items.append(item)
-                panel_item = get_panel_item(self.import_root, item)
-                panel_items.append(panel_item)
+                match_items.append(item)
+                panel_items.append(get_panel_item(self.import_root, item))            
+        # Iterate through node modules
+        for item in node_modules:
+            if (item['name'] == selected):
+                match_items.append(item)
+                panel_items.append(get_panel_item(self.import_root, item))
         if (len(panel_items) == 0):
-            view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
+            self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
             return
-        window = view.window()
         if (len(panel_items) == 1):
-            view.run_command('do_insert_import', {'item': items[0]})
+            self.view.run_command('do_insert_import', {'item': match_items[0]})
             return
-
-        def on_select(selected_index):
-            debug('Selected index', selected_index)
-            if (selected_index == -1): return
-            selected_item = items[selected_index]
-            debug('Selected item', selected_item)
-            view.run_command('do_insert_import', {'item': selected_item})
-
-        window.show_quick_panel(panel_items, on_select)
-
+        self.view.window().show_quick_panel(panel_items, on_done_func(match_items, self.on_select))
+        
+    def on_select(selected_item):
+        debug('Selected item', selected_item)
+        self.view.run_command('do_insert_import', {'item': selected_item})
+    
 # =============================================== Command list_imports
 # view.run_command('list_imports')
 class ListImportsCommand(sublime_plugin.TextCommand):
@@ -129,17 +130,19 @@ class ListImportsCommand(sublime_plugin.TextCommand):
         self.import_root = get_import_root()
 
     def run(self, edit):
-        view = self.view
-        window = view.window()
-        items = [get_panel_item(self.import_root, item) for item in IMPORT_NODES]
+        match_items = []
+        panel_items = []
+        for item in source_modules:
+            match_items.append(item)
+            panel_items.append(get_panel_item(self.import_root, item))
+        for item in node_modules:
+            match_items.append(item)
+            panel_items.append(get_panel_item(self.import_root, item))
+        self.view.window().show_quick_panel(panel_items, on_done_func(match_items, self.on_select))
 
-        def on_select(index):
-            debug('Selected index', index)
-            if (index == -1): return
-            selected_item = IMPORT_NODES[index]
-            debug('Selected item', selected_item)
-            view.run_command('do_insert_import', {'item': selected_item})
-        window.show_quick_panel(items, on_select)
+    def on_select(self, selected_item):
+        debug('Selected item', selected_item)
+        self.view.run_command('do_insert_import', {'item': selected_item})
 
 # window.run_command('update_imports')
 # sublime.active_window().run_command('update_imports', args={'a':'bar'})

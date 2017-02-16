@@ -13,7 +13,6 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         self.settings = sublime.load_settings('import-helper')
 
     def run(self, edit, item):
-        view = self.view
         if (item.get('module')):
             from_path = item['module']
         else:
@@ -32,8 +31,8 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             debug('Import string', import_string)
             pos = 0
             if 'end' == self.settings.get('insert_position', 'end'):
-                pos = view.text_point(import_info['last_import_row'] + 1, 0)
-            view.insert(edit, pos, import_string)
+                pos = self.view.text_point(import_info['last_import_row'] + 1, 0)
+            self.view.insert(edit, pos, import_string)
         else:
             imports = import_info['imports']
             line_region = import_info['line_region']
@@ -43,18 +42,17 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             name = self.wrap_imports(imports)
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
-            view.replace(edit, line_region, import_string)
+            self.view.replace(edit, line_region, import_string)
 
     def get_import_info(self, from_path):
-        view = self.view
         row = -1
         found = False
-        last_row = view.rowcol(view.size())[0]
+        last_row = self.view.rowcol(self.view.size())[0]
         last_import_row = row
         while row <= last_row:
             row = row + 1
-            line_region = view.full_line(view.text_point(row, 0))
-            line_contents = view.substr(line_region)
+            line_region = self.view.full_line(self.view.text_point(row, 0))
+            line_contents = self.view.substr(line_region)
             match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
             # match = re.search(r"import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
             if match:

@@ -1,5 +1,10 @@
 type NameOrNameArray = string | string[];
 
+export interface FullName {
+	firstName: string;
+	lastName: string;
+}
+
 export function createName(name: NameOrNameArray) {
     if (typeof name === "string") {
         return name;

@@ -9,9 +9,9 @@ import traceback
 DEBUG = True
 # DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
-RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
+RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG:
-    RUN_PATH = os.path.join(PACKAGE_PATH, "backend", "run.js")
+    RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
 
 def debug(s, data=None, force=False):
     if (DEBUG or force):
@@ -21,19 +21,19 @@ def debug(s, data=None, force=False):
         print(message)
 
 def run_command(command, data=None, callback=None):
-    debug("Run command", command)
+    debug('Run command', command)
     json = sublime.encode_value(data)
     err = None
     out = None
     try:
-        (err, out) = exec(["node", RUN_PATH, command, json])
+        (err, out) = exec(['node', RUN_PATH, command, json])
     except Exception as e:
         err = traceback.format_exc()
     if bool(err):
         if callback is not None:
             return callback(err, None)
         raise err
-    debug("Trying to decode", out)
+    debug('Trying to decode', out)
     result = sublime.decode_value(out)
     if callback is not None:
         return callback(None, result)
@@ -44,7 +44,7 @@ def run_command_async(command, data=None, callback=None):
     thread.start()
 
 def exec(cmd):
-    if os.name == "nt":
+    if os.name == 'nt':
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.SW_HIDE | subprocess.STARTF_USESHOWWINDOW
         proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=si)
@@ -53,7 +53,7 @@ def exec(cmd):
     outs, errs = proc.communicate()
     err = errs.decode().strip()
     if bool(err):
-        debug("Exec error", err, True)
+        debug('Exec error', err, True)
     return (err, outs.decode().strip())
 
 def exec_async(cmd, done=None):
@@ -73,6 +73,7 @@ def unixify(path):
     return path
 
 def get_panel_item(root, item):
+    # Prepare string to show in window's quick panel.
     module = item.get('module')
     if (module is not None):
         return module + '/' + item['name']
@@ -81,3 +82,10 @@ def get_panel_item(root, item):
 
 def norm_path(base, to):
     return os.path.normpath(os.path.join(os.path.dirname(base), to))
+
+def on_done_func(choices, func):
+    # Return a function which is used with sublime list picking.
+    def on_done(index):
+        if index >= 0:
+            return func(choices[index])
+    return on_done

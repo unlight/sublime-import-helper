@@ -85,6 +85,7 @@ CHANGELOG
 
 TODO
 ---
+* parse single file
 * Handle all selections
 * watch for project file changes
 * update imports on adding file
