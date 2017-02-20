@@ -10,7 +10,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         super().__init__(view)
-        self.settings = sublime.load_settings('import-helper')
+        self.settings = sublime.load_settings('import_helper')
 
     def run(self, edit, item):
         if (item.get('module')):

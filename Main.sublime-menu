@@ -15,7 +15,7 @@
                         "caption": "Import Helper",
                         "command": "edit_settings",
                         "args": {
-                            "base_file": "${packages}/ImportHelper/import-helper.sublime-settings"
+                            "base_file": "${packages}/ImportHelper/import_helper.sublime-settings"
                         }
                     }
                 ]
