@@ -2,6 +2,23 @@ import sublime
 import sys
 from unittest import TestCase
 import_helper = sys.modules['ImportHelper.import_helper']
+from time import sleep
+
+# window.run_command('update_imports')
+
+class TestUpdateImports(TestCase):
+    
+    def setUp(self):
+        self.window = sublime.active_window()
+    
+    def test_update_imports(self):
+        self.window.run_command('update_imports')
+        def check_source_modules():
+            self.assertTrue(len(import_helper.source_modules) > 0)
+        sublime.set_timeout(check_source_modules, 1000)
+        def check_node_modules():
+            self.assertTrue(len(import_helper.node_modules) > 0)
+        sublime.set_timeout(check_node_modules, 3000)
 
 class TestExample(TestCase):
 
