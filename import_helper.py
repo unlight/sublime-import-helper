@@ -115,9 +115,10 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         if (len(panel_items) == 1):
             self.view.run_command('do_insert_import', {'item': match_items[0]})
             return
-        self.view.window().show_quick_panel(panel_items, on_done_func(match_items, self.on_select))
+        on_done = on_done_func(match_items, self.on_select)
+        self.view.window().show_quick_panel(panel_items, on_done)
         
-    def on_select(selected_item):
+    def on_select(self, selected_item):
         debug('Selected item', selected_item)
         self.view.run_command('do_insert_import', {'item': selected_item})
     
@@ -138,7 +139,8 @@ class ListImportsCommand(sublime_plugin.TextCommand):
         for item in node_modules:
             match_items.append(item)
             panel_items.append(get_panel_item(self.import_root, item))
-        self.view.window().show_quick_panel(panel_items, on_done_func(match_items, self.on_select))
+        on_done = on_done_func(match_items, self.on_select)
+        self.view.window().show_quick_panel(panel_items, on_done)
 
     def on_select(self, selected_item):
         debug('Selected item', selected_item)
