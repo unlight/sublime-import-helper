@@ -74,8 +74,9 @@ CHANGELOG
 ---
 | Version | Date        | Description                               |
 |:--------|:------------|:------------------------------------------|
-| 1.1.0   | 24 Feb 2017 | Auto update imports when new file saved   |
+| 1.1.0   | 25 Feb 2017 | Auto update imports when new file saved   |
 |         |             | Unit tests, bug fixing                    |
+|         |             | Parse inner modules                       |
 | 1.0.10  | 30 Jan 2017 | Fixed errors when broken package.json     |
 | 1.0.8   | 24 Jan 2017 | Added .no-sublime-package                 |
 | 1.0.7   | 21 Jan 2017 | Fixed #10 incorrect adding to `import as` |
