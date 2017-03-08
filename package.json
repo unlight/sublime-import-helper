@@ -24,8 +24,7 @@
     "mocha": "^3.2.0",
     "pkg-dir": "^1.0.0",
     "preprocess": "^3.1.0",
-    "read-pkg-up": "^2.0.0",
-    "source-map-support": "^0.4.11"
+    "read-pkg-up": "^2.0.0"
   },
   "dependencies": {},
   "repository": {
