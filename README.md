@@ -74,6 +74,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                               |
 |:--------|:------------|:------------------------------------------|
+| 1.1.1   | 09 Mar 2017 | Respect exclude_patterns project settings |
 | 1.1.0   | 25 Feb 2017 | Auto update imports when new file saved   |
 |         |             | Unit tests, bug fixing                    |
 |         |             | Parse inner modules                       |

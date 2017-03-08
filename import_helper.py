@@ -22,12 +22,15 @@ def setup():
 def update_source_modules():
     source_folders = get_source_folders()
     debug('source_folders', source_folders)
-    def get_source_modules_callback(err, result):
+    def get_source_modules_callback(err, modules):
         if err:
             sublime.error_message(PROJECT_NAME + '\n' + str(err))
             return
         source_modules.clear();
-        source_modules.extend(result)
+        exclude_patterns = get_exclude_patterns()
+        for item in modules:
+            if is_excluded_file(item['filepath'], exclude_patterns): continue
+            source_modules.append(item)
         sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
         debug('Update source modules', len(source_modules))
     run_command_async('get_packages', {'folders': source_folders}, get_source_modules_callback)
@@ -38,6 +41,21 @@ def update_node_modules():
     debug('import_root', import_root)
     run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_packages_callback)
     run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)    
+
+def get_exclude_patterns():
+    result = []
+    project_data = sublime.active_window().project_data()
+    project_file = sublime.active_window().project_file_name()
+    for folder in project_data['folders']:
+        folder_exclude_patterns = folder.get('folder_exclude_patterns')
+        if folder_exclude_patterns is None: folder_exclude_patterns = []
+        for pattern in folder_exclude_patterns:
+            result.append(norm_path(project_file, pattern))
+        file_exclude_patterns = folder.get('file_exclude_patterns')
+        if file_exclude_patterns is None: file_exclude_patterns = []
+        for pattern in file_exclude_patterns:
+            result.append(norm_path(project_file, pattern))
+    return result
 
 def get_import_root():
     window = sublime.active_window()

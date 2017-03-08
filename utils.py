@@ -5,9 +5,10 @@ import subprocess
 import threading
 import socket
 import traceback
+import fnmatch
 
 DEBUG = True
-# DEBUG = False
+DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG:
@@ -89,3 +90,11 @@ def on_done_func(choices, func):
         if index >= 0:
             return func(choices[index])
     return on_done
+
+def is_excluded_file(filepath, exclude_patterns):
+    if exclude_patterns is None or len(exclude_patterns) == 0:
+        return False
+    for pattern in exclude_patterns:
+        if filepath.startswith(pattern): return True
+        if fnmatch.fnmatch(filepath, pattern): return True
+    return False
