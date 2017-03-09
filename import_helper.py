@@ -29,7 +29,9 @@ def update_source_modules():
         source_modules.clear();
         exclude_patterns = get_exclude_patterns()
         for item in modules:
-            if is_excluded_file(item['filepath'], exclude_patterns): continue
+            filepath = item.get('filepath')
+            if filepath is None: continue
+            if is_excluded_file(filepath, exclude_patterns): continue
             source_modules.append(item)
         sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
         debug('Update source modules', len(source_modules))
