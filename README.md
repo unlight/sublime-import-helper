@@ -1,5 +1,7 @@
 sublime-import-helper
 =====================
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/unlight/sublime-import-helper.svg)](https://greenkeeper.io/)
 A Sublime Text Plugin that helps you to import your modules.
 
 Supported Languages
