@@ -72,20 +72,21 @@ Paste space before opening and after closing curly brackets.
 
 CHANGELOG
 ---
-| Version | Date        | Description                               |
-|:--------|:------------|:------------------------------------------|
-| 1.1.1   | 09 Mar 2017 | Respect exclude_patterns project settings |
-| 1.1.0   | 25 Feb 2017 | Auto update imports when new file saved   |
-|         |             | Unit tests, bug fixing                    |
-|         |             | Parse inner modules                       |
-| 1.0.10  | 30 Jan 2017 | Fixed errors when broken package.json     |
-| 1.0.8   | 24 Jan 2017 | Added .no-sublime-package                 |
-| 1.0.7   | 21 Jan 2017 | Fixed #10 incorrect adding to `import as` |
-| 1.0.6   | 10 Jan 2017 | Updated esm-exports modules to 0.3.2      |
-| 1.0.5   | 10 Jan 2017 | Updated esm-exports modules to 0.3.1      |
-| 1.0.3   | 26 Dec 2016 | Setting `space_around_braces`             |
-| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug                |
-| 1.0.0   | 18 Dec 2016 | First release                             |
+| Version | Date        | Description                                             |
+|:--------|:------------|:--------------------------------------------------------|
+| 1.2.0   | 23 Mar 2017 | Prevent fail while parse link to not existing directory |
+| 1.1.1   | 09 Mar 2017 | Respect exclude_patterns project settings               |
+| 1.1.0   | 25 Feb 2017 | Auto update imports when new file saved                 |
+|         |             | Unit tests, bug fixing                                  |
+|         |             | Parse inner modules                                     |
+| 1.0.10  | 30 Jan 2017 | Fixed errors when broken package.json                   |
+| 1.0.8   | 24 Jan 2017 | Added .no-sublime-package                               |
+| 1.0.7   | 21 Jan 2017 | Fixed #10 incorrect adding to `import as`               |
+| 1.0.6   | 10 Jan 2017 | Updated esm-exports modules to 0.3.2                    |
+| 1.0.5   | 10 Jan 2017 | Updated esm-exports modules to 0.3.1                    |
+| 1.0.3   | 26 Dec 2016 | Setting `space_around_braces`                           |
+| 1.0.1   | 19 Dec 2016 | Fixed loading settings bug                              |
+| 1.0.0   | 18 Dec 2016 | First release                                           |
 
 TODO
 ---
