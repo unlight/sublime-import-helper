@@ -74,7 +74,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
-| 1.2.0   | 23 Mar 2017 | Prevent fail while parse link to not existing directory |
+| 1.3.0   | 23 Mar 2017 | Prevent fail while parse link to not existing directory |
 | 1.1.1   | 09 Mar 2017 | Respect exclude_patterns project settings               |
 | 1.1.0   | 25 Feb 2017 | Auto update imports when new file saved                 |
 |         |             | Unit tests, bug fixing                                  |
