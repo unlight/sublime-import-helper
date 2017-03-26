@@ -100,3 +100,17 @@ it('Get packages for root (no package found)', () => {
         assert.deepEqual(response, []);
     });
 });
+
+it('Get packages source only', () => {
+    return getPackagesCmd({
+        _state: _state,
+        folders: [rootPath],
+        packageKeys: [],
+    }, (err, response) => {
+        assert.ifError(err);
+        assert(response);
+        assert(response.length);
+        let [greeter] = response.filter(x => x.name === 'Greeter');
+        assert(greeter);
+    });
+});

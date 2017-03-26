@@ -13,7 +13,7 @@ class TestUpdateImports(TestCase):
         self.window.run_command('update_imports')
     
     def test_check_node_modules(self):
-        sleep(3)
+        sleep(4)
         self.assertNotEqual(len(import_helper.node_modules), 0)
 
     def test_check_source_modules(self):

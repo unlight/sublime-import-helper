@@ -5,21 +5,24 @@
   "homepage": "https://github.com/unlight/sublime-import-helper#readme",
   "scripts": {
     "eslint": "eslint backend",
+    "postinstall": "npm run build:backend",
     "build:backend": "browserify --bare backend/run.js > backend_run.js",
     "bb": "npm run build:backend",
     "prerelease": "npm run eslint && npm run t && npm run build:backend",
     "release:patch": "npm run prerelease && npm version patch",
     "release:minor": "npm run prerelease && npm version minor",
     "test": "npm run eslint && npm run t",
-    "t": "mocha backend/test.js",
-    "test:w": "mocha --watch backend/test.js"
+    "mocha": "mocha --timeout 5000",
+    "t": "npm run mocha -- backend/test.js",
+    "test:w": "npm run mocha -- --watch backend/test.js",
+    "inspecttest": "inspect node_modules/mocha/bin/_mocha --timeout 555000 backend/test.js"
   },
   "devDependencies": {
-    "@types/node": "7.0.10",
+    "@types/node": "7.0.11",
     "browserify": "14.1.0",
     "eslint": "3.18.0",
     "eslint-plugin-mocha": "4.9.0",
-    "esm-exports": "0.7.0",
+    "esm-exports": "0.8.1",
     "lodash": "4.17.4",
     "mocha": "3.2.0",
     "pkg-dir": "1.0.0",
