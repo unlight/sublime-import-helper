@@ -13,12 +13,12 @@ const emptyPkg = {
 };
 
 module.exports = (data, callback) => {
-    var folderList = data.folders || [];
-    var requests = folderList.map(d => esm.directory(d));
-    var importRoot = data.importRoot;
-    var packageKeys = data.packageKeys || ['dependencies', 'devDependencies'];
+    const folderList = data.folders || [];
+    const requests = folderList.map(d => esm.directory(d));
+    const importRoot = data.importRoot;
+    const packageKeys = data.packageKeys || ['dependencies', 'devDependencies'];
     if (importRoot) {
-        var npmModules = readPkgUp({ cwd: importRoot, normalize: false })
+        const npmModules = readPkgUp({ cwd: importRoot, normalize: false })
             .catch(() => Promise.resolve(emptyPkg))
             .then(p => _get(p, 'pkg', emptyPkg))
             .then(pkg => _pick(pkg, packageKeys))

@@ -1,4 +1,4 @@
-var cmd = process.argv[2];
+const cmd = process.argv[2];
 var data = process.argv[3];
 
 if (data) {
@@ -11,8 +11,8 @@ if (data) {
 }
 
 const commands = {
-	ping: () => require("./commands/ping"),
-	get_packages: () => require("./commands/get_packages")
+	ping: () => require('./commands/ping'),
+	get_packages: () => require('./commands/get_packages')
 };
 
 const runCommand = commands[cmd]();
