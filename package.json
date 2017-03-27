@@ -22,7 +22,7 @@
     "browserify": "14.1.0",
     "eslint": "3.18.0",
     "eslint-plugin-mocha": "4.9.0",
-    "esm-exports": "0.8.1",
+    "esm-exports": "0.8.2",
     "lodash": "4.17.4",
     "mocha": "3.2.0",
     "pkg-dir": "1.0.0",
