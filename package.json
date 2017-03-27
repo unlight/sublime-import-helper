@@ -11,11 +11,11 @@
     "prerelease": "npm run eslint && npm run t && npm run build:backend",
     "release:patch": "npm run prerelease && npm version patch",
     "release:minor": "npm run prerelease && npm version minor",
-    "test": "npm run eslint && npm run t",
-    "mocha": "mocha --timeout 5000",
+    "test": "npm run prerelease",
+    "mocha": "mocha --timeout 15000",
     "t": "npm run mocha -- backend/test.js",
     "test:w": "npm run mocha -- --watch backend/test.js",
-    "inspecttest": "inspect node_modules/mocha/bin/_mocha --timeout 555000 backend/test.js"
+    "inspect": "inspect node_modules/mocha/bin/_mocha --no-timeouts backend/test.js"
   },
   "devDependencies": {
     "@types/node": "7.0.11",
