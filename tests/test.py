@@ -4,10 +4,37 @@ from unittest import TestCase
 import_helper = sys.modules['ImportHelper.import_helper']
 from time import sleep
 
-# window.run_command('update_imports')
+class TestDoInsertImport(TestCase):
+    
+    def setUp(self):
+        self.view = sublime.active_window().new_file()
+        s = sublime.load_settings("Preferences.sublime-settings")
+        s.set("close_windows_when_empty", False)
+
+    def tearDown(self):
+        if self.view:
+            self.view.set_scratch(True)
+            self.view.window().focus_view(self.view)
+            self.view.window().run_command("close_file")
+
+    def setText(self, string):
+        self.view.run_command("insert", {"characters": string})
+
+    def getRow(self, row):
+        return self.view.substr(self.view.line(self.view.text_point(row, 0)))
+
+    def test_smoke(self):
+        self.setText('')
+        self.view.run_command('do_insert_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
+        first_row = self.getRow(0)
+        self.assertTrue(first_row.startswith('import {'))
+        self.assertIn('}', first_row)
+        self.assertIn('Lakia', first_row)
+        self.assertIn('dinah_widdoes', first_row)
 
 class TestUpdateImports(TestCase):
-    
+    # window.run_command('update_imports')
+
     def setUp(self):
         self.window = sublime.active_window()
         self.window.run_command('update_imports')
@@ -75,7 +102,6 @@ class TestExample(TestCase):
     def test_smoke(self):
         self.assertTrue(True)
         
-    # def test_hello_world(self):
-    #     self.view.run_command("hello_world")
-    #     first_row = self.getRow(0)
-    #     self.assertEqual(first_row, "hello world")
+    def test_hello_world(self):
+        self.view.run_command("hello_world")
+        first_row = self.getRow(0)

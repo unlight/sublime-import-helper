@@ -70,10 +70,17 @@ Paste space before opening and after closing curly brackets.
 - Type: `boolean`
 - Default: `true`
 
+Plugin settings per project
+---
+Just copy plugin settings to project file with key `import_helper`.
+Supported settings:
+- space_around_braces
+
 CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
+| 1.4.0   | 29 Mar 2017 | Settings per project                                    |
 | 1.3.0   | 23 Mar 2017 | Prevent fail while parse link to not existing directory |
 | 1.1.1   | 09 Mar 2017 | Respect exclude_patterns project settings               |
 | 1.1.0   | 25 Feb 2017 | Auto update imports when new file saved                 |

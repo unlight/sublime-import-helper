@@ -10,18 +10,20 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         super().__init__(view)
-        self.settings = sublime.load_settings('import_helper')
+        self.user_settings = sublime.load_settings('import_helper')
+        project_data = sublime.active_window().project_data()
+        self.project_settings = project_data.get('import_helper') or {}
 
     def run(self, edit, item):
         if (item.get('module')):
             from_path = item['module']
         else:
-            file_name = self.view.file_name()
+            file_name = self.view.file_name() or '.'
             from_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
             from_path = unixify(from_path)
             if from_path[0] != '.':
                 from_path = './' + from_path
-        import_string = "import {{0}} from {0}{{1}}{0};\n".format(self.settings.get('from_quote', "'"))
+        import_string = "import {{0}} from {0}{{1}}{0};\n".format(self.user_settings.get('from_quote', "'"))
         name = item['name']
         import_info = self.get_import_info(from_path)
         if not import_info.get('line_region') or item['isDefault']:
@@ -30,7 +32,7 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             import_string = import_string.format(name, from_path)
             debug('Import string', import_string)
             pos = 0
-            if 'end' == self.settings.get('insert_position', 'end'):
+            if 'end' == self.user_settings.get('insert_position', 'end'):
                 pos = self.view.text_point(import_info['last_import_row'] + 1, 0)
             self.view.insert(edit, pos, import_string)
         else:
@@ -73,7 +75,17 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             return {'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
 
     def wrap_imports(self, imports):
-        if self.settings.get('space_around_braces', True):
-            return '{ ' + ', '.join(imports) + ' }'
-        else:
-            return '{' + ', '.join(imports) + '}'
+        start = '{'
+        end = '}'
+        if self.is_setting_space_around_braces():
+            start = start + ' '
+            end = ' ' + end
+        return start + ', '.join(imports) + end
+
+    def is_setting_space_around_braces(self):
+        user_or_default = self.user_settings.get('space_around_braces', True)
+        result = self.project_settings.get('space_around_braces', user_or_default)
+        return result
+
+    def is_spaced_import(self, statement):
+        return statement.startswith('{ ')
