@@ -19,17 +19,17 @@
     "updtr": "updtr --test-stdout -R simple --test \"npm run t\""
   },
   "devDependencies": {
-    "@types/node": "7.0.13",
-    "browserify": "14.1.0",
-    "eslint": "3.18.0",
+    "@types/node": "7.0.15",
+    "browserify": "14.3.0",
+    "eslint": "3.19.0",
     "eslint-plugin-mocha": "4.9.0",
-    "esm-exports": "^0.8.3",
+    "esm-exports": "0.8.3",
     "lodash": "4.17.4",
-    "mocha": "3.2.0",
+    "mocha": "3.3.0",
     "pkg-dir": "1.0.0",
     "preprocess": "3.1.0",
     "read-pkg-up": "2.0.0",
-    "source-map-support": "0.4.14"
+    "source-map-support": "0.4.15"
   },
   "dependencies": {},
   "repository": {
