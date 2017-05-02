@@ -69,6 +69,11 @@ class TestUtilFunctions(TestCase):
         _ = 'some\\file.ts'
         self.assertTrue(unixify(_) == 'some/file')
         
+    def test_unixify_tsx(self):
+        unixify = import_helper.unixify
+        path = 'd/file.tsx'
+        self.assertTrue(unixify(path) == 'd/file')
+
     def test_unixify_js(self):
         unixify = import_helper.unixify
         _ = 'some\\file.js'

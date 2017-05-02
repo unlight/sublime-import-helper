@@ -71,6 +71,8 @@ def unixify(path):
     path = path.replace('\\', '/')
     if (path[-3:] in ['.ts', '.js']):
         path = path[0:-3]
+    elif path[-4:] in ['.tsx', '.jsx']:
+        path = path[0:-4]
     return path
 
 def get_panel_item(root, item):
