@@ -41,8 +41,10 @@ def update_node_modules():
     node_modules.clear()
     import_root = get_import_root()
     debug('import_root', import_root)
-    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_packages_callback)
-    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)    
+    def callback(err, result):
+        get_packages_callback(err, result)
+        run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)
+    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, callback)
 
 def get_exclude_patterns():
     result = []
@@ -171,6 +173,12 @@ class ListImportsCommand(sublime_plugin.TextCommand):
 class UpdateImportsCommand(sublime_plugin.WindowCommand):
     def run(self):
         setup()
+
+# window.run_command('update_source_modules')
+class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
+    
+    def run(self):
+        update_source_modules()
 
 # view.run_command('import_from_clipboard')
 class ImportFromClipboardCommand(sublime_plugin.TextCommand):

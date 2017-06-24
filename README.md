@@ -32,6 +32,9 @@ Usage
 #### List imports
 * Press `alt+i, alt+l`, or select the command from command palette
 
+#### Update source modules
+* Select the command from command palette
+
 #### Update imports
 * Select the command from command palette
 
@@ -80,7 +83,8 @@ CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
-| 1.4.1   | 3 May 2017  | Import tsx/jsx without extension                        |
+| 1.5.0   | 24 Jun 2017 | Added update source modules command                     |
+| 1.4.1   | 03 May 2017 | Import tsx/jsx without extension                        |
 | 1.4.0   | 29 Mar 2017 | Settings per project                                    |
 | 1.3.0   | 23 Mar 2017 | Prevent fail while parse link to not existing directory |
 | 1.1.1   | 09 Mar 2017 | Respect exclude_patterns project settings               |
