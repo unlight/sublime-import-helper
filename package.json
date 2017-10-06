@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "eslint backend",
     "postinstall": "npm run build:backend",
-    "build:backend": "browserify --bare backend/run.js > backend_run.js",
+    "build:backend": "browserify -x spawn-sync --bare backend/run.js > backend_run.js",
     "bb": "npm run build:backend",
     "prerelease": "npm run eslint && npm run t && npm run build:backend",
     "release:patch": "npm run prerelease && npm version patch",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "7.0.15",
     "browserify": "14.3.0",
+    "cross-spawn": "^5.1.0",
     "eslint": "3.19.0",
     "eslint-plugin-mocha": "4.9.0",
     "esm-exports": "0.8.3",
@@ -31,7 +32,6 @@
     "read-pkg-up": "2.0.0",
     "source-map-support": "0.4.15"
   },
-  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/unlight/sublime-import-helper.git"

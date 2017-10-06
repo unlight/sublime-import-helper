@@ -1,5 +1,7 @@
 type NameOrNameArray = string | string[];
 
+export const createname = 1;
+
 export interface FullName {
 	firstName: string;
 	lastName: string;

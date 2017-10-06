@@ -19,5 +19,12 @@
         "context": [
             { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" }
         ]
+    },
+    {
+        "keys": ["alt+i", "alt+u"],
+        "command": "remove_unused",
+        "context": [
+            { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" }
+        ]
     }
 ]

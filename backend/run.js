@@ -12,7 +12,8 @@ if (data) {
 
 const commands = {
 	ping: () => require('./commands/ping'),
-	get_packages: () => require('./commands/get_packages')
+	get_packages: () => require('./commands/get_packages'),
+	remove_unused: () => require('./commands/remove_unused'),
 };
 
 const runCommand = commands[cmd]();

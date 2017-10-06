@@ -42,6 +42,9 @@ Usage
 * Copy text to clipboard `ctrl+c`
 * Press `alt+i, alt+k`, or select the command from command palette
 
+#### Remove unused imports (TypeScript only)
+* Press `alt+i, alt+u`, or select the command from command palette
+
 Screenshots
 ---
 ![](https://raw.githubusercontent.com/unlight/sublime-import-helper/master/screenshots/insert-import.gif)
@@ -83,6 +86,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
+| 1.6.0   | 06 Oct 2017 | New feature remove unused imports                       |
 | 1.5.0   | 24 Jun 2017 | Added update source modules command                     |
 | 1.4.1   | 03 May 2017 | Import tsx/jsx without extension                        |
 | 1.4.0   | 29 Mar 2017 | Settings per project                                    |

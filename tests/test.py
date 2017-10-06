@@ -40,7 +40,7 @@ class TestUpdateImports(TestCase):
         self.window.run_command('update_imports')
     
     def test_check_node_modules(self):
-        sleep(4)
+        sleep(6)
         self.assertNotEqual(len(import_helper.node_modules), 0)
 
     def test_check_source_modules(self):
@@ -83,6 +83,53 @@ class TestUtilFunctions(TestCase):
         is_excluded_file = import_helper.is_excluded_file
         self.assertTrue(is_excluded_file('dir/file1.ts', ['*.ts']))
         self.assertTrue(is_excluded_file('dir1/file1.ts', ['dir1']))
+
+class TestUnsedImports(TestCase):
+
+    def setUp(self):
+        self.view = sublime.active_window().new_file()
+        # make sure we have a window to work with
+        s = sublime.load_settings("Preferences.sublime-settings")
+        s.set("close_windows_when_empty", False)
+
+    def tearDown(self):
+        if self.view:
+            self.view.set_scratch(True)
+            self.view.window().focus_view(self.view)
+            self.view.window().run_command("close_file")
+
+    def setText(self, string):
+        self.view.run_command("insert", {"characters": string})
+
+    def getRow(self, row):
+        return self.view.substr(self.view.line(self.view.text_point(row, 0)))
+
+    def test_partial_as(self):
+        self.setText("import { FullName as f, createname as cr } from './createname'; // Partial")
+        self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":[{"line":1,"pos":22,"name":"f"}]}}))
+        first_row = self.getRow(0)
+        self.assertEqual(first_row, "import { createname as cr } from './createname'; // Partial")
+
+    def test_unused_all(self):
+        self.setText("import {a, b, xx as c} from './createname';  // Unused all")
+        line1 = [{"line":1,"name":"a"}, {"line":1,"name":"b"}, {"line":1,"name":"c"}]
+        self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
+        first_row = self.getRow(0)
+        self.assertEqual(first_row, "")
+
+    def test_unused_single_as(self):
+        self.setText("import { Greeter as gr } from './greeter'; // Unused")
+        line1 = [{"line":1,"name":"gr"}]
+        self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
+        first_row = self.getRow(0)
+        self.assertEqual(first_row, "")
+
+    def test_used_should_not_be_removed(self):
+        self.setText("import {a} from './greeter';\nimport { b } from './greeter';")
+        line1 = [{"line":1,"name":"a"}]
+        self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
+        first_row = self.getRow(0)
+        self.assertEqual(first_row, "import { b } from './greeter';")
 
 class TestExample(TestCase):
 
