@@ -14,7 +14,6 @@ module.exports = (data, callback) => {
         var result = {};
         for (var i = 0; i < outlines.length; i++) {
             var line = outlines[i];
-            // TODO: Need take into account file
             var match = line.match(/^(.+)\((\d+),(\d+)\): error TS(\d+): '(\w+)'/);
             if (!match || match[4] !== '6133') continue;
             var file = match[1].replace(/\\/g, '/');
