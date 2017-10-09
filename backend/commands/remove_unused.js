@@ -7,14 +7,14 @@ module.exports = (data, callback) => {
     proc.on('error', (err) => {
         callback(err);
     });
-    stdout = '';
+    var stdout = '';
     proc.stdout.on('data', (d) => stdout += d);
     proc.on('exit', () => {
         var outlines = stdout.split('\n');
         var result = {};
         for (var i = 0; i < outlines.length; i++) {
-            var line = outlines[i];
-            var match = line.match(/^(.+)\((\d+),(\d+)\): error TS(\d+): '(\w+)'/);
+            var outline = outlines[i];
+            var match = outline.match(/^(.+)\((\d+),(\d+)\): error TS(\d+): '(\w+)'/);
             if (!match || match[4] !== '6133') continue;
             var file = match[1].replace(/\\/g, '/');
             if (file_name.slice(-file.length) !== file) continue;
