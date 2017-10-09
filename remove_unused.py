@@ -3,7 +3,7 @@ import sublime_plugin
 import os
 import re
 from .utils import debug, run_command_async
-from .import_helper import PROJECT_NAME
+from .import_helper import PROJECT_NAME, get_import_root
 
 # view.run_command('remove_unused')
 class RemoveUnusedCommand(sublime_plugin.TextCommand):
@@ -13,7 +13,8 @@ class RemoveUnusedCommand(sublime_plugin.TextCommand):
         if file_name is None or self.view.is_dirty():
             sublime.status_message('File must be saved')
             return
-        run_command_async('remove_unused', {'file_name': self.view.file_name()}, self.callback)
+        data = {'file_name': self.view.file_name(), 'cwd': get_import_root()}
+        run_command_async('remove_unused', data, self.callback)
 
     def callback(self, err, result):
         if (err is not None):

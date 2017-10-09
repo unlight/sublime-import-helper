@@ -2,7 +2,8 @@ var spawn = require('cross-spawn');
 
 module.exports = (data, callback) => {
     var file_name = data.file_name;
-    var proc = spawn('node_modules/.bin/tsc', [ file_name, '--noEmit', '--pretty', 'false', '--noUnusedLocals', '--allowJs'], { encoding: 'utf8' });
+    var options = { encoding: 'utf8' , cwd: data.cwd };
+    var proc = spawn('node_modules/.bin/tsc', [ file_name, '--noEmit', '--pretty', 'false', '--noUnusedLocals', '--allowJs'], options);
     proc.on('error', (err) => {
         callback(err);
     });
