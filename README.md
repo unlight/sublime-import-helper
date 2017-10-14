@@ -86,6 +86,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
+| 1.6.2   | 18 Oct 2017 | Fix for empty projects                                  |
 | 1.6.0   | 06 Oct 2017 | New feature remove unused imports                       |
 | 1.5.0   | 24 Jun 2017 | Added update source modules command                     |
 | 1.4.1   | 03 May 2017 | Import tsx/jsx without extension                        |
