@@ -47,10 +47,14 @@ class EditRemoveUnsedImports(sublime_plugin.TextCommand):
                 line_contents = re.sub(r"((,\s*)(\w+\s+as\s+)?\b" + name + r"\b|(\w+\s+as\s+)?\b" + name + r"\b(,\s*)|(\w+\s+as\s+)?\b" + name + r"\b)", '', line_contents, 1)
             remove_line = re.search(r"import\s+{\s*}", line_contents) is not None
             if remove_line:
+                # debug("Line has to be removed", self.view.substr(self.view.line(self.view.text_point(line_index, 0))))
                 empty_lines.append(line_index)
                 continue
             self.view.replace(edit, line_region, line_contents)
         # remove empty lines if any
-        for n, line_index in enumerate(empty_lines):
-            line_region = self.view.full_line(self.view.text_point(line_index - n, 0))
-            self.view.erase(edit, line_region)
+        if len(empty_lines) > 0:
+            empty_lines.sort()
+            for n, line_index in enumerate(empty_lines):
+                line_region = self.view.full_line(self.view.text_point(line_index - n, 0))
+                # debug("Removing line", self.view.substr(line_region))
+                self.view.erase(edit, line_region)
