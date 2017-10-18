@@ -12,7 +12,8 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         super().__init__(view)
         self.user_settings = sublime.load_settings('import_helper')
         project_data = sublime.active_window().project_data()
-        self.project_settings = project_data.get('import_helper') or {}
+        if project_data is not None:
+            self.project_settings = project_data.get('import_helper') or {}
 
     def run(self, edit, item):
         if (item.get('module')):
