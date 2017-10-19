@@ -49,16 +49,16 @@ Screenshots
 ---
 ![](https://raw.githubusercontent.com/unlight/sublime-import-helper/master/screenshots/insert-import.gif)
 
-Project Settings
+Settings
 ---
-#### `import_root`
-Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
+There are some several configuration settings. Open plugin settings file by opening in menu:  
+Preferences -> Package Settings -> Import Helper  
+Also, there are some optional project specific settings.  
+The precedence of getting of value of setting is following:
+1. Project file
+2. Plugin file settings
+3. Default settings
 
-#### `folders[i].path_source`
-Path to your source. If not set `folders[i].path` will be used.
-
-Plugin Settings
----
 #### `insert_position`
 Specifies where new import statement should be inserted, at the beginning ('start')
 or at the end of imports block ('end').
@@ -76,16 +76,32 @@ Paste space before opening and after closing curly brackets.
 - Type: `boolean`
 - Default: `true`
 
-Plugin settings per project
+#### `import_root` (project file only)
+Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
+
+#### `folders[i].path_source` (project file only)
+Path to your source. If not set `folders[i].path` will be used.
+
+Example of settings in project file:
 ---
-Just copy plugin settings to project file with key `import_helper`.
-Supported settings:
-- space_around_braces
+Example of project file:
+```
+{
+	"import_root": ".",
+	"space_around_braces": false,
+	"folders": [
+		{
+			"path": "."
+		}
+	]
+} 
+```
 
 CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
+| 1.6.3   | 20 Oct 2017 | Fixed #42 settings does not work                        |
 | 1.6.2   | 18 Oct 2017 | Fix for empty projects                                  |
 | 1.6.0   | 06 Oct 2017 | New feature remove unused imports                       |
 | 1.5.0   | 24 Jun 2017 | Added update source modules command                     |

@@ -105,16 +105,24 @@ def get_setting(name, default):
     result = None
     project_data = sublime.active_window().project_data()
     if project_data is not None:
-        project_settings = project_data.get('import_helper') or {}
-        result = project_settings.get(name)
-    if result is None:
-        user_preferences = sublime.load_settings('Preferences.sublime-settings')
-        if user_preferences is not None:
-            plugin_preferences = user_preferences.get('import_helper') or {}
-            result = plugin_preferences.get(name)
+        result = project_data.get(name)
     if result is None:
         settings = sublime.load_settings('import_helper.sublime-settings') or {}
         result = settings.get(name)
     if result is None:
+        preferences = sublime.load_settings('Preferences.sublime-settings')
+        result = preferences.get(name)
+    if result is None:
         result = default
     return result
+
+def get_import_root():
+    window = sublime.active_window()
+    project_file = window.project_file_name()
+    if project_file is None:
+        return None
+    project_data = window.project_data() or {}
+    result = project_data.get('import_root')
+    if result is None:
+        result = project_data['folders'][0]['path']
+    return norm_path(project_file, result)

@@ -61,19 +61,6 @@ def get_exclude_patterns():
             result.append(norm_path(project_file, pattern))
     return result
 
-def get_import_root():
-    window = sublime.active_window()
-    project_file = window.project_file_name()
-    if project_file is None:
-	    return
-    project_data = window.project_data()
-    test_path = project_data.get('import_root')
-    if bool(test_path):
-        result = test_path
-    else:
-        result = project_data['folders'][0]['path']
-    return norm_path(project_file, result)
-
 def get_source_folders():
     window = sublime.active_window()
     project_file = window.project_file_name()

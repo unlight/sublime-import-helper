@@ -87,9 +87,14 @@ class TestUtilFunctions(TestCase):
     def test_get_setting(self):
         get_setting = import_helper.get_setting
         self.assertEqual(get_setting('insert_position', None), 'end')
-        self.assertEqual(get_setting('from_quote', None), "'")
+        self.assertEqual(get_setting('from_quote', None), "\"")
         self.assertEqual(get_setting('space_around_braces', None), False)
         self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
+
+    def test_get_import_root(self):
+        get_import_root = import_helper.get_import_root
+        result = get_import_root()
+        self.assertTrue('ImportHelper' in result)
 
 class TestUnsedImports(TestCase):
 

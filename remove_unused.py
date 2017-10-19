@@ -2,8 +2,8 @@ import sublime
 import sublime_plugin
 import os
 import re
-from .utils import debug, run_command_async
-from .import_helper import PROJECT_NAME, get_import_root
+from .utils import debug, run_command_async, get_import_root
+from .import_helper import PROJECT_NAME
 
 # view.run_command('remove_unused')
 class RemoveUnusedCommand(sublime_plugin.TextCommand):
