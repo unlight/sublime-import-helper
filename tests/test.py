@@ -84,6 +84,13 @@ class TestUtilFunctions(TestCase):
         self.assertTrue(is_excluded_file('dir/file1.ts', ['*.ts']))
         self.assertTrue(is_excluded_file('dir1/file1.ts', ['dir1']))
 
+    def test_get_setting(self):
+        get_setting = import_helper.get_setting
+        self.assertEqual(get_setting('insert_position', None), 'end')
+        self.assertEqual(get_setting('from_quote', None), "'")
+        self.assertEqual(get_setting('space_around_braces', None), False)
+        self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
+
 class TestUnsedImports(TestCase):
 
     def setUp(self):

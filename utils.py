@@ -100,3 +100,21 @@ def is_excluded_file(filepath, exclude_patterns):
         if filepath.startswith(pattern): return True
         if fnmatch.fnmatch(filepath, pattern): return True
     return False
+
+def get_setting(name, default):
+    result = None
+    project_data = sublime.active_window().project_data()
+    if project_data is not None:
+        project_settings = project_data.get('import_helper') or {}
+        result = project_settings.get(name)
+    if result is None:
+        user_preferences = sublime.load_settings('Preferences.sublime-settings')
+        if user_preferences is not None:
+            plugin_preferences = user_preferences.get('import_helper') or {}
+            result = plugin_preferences.get(name)
+    if result is None:
+        settings = sublime.load_settings('import_helper.sublime-settings') or {}
+        result = settings.get(name)
+    if result is None:
+        result = default
+    return result
