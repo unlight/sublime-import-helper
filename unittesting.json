@@ -1,8 +1,8 @@
 {
     "tests_dir" : "tests",
     "pattern" : "test*.py",
- 	"async": true,
-    "deferred": false,
+ 	"async": false,
+    "deferred": true,
     "verbosity": 2,
     "capture_console": true,
     "output": null

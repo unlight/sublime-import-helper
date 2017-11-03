@@ -97,10 +97,22 @@ Example of project file:
 } 
 ```
 
+No imports found for...
+---
+Or if you see such message in status bar and console:
+```
+There is no project file, ... will not work without project.
+```
+You must create project from your working files and folders, you can do it in top menu:  
+`Project -> Save project as...`  
+Save project file in any place you want.  
+Then restart Sublime.  
+
 CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
+| 1.6.4   | 03 Nov 2017 | Updated `esm-exports` to v0.8.5                         |
 | 1.6.3   | 20 Oct 2017 | Fixed #42 settings does not work                        |
 | 1.6.2   | 18 Oct 2017 | Fix for empty projects                                  |
 | 1.6.0   | 06 Oct 2017 | New feature remove unused imports                       |

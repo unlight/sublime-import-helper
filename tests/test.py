@@ -2,7 +2,6 @@ import sublime
 import sys
 from unittest import TestCase
 import_helper = sys.modules['ImportHelper.import_helper']
-from time import sleep
 
 class TestDoInsertImport(TestCase):
     
@@ -38,12 +37,13 @@ class TestUpdateImports(TestCase):
     def setUp(self):
         self.window = sublime.active_window()
         self.window.run_command('update_imports')
-    
+
     def test_check_node_modules(self):
-        sleep(6)
+        yield 5000
         self.assertNotEqual(len(import_helper.node_modules), 0)
 
     def test_check_source_modules(self):
+        yield 1000
         self.assertNotEqual(len(import_helper.source_modules), 0)
 
     def test_exclude_should_work(self):
@@ -87,7 +87,7 @@ class TestUtilFunctions(TestCase):
     def test_get_setting(self):
         get_setting = import_helper.get_setting
         self.assertEqual(get_setting('insert_position', None), 'end')
-        self.assertEqual(get_setting('from_quote', None), "\"")
+        self.assertEqual(get_setting('from_quote', None), "'")
         self.assertEqual(get_setting('space_around_braces', None), False)
         self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
 
