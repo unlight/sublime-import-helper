@@ -97,8 +97,9 @@ Example of project file:
 } 
 ```
 
-No imports found for...
+FAQ
 ---
+#### No imports found for...
 Or if you see such message in status bar and console:
 ```
 There is no project file, ... will not work without project.
