@@ -101,7 +101,7 @@ it('Get packages for root (no package found)', () => {
     });
 });
 
-it('Get packages source only', () => {
+it('Get packages source only (ignore node_modules)', () => {
     return getPackagesCmd({
         _state: _state,
         folders: [rootPath],
