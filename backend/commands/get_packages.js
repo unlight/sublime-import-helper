@@ -1,7 +1,7 @@
 const esm = require('esm-exports');
 const pick = require('1-liners/pick');
 const readPkgUp = require('read-pkg-up');
-
+const objectValues = require('object-values');
 
 const emptyPkg = {
     dependencies: [],
@@ -22,7 +22,7 @@ module.exports = (data, callback) => {
             .then(p => p && p.pkg || emptyPkg)
             .then(pkg => pick(packageKeys, pkg))
             .then(part => {
-                const values = Object.assign({}, ...Object.values(part));
+                const values = Object.assign({}, ...objectValues(part));
                 return Object.keys(values);
             })
             .then(names => {
