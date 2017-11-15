@@ -69,10 +69,12 @@ def exec_async(cmd, done=None):
 
 def unixify(path):
     path = path.replace('\\', '/')
-    if (path[-3:] in ['.ts', '.js']):
-        path = path[0:-3]
-    elif path[-4:] in ['.tsx', '.jsx']:
-        path = path[0:-4]
+    ext3 = path[-3:]
+    if (ext3 == '.ts' or ext3 == '.js'):
+        return path[0:-3]
+    ext4 = path[-4:]
+    if (ext4 == '.tsx' or ext4 == '.jsx'):
+        return path[0:-4]
     return path
 
 def get_panel_item(root, item):
