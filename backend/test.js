@@ -2,10 +2,9 @@
 const assert = require('assert');
 const Path = require('path');
 const pkgDir = require('pkg-dir');
-const _state = { packages: [] };
 
-const getPackagesCmd = require('./commands/get_packages');
 const getFoldersCmd = require('./commands/get_folders');
+const getModulesCmd = require('./commands/get_modules');
 const ping = require('./commands/ping');
 
 const rootPath = pkgDir.sync(__dirname);
@@ -13,8 +12,8 @@ const rootPath = pkgDir.sync(__dirname);
 it('smoke test', () => {
     assert(true);
 });
-   
-it('Ping', done => {
+
+it('ping', done => {
     ping({}, (err, response) => {
         if (err) throw err;
         assert(response.message === 'Pong');
@@ -23,10 +22,9 @@ it('Ping', done => {
     });
 });
 
-it('Get packages', () => {
+it('get folders importRoot will bed added if not folders', () => {
     var importRoot = Path.join(rootPath, 'test_playground');
-    return getPackagesCmd({
-        _state: _state,
+    return getFoldersCmd({
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
@@ -36,23 +34,20 @@ it('Get packages', () => {
     });
 });
 
-it('Get packages no pkg', () => {
+it('get folders no pkg', () => {
     var importRoot = Path.join(rootPath, 'test_playground/no_pkg');
-    return getPackagesCmd({
-        _state: _state,
+    return getFoldersCmd({
         folders: [],
-        importRoot: importRoot
-    }, (err, response) => {
+        importRoot: importRoot,
+    }, (err, result) => {
         assert.ifError(err);
-        assert(response);
-        assert(response.length > 0);
+        assert.deepEqual(result, []);
     });
 });
 
-it('Get packages with broken json', () => {
+it('get packages with broken json', () => {
     var importRoot = Path.join(rootPath, 'test_playground/bad_json');
-    return getPackagesCmd({
-        _state: _state,
+    return getFoldersCmd({
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
@@ -61,10 +56,9 @@ it('Get packages with broken json', () => {
     });
 });
 
-it('Get packages with empty_pkg', () => {
+it('get packages with empty_pkg', () => {
     var importRoot = Path.join(rootPath, 'test_playground/empty_pkg');
-    return getPackagesCmd({
-        _state: _state,
+    return getFoldersCmd({
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
@@ -73,10 +67,9 @@ it('Get packages with empty_pkg', () => {
     });
 });
 
-it('Get packages with empty_file', () => {
+it('get packages with empty_file', () => {
     var importRoot = Path.join(rootPath, 'test_playground/empty_file');
-    return getPackagesCmd({
-        _state: _state,
+    return getFoldersCmd({
         folders: [],
         importRoot: importRoot
     }, (err, response) => {
@@ -85,23 +78,9 @@ it('Get packages with empty_file', () => {
     });
 });
 
-it('Get packages for root (no package found)', () => {
-    var importRoot = '/';
-    return getPackagesCmd({
-        _state: _state,
-        folders: [],
-        importRoot: importRoot
-    }, (err, response) => {
-        assert.ifError(err);
-        assert.deepEqual(response, []);
-    });
-});
-
-it('Get packages source only (ignore node_modules)', () => {
-    return getPackagesCmd({
-        _state: _state,
+it('get packages source only (ignore node_modules)', () => {
+    return getFoldersCmd({
         folders: [rootPath],
-        packageKeys: [],
     }, (err, response) => {
         assert.ifError(err);
         assert(response);
@@ -122,5 +101,37 @@ it('get_folders command', (done) => {
         assert(result.find(m => m.name === 'AbcComponent'));
         assert(result.filter(m => m.name === 'x2').length > 1);
         done();
+    });
+});
+
+it('get_modules command', (done) => {
+    getModulesCmd({
+
+    }, (err, result) => {
+        if (err) return done(err);
+        assert(result.find(m => m.name === 'parse')); // esm-exports
+        assert(result.find(m => m.name === 'directory'));
+        assert(result.find(m => m.name === 'Component')); // @angular/core
+        assert(result.find(m => m.name === 'inject')); // @angular/core/testing
+        done();
+    });
+});
+
+it('get only dependencies', () => {
+    getModulesCmd({
+        packageKeys: ['dependencies'],
+    }, (err, result) => {
+        assert.ifError(err);
+        assert.deepEqual(result, []);
+    });
+});
+
+it('get folders error', () => {
+    return getFoldersCmd({
+        folders: null,
+        importRoot: 'foobar',
+    }, (err, response) => {
+        assert(err);
+        assert.ifError(response);
     });
 });

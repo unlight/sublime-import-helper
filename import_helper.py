@@ -35,16 +35,14 @@ def update_source_modules():
             source_modules.append(item)
         sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
         debug('Update source modules', len(source_modules))
-    run_command_async('get_packages', {'folders': source_folders}, get_source_modules_callback)
+    run_command_async('get_folders', {'folders': source_folders}, get_source_modules_callback)
 
 def update_node_modules():
     node_modules.clear()
     import_root = get_import_root()
     debug('import_root', import_root)
-    def callback(err, result):
-        get_packages_callback(err, result)
-        run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)
-    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, callback)
+    run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_modules_callback)
+    run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
 
 def get_exclude_patterns():
     result = []
@@ -75,7 +73,7 @@ def get_source_folders():
         result.append(folder_path)
     return result
 
-def get_packages_callback(err, result):
+def get_modules_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
