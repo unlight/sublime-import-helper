@@ -8,7 +8,7 @@ import traceback
 import fnmatch
 
 DEBUG = True
-DEBUG = False
+# DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG:
@@ -22,7 +22,7 @@ def debug(s, data=None, force=False):
         print(message)
 
 def run_command(command, data=None, callback=None):
-    debug('Run command', command)
+    debug('Run command', [command, data])
     json = sublime.encode_value(data)
     err = None
     out = None
