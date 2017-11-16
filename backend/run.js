@@ -14,6 +14,7 @@ const commands = {
 	ping: () => require('./commands/ping'),
 	get_packages: () => require('./commands/get_packages'),
 	remove_unused: () => require('./commands/remove_unused'),
+	get_folders: () => require('./commands/get_folders'),
 };
 
 const runCommand = commands[cmd]();

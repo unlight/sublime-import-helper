@@ -2,22 +2,18 @@
 const assert = require('assert');
 const Path = require('path');
 const pkgDir = require('pkg-dir');
-var rootPath;
 const _state = { packages: [] };
 
 const getPackagesCmd = require('./commands/get_packages');
+const getFoldersCmd = require('./commands/get_folders');
 const ping = require('./commands/ping');
+
+const rootPath = pkgDir.sync(__dirname);
 
 it('smoke test', () => {
     assert(true);
 });
-
-beforeEach(() => {
-    return pkgDir(__dirname).then(value => {
-        rootPath = value;
-    });    
-});
-    
+   
 it('Ping', done => {
     ping({}, (err, response) => {
         if (err) throw err;
@@ -112,5 +108,19 @@ it('Get packages source only (ignore node_modules)', () => {
         assert(response.length);
         let [greeter] = response.filter(x => x.name === 'Greeter');
         assert(greeter);
+    });
+});
+
+it('get_folders command', (done) => {
+    const folder1 = Path.join(rootPath, 'test_playground/component');
+    const folder2 = Path.join(rootPath, 'test_playground/lib');
+    getFoldersCmd({
+        folders: [folder1, folder2],
+    }, (err, result) => {
+        if (err) return done(err);
+        assert(result.find(m => m.name === 'Animal'));
+        assert(result.find(m => m.name === 'AbcComponent'));
+        assert(result.filter(m => m.name === 'x2').length > 1);
+        done();
     });
 });
