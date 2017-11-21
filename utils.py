@@ -80,10 +80,14 @@ def unixify(path):
 def get_panel_item(root, item):
     # Prepare string to show in window's quick panel.
     module = item.get('module')
+    name = item.get('name')
+    # TODO: Handle case when name is none (browserify)
+    if name is None:
+        return None
     if (module is not None):
-        return module + '/' + item['name']
+        return module + '/' + name
     filepath = os.path.normpath(item['filepath'])[len(root) + 1:]
-    return unixify(filepath) + '/' + item['name']
+    return unixify(filepath) + '/' + name
 
 def norm_path(base, to):
     return os.path.normpath(os.path.join(os.path.dirname(base), to))

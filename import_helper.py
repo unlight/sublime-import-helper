@@ -106,16 +106,13 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         debug('Selected word region', selected)
         match_items = []
         panel_items = []
-        # Iterate through source modules
-        for item in source_modules:
-            if (item['name'] == selected):
-                match_items.append(item)
-                panel_items.append(get_panel_item(self.import_root, item))            
-        # Iterate through node modules
-        for item in node_modules:
-            if (item['name'] == selected):
-                match_items.append(item)
-                panel_items.append(get_panel_item(self.import_root, item))
+        # Iterate through source modules + node modules
+        for item in source_modules + node_modules:
+            if (item.get('name') == selected):
+                panel_item = get_panel_item(self.import_root, item)
+                if panel_item is not None:
+                    panel_items.append(panel_item)
+                    match_items.append(item)
         if (len(panel_items) == 0):
             self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
             return
@@ -140,12 +137,11 @@ class ListImportsCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         match_items = []
         panel_items = []
-        for item in source_modules:
-            match_items.append(item)
-            panel_items.append(get_panel_item(self.import_root, item))
-        for item in node_modules:
-            match_items.append(item)
-            panel_items.append(get_panel_item(self.import_root, item))
+        for item in source_modules + node_modules:
+            panel_item = get_panel_item(self.import_root, item)
+            if panel_item is not None:
+                panel_items.append(panel_item)
+                match_items.append(item)
         on_done = on_done_func(match_items, self.on_select)
         self.view.window().show_quick_panel(panel_items, on_done)
 

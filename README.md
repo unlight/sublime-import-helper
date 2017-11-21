@@ -136,6 +136,7 @@ CHANGELOG
 
 TODO
 ---
+* handle case when name is none (browserify, cjs: true)
 * parse single file
 * Handle all selections
 * watch for project file changes

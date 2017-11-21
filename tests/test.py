@@ -96,6 +96,11 @@ class TestUtilFunctions(TestCase):
         result = get_import_root()
         self.assertTrue('ImportHelper' in result)
 
+    def test_get_panel_item_negative_test(self):
+        get_panel_item = import_helper.get_panel_item
+        result = get_panel_item('/', {})
+        self.assertTrue(result is None)
+
 class TestUnsedImports(TestCase):
 
     def setUp(self):
