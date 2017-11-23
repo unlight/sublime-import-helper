@@ -35,16 +35,14 @@ def update_source_modules():
             source_modules.append(item)
         sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
         debug('Update source modules', len(source_modules))
-    run_command_async('get_packages', {'folders': source_folders}, get_source_modules_callback)
+    run_command_async('get_folders', {'folders': source_folders}, get_source_modules_callback)
 
 def update_node_modules():
     node_modules.clear()
     import_root = get_import_root()
     debug('import_root', import_root)
-    def callback(err, result):
-        get_packages_callback(err, result)
-        run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_packages_callback)
-    run_command_async('get_packages', {'importRoot': import_root, 'packageKeys': ['dependencies']}, callback)
+    run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_modules_callback)
+    run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
 
 def get_exclude_patterns():
     result = []
@@ -75,7 +73,7 @@ def get_source_folders():
         result.append(folder_path)
     return result
 
-def get_packages_callback(err, result):
+def get_modules_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
@@ -108,16 +106,13 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         debug('Selected word region', selected)
         match_items = []
         panel_items = []
-        # Iterate through source modules
-        for item in source_modules:
-            if (item['name'] == selected):
-                match_items.append(item)
-                panel_items.append(get_panel_item(self.import_root, item))            
-        # Iterate through node modules
-        for item in node_modules:
-            if (item['name'] == selected):
-                match_items.append(item)
-                panel_items.append(get_panel_item(self.import_root, item))
+        # Iterate through source modules + node modules
+        for item in source_modules + node_modules:
+            if (item.get('name') == selected):
+                panel_item = get_panel_item(self.import_root, item)
+                if panel_item is not None:
+                    panel_items.append(panel_item)
+                    match_items.append(item)
         if (len(panel_items) == 0):
             self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
             return
@@ -142,12 +137,11 @@ class ListImportsCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         match_items = []
         panel_items = []
-        for item in source_modules:
-            match_items.append(item)
-            panel_items.append(get_panel_item(self.import_root, item))
-        for item in node_modules:
-            match_items.append(item)
-            panel_items.append(get_panel_item(self.import_root, item))
+        for item in source_modules + node_modules:
+            panel_item = get_panel_item(self.import_root, item)
+            if panel_item is not None:
+                panel_items.append(panel_item)
+                match_items.append(item)
         on_done = on_done_func(match_items, self.on_select)
         self.view.window().show_quick_panel(panel_items, on_done)
 

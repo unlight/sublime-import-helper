@@ -12,8 +12,9 @@ if (data) {
 
 const commands = {
 	ping: () => require('./commands/ping'),
-	get_packages: () => require('./commands/get_packages'),
 	remove_unused: () => require('./commands/remove_unused'),
+	get_folders: () => require('./commands/get_folders'),
+	get_modules: () => require('./commands/get_modules'),
 };
 
 const runCommand = commands[cmd]();
@@ -24,4 +25,3 @@ runCommand(data, function(err, result) {
 	}
 	console.log(JSON.stringify(result));
 });
-

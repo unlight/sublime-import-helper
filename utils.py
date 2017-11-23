@@ -22,7 +22,7 @@ def debug(s, data=None, force=False):
         print(message)
 
 def run_command(command, data=None, callback=None):
-    debug('Run command', command)
+    debug('Run command', [command, data])
     json = sublime.encode_value(data)
     err = None
     out = None
@@ -48,9 +48,9 @@ def exec(cmd):
     if os.name == 'nt':
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.SW_HIDE | subprocess.STARTF_USESHOWWINDOW
-        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=si)
+        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, startupinfo=si)
     else:
-        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     outs, errs = proc.communicate()
     err = errs.decode().strip()
     if bool(err):
@@ -69,19 +69,25 @@ def exec_async(cmd, done=None):
 
 def unixify(path):
     path = path.replace('\\', '/')
-    if (path[-3:] in ['.ts', '.js']):
-        path = path[0:-3]
-    elif path[-4:] in ['.tsx', '.jsx']:
-        path = path[0:-4]
+    ext3 = path[-3:]
+    if (ext3 == '.ts' or ext3 == '.js'):
+        return path[0:-3]
+    ext4 = path[-4:]
+    if (ext4 == '.tsx' or ext4 == '.jsx'):
+        return path[0:-4]
     return path
 
 def get_panel_item(root, item):
     # Prepare string to show in window's quick panel.
     module = item.get('module')
+    name = item.get('name')
+    # TODO: Handle case when name is none (browserify)
+    if name is None:
+        return None
     if (module is not None):
-        return module + '/' + item['name']
+        return module + '/' + name
     filepath = os.path.normpath(item['filepath'])[len(root) + 1:]
-    return unixify(filepath) + '/' + item['name']
+    return unixify(filepath) + '/' + name
 
 def norm_path(base, to):
     return os.path.normpath(os.path.join(os.path.dirname(base), to))

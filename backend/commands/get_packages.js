@@ -1,11 +1,7 @@
 const esm = require('esm-exports');
-const _keys = require('lodash/keys');
-const _flatten = require('lodash/flatten');
-const _get = require('lodash/get');
-const _pick = require('lodash/pick');
-const _merge = require('lodash/merge');
-const _values = require('lodash/values');
+const pick = require('1-liners/pick');
 const readPkgUp = require('read-pkg-up');
+const objectValues = require('object-values');
 
 const emptyPkg = {
     dependencies: [],
@@ -14,21 +10,32 @@ const emptyPkg = {
 
 module.exports = (data, callback) => {
     const folderList = data.folders || [];
-    const requests = folderList.map(d => esm.directory(d));
+    const result = [];
+    const requests = folderList.map(d => esm.directory(d).then(items => {
+        result.push(...items);
+    }));
     const importRoot = data.importRoot;
     const packageKeys = data.packageKeys || ['dependencies', 'devDependencies'];
     if (importRoot) {
         const npmModules = readPkgUp({ cwd: importRoot, normalize: false })
             .catch(() => Promise.resolve(emptyPkg))
-            .then(p => _get(p, 'pkg', emptyPkg))
-            .then(pkg => _pick(pkg, packageKeys))
-            .then(part => _keys(_merge(..._values(part))))
-            .then(names => Promise.all(names.map(n => esm.parseModule(n, {dirname: importRoot}))))
-            .then(data => _flatten(data));
+            .then(p => p && p.pkg || emptyPkg)
+            .then(pkg => pick(packageKeys, pkg))
+            .then(part => {
+                const values = Object.assign({}, ...objectValues(part));
+                return Object.keys(values);
+            })
+            .then(names => {
+                const promises = names.map(n => esm.module(n, { dirname: importRoot }).then(items => {
+                    result.push(...items);
+                }));
+                return Promise.all(promises);
+            });
         requests.push(npmModules);
     }
     return Promise.all(requests)
-        .then(results => _flatten(results))
-        .then(results => callback(null, results))
+        .then(() => {
+            callback(null, result);
+        })
         .catch(err => callback(err));
 };

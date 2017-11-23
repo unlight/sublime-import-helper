@@ -9,3 +9,5 @@ import {greeter as lg} from './greeter'; // Used
 console.log("Greeter", Greeter);
 console.log("cr", cr);
 console.log("lg", lg);
+
+console.log(typeof x2);
