@@ -113,6 +113,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                             |
 |:--------|:------------|:--------------------------------------------------------|
+| 1.7.1   | 29 Nov 2017 | Try to find node executable                             |
 | 1.7.0   | 22 Nov 2017 | Updated `esm-exports` to 2.0.0                          |
 |         |             | Added shell true #43                                    |
 | 1.6.4   | 03 Nov 2017 | Updated `esm-exports` to v0.8.5                         |

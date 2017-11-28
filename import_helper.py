@@ -92,9 +92,6 @@ def plugin_loaded():
 
 class InsertImportCommand(sublime_plugin.TextCommand):
     # Adds import of identifier near cursor
-    def __init__(self, view):
-        super().__init__(view)
-        self.import_root = get_import_root()
 
     def run(self, edit, selected=None):
         if (selected is None):
@@ -104,12 +101,13 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             cursor_region = self.view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
             selected = self.view.substr(cursor_region)
         debug('Selected word region', selected)
+        import_root = get_import_root()
         match_items = []
         panel_items = []
         # Iterate through source modules + node modules
         for item in source_modules + node_modules:
             if (item.get('name') == selected):
-                panel_item = get_panel_item(self.import_root, item)
+                panel_item = get_panel_item(import_root, item)
                 if panel_item is not None:
                     panel_items.append(panel_item)
                     match_items.append(item)
@@ -130,15 +128,13 @@ class InsertImportCommand(sublime_plugin.TextCommand):
 # view.run_command('list_imports')
 class ListImportsCommand(sublime_plugin.TextCommand):
     # Show all available imports
-    def __init__(self, view):
-        super().__init__(view)
-        self.import_root = get_import_root()
 
     def run(self, edit):
+        import_root = get_import_root()
         match_items = []
         panel_items = []
         for item in source_modules + node_modules:
-            panel_item = get_panel_item(self.import_root, item)
+            panel_item = get_panel_item(import_root, item)
             if panel_item is not None:
                 panel_items.append(panel_item)
                 match_items.append(item)
