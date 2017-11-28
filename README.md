@@ -77,7 +77,7 @@ Paste space before opening and after closing curly brackets.
 - Default: `true`
 
 #### `node_bin`
-Sometimes sublime cannot node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
+Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
 - Type: `string`
 - Default: `` (auto detect)
 
