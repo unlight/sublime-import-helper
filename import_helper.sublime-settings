@@ -1,5 +1,6 @@
 {
 	"insert_position": "end",
 	"from_quote": "'",
-	"space_around_braces": true
+	"space_around_braces": true,
+	"node_bin": ""
 }

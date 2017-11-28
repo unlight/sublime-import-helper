@@ -77,7 +77,8 @@ def get_modules_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
-    node_modules.extend(result)
+    if result is not None:
+        node_modules.extend(result)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('Get packages result', len(result))
 

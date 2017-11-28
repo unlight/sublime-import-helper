@@ -29,5 +29,8 @@ module.exports = (data, callback) => {
         .then(() => {
             callback(null, result);
         })
-        .catch(err => callback(err));
+        .catch(err => {
+            if (!err) err = new Error('Unknow error.');
+            callback(err);
+        });
 };

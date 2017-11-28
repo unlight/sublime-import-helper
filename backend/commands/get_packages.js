@@ -3,6 +3,8 @@ const pick = require('1-liners/pick');
 const readPkgUp = require('read-pkg-up');
 const objectValues = require('object-values');
 
+// Deprecated, use get_modules and get_folders instead.
+
 const emptyPkg = {
     dependencies: [],
     devDependencies: []

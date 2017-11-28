@@ -13,7 +13,9 @@ DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
-NODE_BIN = find_executable('node')
+NODE_BIN = get_setting('node_bin', '')
+if not bool(NODE_BIN): NODE_BIN = find_executable('node')
+if not bool(NODE_BIN): NODE_BIN = 'node'
 
 def debug(s, data=None, force=False):
     if (DEBUG or force):
@@ -23,13 +25,12 @@ def debug(s, data=None, force=False):
         print(message)
 
 def run_command(command, data=None, callback=None):
-    debug('Run command', [command, data])
+    debug('Run command', [NODE_BIN, command, data])
     json = sublime.encode_value(data)
     err = None
     out = None
-    node_bin = NODE_BIN or 'node'
     try:
-        (err, out) = exec([node_bin, RUN_PATH, command, json])
+        (err, out) = exec([NODE_BIN, RUN_PATH, command, json])
     except Exception as e:
         err = traceback.format_exc()
     if bool(err):
@@ -50,9 +51,9 @@ def exec(cmd):
     if os.name == 'nt':
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.SW_HIDE | subprocess.STARTF_USESHOWWINDOW
-        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, startupinfo=si)
+        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=si)
     else:
-        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        proc = subprocess.Popen(cmd, cwd=PACKAGE_PATH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outs, errs = proc.communicate()
     err = errs.decode().strip()
     if bool(err):

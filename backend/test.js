@@ -135,3 +135,33 @@ it('get folders error', () => {
         assert.ifError(response);
     });
 });
+
+describe('if error undefined we should set it to unknown err', () => {
+    
+    before(() => {
+        const esm = require('esm-exports');
+        esm.module = () => Promise.reject(undefined);
+        esm.directory = () => Promise.reject(undefined);
+    });
+
+    after(() => {
+        delete require.cache[require.resolve('esm-exports')];
+    });
+
+    it('get modules', () => {
+        return getModulesCmd({
+        }, (err, response) => {
+            assert(err);
+        });
+    });
+
+    it('get folders', () => {
+        return getFoldersCmd({
+            folders: [],
+            importRoot: Path.join(rootPath, 'test_playground')
+        }, (err, response) => {
+            assert(err);
+        });
+    });
+});
+
