@@ -159,7 +159,7 @@ describe('if error undefined we should set it to unknown err', () => {
         return getFoldersCmd({
             folders: [],
             importRoot: Path.join(rootPath, 'test_playground')
-        }, (err, response) => {
+        }, (err) => {
             assert(err);
         });
     });
