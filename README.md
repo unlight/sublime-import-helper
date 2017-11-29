@@ -118,6 +118,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                              |
 |:--------|:------------|:---------------------------------------------------------|
+| 1.7.4   | 30 Nov 2017 | Delayed initialization                                   |
 | 1.7.3   | 30 Nov 2017 | `node_bin` setting to explicitly set path to node binary |
 | 1.7.1   | 29 Nov 2017 | Try to find node executable                              |
 | 1.7.0   | 22 Nov 2017 | Updated `esm-exports` to 2.0.0                           |
@@ -149,4 +150,3 @@ TODO
 * parse single file
 * Handle all selections
 * watch for project file changes
-* update imports on adding file

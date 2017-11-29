@@ -9,6 +9,14 @@ PROJECT_NAME = 'Import Helper'
 node_modules = []
 source_modules = [];
 
+# =============================================== Plugin Lifecycle
+
+def plugin_loaded():
+    print()
+    debug('Plugin loaded', PROJECT_NAME)
+    sublime.set_timeout(initialize, 0)
+    sublime.set_timeout(setup, 0)
+
 def setup():
     project_file = sublime.active_window().project_file_name()
     if project_file is None:
@@ -22,16 +30,16 @@ def setup():
 def update_source_modules():
     source_folders = get_source_folders()
     debug('source_folders', source_folders)
-    def get_source_modules_callback(err, modules):
+    def get_source_modules_callback(err, result):
         if err:
             sublime.error_message(PROJECT_NAME + '\n' + str(err))
             return
         source_modules.clear();
         exclude_patterns = get_exclude_patterns()
-        if type(modules) is not list:
-            sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(modules))
+        if type(result) is not list:
+            sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(result))
             return
-        for item in modules:
+        for item in result:
             filepath = item.get('filepath')
             if filepath is None: continue
             if is_excluded_file(filepath, exclude_patterns): continue
@@ -46,21 +54,6 @@ def update_node_modules():
     debug('import_root', import_root)
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_modules_callback)
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
-
-def get_exclude_patterns():
-    result = []
-    project_data = sublime.active_window().project_data()
-    project_file = sublime.active_window().project_file_name()
-    for folder in project_data['folders']:
-        folder_exclude_patterns = folder.get('folder_exclude_patterns')
-        if folder_exclude_patterns is None: folder_exclude_patterns = []
-        for pattern in folder_exclude_patterns:
-            result.append(norm_path(project_file, pattern))
-        file_exclude_patterns = folder.get('file_exclude_patterns')
-        if file_exclude_patterns is None: file_exclude_patterns = []
-        for pattern in file_exclude_patterns:
-            result.append(norm_path(project_file, pattern))
-    return result
 
 def get_source_folders():
     window = sublime.active_window()
@@ -80,18 +73,12 @@ def get_modules_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
-    if type(result) is list:
-        node_modules.extend(result)
+    if type(result) is not list:
+        sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(result))
+        return
+    node_modules.extend(result)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('Get packages result', len(result))
-
-# =============================================== Plugin Lifecycle
-
-def plugin_loaded():
-    print()
-    debug('Plugin loaded', PROJECT_NAME)
-    sublime.set_timeout(initialize, 0)
-    sublime.set_timeout(setup, 0)
 
 # =============================================== Command insert_import
 
