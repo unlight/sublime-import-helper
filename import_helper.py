@@ -87,7 +87,8 @@ def get_modules_callback(err, result):
 def plugin_loaded():
     print()
     debug('Plugin loaded', PROJECT_NAME)
-    setup()
+    sublime.set_timeout(initialize, 0)
+    sublime.set_timeout(setup, 0)
 
 # =============================================== Command insert_import
 

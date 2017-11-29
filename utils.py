@@ -177,5 +177,3 @@ def find_executable(executable, path = None):
                     return f
     else:
         return None
-
-initialize()

@@ -89,6 +89,7 @@ class TestUtilFunctions(TestCase):
         self.assertEqual(get_setting('insert_position', None), 'end')
         self.assertEqual(get_setting('from_quote', None), "'")
         self.assertEqual(get_setting('space_around_braces', None), False)
+        self.assertEqual(get_setting('node_bin', ''), 'node.exe')
         self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
 
     def test_get_import_root(self):
