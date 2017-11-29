@@ -28,6 +28,9 @@ def update_source_modules():
             return
         source_modules.clear();
         exclude_patterns = get_exclude_patterns()
+        if type(modules) is not list:
+            sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(modules))
+            return
         for item in modules:
             filepath = item.get('filepath')
             if filepath is None: continue
@@ -77,7 +80,7 @@ def get_modules_callback(err, result):
     if err:
         sublime.error_message(PROJECT_NAME + '\n' + str(err))
         return
-    if result is not None:
+    if type(result) is list:
         node_modules.extend(result)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('Get packages result', len(result))
