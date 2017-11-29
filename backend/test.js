@@ -150,7 +150,7 @@ describe('if error undefined we should set it to unknown err', () => {
 
     it('get modules', () => {
         return getModulesCmd({
-        }, (err, response) => {
+        }, (err) => {
             assert(err);
         });
     });

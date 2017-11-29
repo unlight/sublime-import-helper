@@ -13,10 +13,12 @@ DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
-# NODE_BIN = get_setting('node_bin', '')
-# if not bool(NODE_BIN): NODE_BIN = find_executable('node')
-# if not bool(NODE_BIN): NODE_BIN = 'node'
-NODE_BIN = 'node'
+NODE_BIN = 'node';
+
+def initialize():
+    NODE_BIN = get_setting('node_bin', '')
+    if not bool(NODE_BIN): NODE_BIN = find_executable('node')
+    if not bool(NODE_BIN): NODE_BIN = 'node'
 
 def debug(s, data=None, force=False):
     if (DEBUG or force):
@@ -172,3 +174,5 @@ def find_executable(executable, path = None):
                     return f
     else:
         return None
+
+initialize()
