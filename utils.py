@@ -13,12 +13,14 @@ DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
-NODE_BIN = 'node';
+NODE_BIN = 'node'
 
 def initialize():
-    NODE_BIN = get_setting('node_bin', '')
-    if not bool(NODE_BIN): NODE_BIN = find_executable('node')
-    if not bool(NODE_BIN): NODE_BIN = 'node'
+    global NODE_BIN
+    if NODE_BIN == 'node' or not bool(NODE_BIN):
+        NODE_BIN = get_setting('node_bin', '')
+        if not bool(NODE_BIN): NODE_BIN = find_executable('node')
+        if not bool(NODE_BIN): NODE_BIN = 'node'
 
 def debug(s, data=None, force=False):
     if (DEBUG or force):
@@ -28,6 +30,7 @@ def debug(s, data=None, force=False):
         print(message)
 
 def run_command(command, data=None, callback=None):
+    global NODE_BIN
     debug('Run command', [NODE_BIN, command, data])
     json = sublime.encode_value(data)
     err = None
