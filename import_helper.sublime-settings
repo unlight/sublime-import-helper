@@ -2,5 +2,6 @@
 	"insert_position": "end",
 	"from_quote": "'",
 	"space_around_braces": true,
-	"node_bin": ""
+	"node_bin": "",
+	"from_semicolon": true
 }

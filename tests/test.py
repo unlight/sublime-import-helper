@@ -30,6 +30,7 @@ class TestDoInsertImport(TestCase):
         self.assertIn('}', first_row)
         self.assertIn('Lakia', first_row)
         self.assertIn('dinah_widdoes', first_row)
+        self.assertFalse(first_row.endswith(';'))
 
 class TestUpdateImports(TestCase):
     # window.run_command('update_imports')
@@ -90,6 +91,7 @@ class TestUtilFunctions(TestCase):
         self.assertEqual(get_setting('from_quote', None), "'")
         self.assertEqual(get_setting('space_around_braces', None), False)
         self.assertEqual(get_setting('node_bin', ''), 'node.exe')
+        self.assertEqual(get_setting('from_semicolon', True), False)
         self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
 
     def test_get_import_root(self):

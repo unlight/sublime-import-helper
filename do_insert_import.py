@@ -20,8 +20,9 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
             from_path = unixify(from_path)
             if from_path[0] != '.':
                 from_path = './' + from_path
-        from_quote = get_setting('from_quote', "'");
-        import_string = "import {{0}} from {0}{{1}}{0};\n".format(from_quote)
+        from_quote = get_setting('from_quote', "'")
+        import_end = ';' if get_setting('from_semicolon', True) else ''
+        import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
         name = item['name']
         import_info = self.get_import_info(from_path)
         if not import_info.get('line_region') or item['isDefault']:

@@ -81,6 +81,11 @@ Sometimes sublime cannot find node executable, if it happens. Set `node_bin` exp
 - Type: `string`
 - Default: `` (auto detect)
 
+#### `from_semicolon`
+Add semicolon to the end of `import` string. 
+- Type: `boolean`
+- Default: `true`
+
 #### `import_root` (project file only)
 Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
 
@@ -118,6 +123,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                              |
 |:--------|:------------|:---------------------------------------------------------|
+| 1.7.5   | 11 Dec 2017 | Added `from_semicolon` setting                           |
 | 1.7.4   | 30 Nov 2017 | Delayed initialization                                   |
 | 1.7.3   | 30 Nov 2017 | `node_bin` setting to explicitly set path to node binary |
 | 1.7.1   | 29 Nov 2017 | Try to find node executable                              |
