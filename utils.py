@@ -114,6 +114,8 @@ def is_excluded_file(filepath, exclude_patterns):
     for pattern in exclude_patterns:
         if filepath.startswith(pattern): return True
         if fnmatch.fnmatch(filepath, pattern): return True
+        if not os.path.isabs(pattern):
+            if fnmatch.fnmatch(filepath, os.path.normpath('*/' + pattern + '/*')): return True
     return False
 
 def get_setting(name, default):
@@ -186,9 +188,9 @@ def get_exclude_patterns():
         folder_exclude_patterns = folder.get('folder_exclude_patterns')
         if folder_exclude_patterns is None: folder_exclude_patterns = []
         for pattern in folder_exclude_patterns:
-            result.append(norm_path(project_file, pattern))
+            result.append(pattern)
         file_exclude_patterns = folder.get('file_exclude_patterns')
         if file_exclude_patterns is None: file_exclude_patterns = []
         for pattern in file_exclude_patterns:
-            result.append(norm_path(project_file, pattern))
+            result.append(pattern)
     return result
