@@ -112,10 +112,11 @@ def is_excluded_file(filepath, exclude_patterns):
     if exclude_patterns is None or len(exclude_patterns) == 0:
         return False
     for pattern in exclude_patterns:
-        if filepath.startswith(pattern): return True
         if fnmatch.fnmatch(filepath, pattern): return True
         if not os.path.isabs(pattern):
             if fnmatch.fnmatch(filepath, os.path.normpath('*/' + pattern + '/*')): return True
+            if fnmatch.fnmatch(filepath, os.path.normpath('*/' + pattern)): return True
+            if fnmatch.fnmatch(filepath, os.path.normpath(pattern + '/*')): return True
     return False
 
 def get_setting(name, default):
