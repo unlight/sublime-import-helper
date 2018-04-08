@@ -1,4 +1,5 @@
 const esm = require('esm-exports');
+const fs = require('fs');
 
 module.exports = (data, callback) => {
     const folders = data.folders || [];
@@ -6,9 +7,11 @@ module.exports = (data, callback) => {
         folders.push(data.importRoot);
     }
     const result = [];
-    const promises = folders.map(d => esm.directory(d).then(items => {
-        result.push(...items);
-    }));
+    const promises = folders
+        .filter(d => fs.existsSync(d))
+        .map(d => esm.directory(d).then(items => {
+            result.push(...items);
+        }));
     return Promise.all(promises)
         .then(() => {
             callback(null, result);
