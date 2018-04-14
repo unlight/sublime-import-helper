@@ -123,6 +123,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                                             |
 |:--------|:------------|:------------------------------------------------------------------------|
+| 1.8.2   | 14 Apr 2018 | Fixed [#56](https://github.com/unlight/sublime-import-helper/issues/56) |
 | 1.8.1   | 22 Feb 2018 | Fixed [#51](https://github.com/unlight/sublime-import-helper/issues/51) |
 | 1.8.0   | 22 Feb 2018 | Fixed [#50](https://github.com/unlight/sublime-import-helper/issues/50) |
 | 1.7.6   | 12 Dec 2017 | Fixed [#47](https://github.com/unlight/sublime-import-helper/issues/47) |

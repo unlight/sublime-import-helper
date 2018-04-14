@@ -5,6 +5,8 @@ import {createname, FullName, createname as xx} from './createname';  // Unused 
 import {Greeter} from './greeter'; // Used
 import { Greeter as gr } from './greeter'; // Unused
 import {greeter as lg} from './greeter'; // Used
+import * as someLib1 from 'prettier'; // Unused
+import someLib2 from 'prettier'; // Unused
 
 console.log("Greeter", Greeter);
 console.log("cr", cr);
