@@ -132,6 +132,7 @@ class TestUnsedImports(TestCase):
 
     def test_unused_all(self):
         self.setText("import {a, b, xx as c} from './createname';  // Unused all")
+        # line1 format of data which we are receiving from backend typescript check
         line1 = [{"line":1,"name":"a"}, {"line":1,"name":"b"}, {"line":1,"name":"c"}]
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
         first_row = self.getRow(0)
@@ -150,6 +151,13 @@ class TestUnsedImports(TestCase):
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
         first_row = self.getRow(0)
         self.assertEqual(first_row, "import { b } from './greeter';")
+
+    def test_unused_import_all(self):
+        self.setText("import * as someLib from 'prettier'; // Unused")
+        line1 = [{"line":1,"name":"someLib"}]
+        self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
+        first_row = self.getRow(0)
+        self.assertEqual(first_row, "")
 
 class TestExample(TestCase):
 

@@ -44,8 +44,8 @@ class EditRemoveUnsedImports(sublime_plugin.TextCommand):
             # import_names = match.group(1)
             for info in infoList:
                 name = info['name']
-                line_contents = re.sub(r"((,\s*)(\w+\s+as\s+)?\b" + name + r"\b|(\w+\s+as\s+)?\b" + name + r"\b(,\s*)|(\w+\s+as\s+)?\b" + name + r"\b)", '', line_contents, 1)
-            remove_line = re.search(r"import\s+{\s*}", line_contents) is not None
+                line_contents = re.sub(r"((,\s*)((\*|\w+)\s+as\s+)?\b" + name + r"\b|((\*|\w+)\s+as\s+)?\b" + name + r"\b(,\s*)|((\*|\w+)\s+as\s+)?\b" + name + r"\b)", '', line_contents, 1)
+            remove_line = re.search(r"import\s+({\s*})?\s+from", line_contents) is not None
             if remove_line:
                 # debug("Line has to be removed", self.view.substr(self.view.line(self.view.text_point(line_index, 0))))
                 empty_lines.append(line_index)
