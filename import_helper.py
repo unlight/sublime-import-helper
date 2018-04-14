@@ -7,7 +7,8 @@ from .utils import *
 
 PROJECT_NAME = 'Import Helper'
 node_modules = []
-source_modules = [];
+source_modules = []
+typescript_paths = []
 
 # =============================================== Plugin Lifecycle
 
@@ -26,6 +27,7 @@ def setup():
         return
     update_source_modules()
     update_node_modules()
+    update_typescript_paths()
 
 def update_source_modules():
     source_folders = get_source_folders()
@@ -54,6 +56,27 @@ def update_node_modules():
     debug('import_root', import_root)
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_modules_callback)
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
+
+def update_typescript_paths():
+    # source_folders = get_source_folders()
+    source_folders = [get_import_root()]
+    for folder in source_folders:
+        tsconfig_file = os.path.normpath(os.path.join(folder, 'tsconfig.json'))
+        if not os.path.isfile(tsconfig_file):
+            continue
+        tsconfig = read_json(tsconfig_file)
+        compilerOptions = tsconfig.get('compilerOptions')
+        if compilerOptions is None:
+            continue
+        baseUrl = compilerOptions.get('baseUrl')
+        if baseUrl is None:
+            continue
+        base_dir = os.path.normpath(os.path.join(os.path.dirname(tsconfig_file), baseUrl))
+        paths = compilerOptions.get('paths')
+        for path_to, pathValues in paths.items():
+            for path_value in pathValues:
+                typescript_paths.append({'base_dir': base_dir, 'path_value': path_value, 'path_to': path_to})
+    debug('typescript_paths', typescript_paths)
 
 def get_source_folders():
     window = sublime.active_window()
@@ -107,14 +130,14 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
             return
         if (len(panel_items) == 1):
-            self.view.run_command('do_insert_import', {'item': match_items[0]})
+            self.view.run_command('do_insert_import', {'item': match_items[0], 'typescript_paths': typescript_paths})
             return
         on_done = on_done_func(match_items, self.on_select)
         self.view.window().show_quick_panel(panel_items, on_done)
         
     def on_select(self, selected_item):
         debug('Selected item', selected_item)
-        self.view.run_command('do_insert_import', {'item': selected_item})
+        self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
     
 # =============================================== Command list_imports
 # view.run_command('list_imports')
@@ -135,11 +158,11 @@ class ListImportsCommand(sublime_plugin.TextCommand):
 
     def on_select(self, selected_item):
         debug('Selected item', selected_item)
-        self.view.run_command('do_insert_import', {'item': selected_item})
+        self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
 
-# window.run_command('update_imports')
-# sublime.active_window().run_command('update_imports', args={'a':'bar'})
-class UpdateImportsCommand(sublime_plugin.WindowCommand):
+# window.run_command('initialize_setup')
+# sublime.active_window().run_command('initialize_setup', args={'a':'bar'})
+class InitializeSetupCommand(sublime_plugin.WindowCommand):
     def run(self):
         setup()
 
@@ -149,6 +172,7 @@ class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
     def run(self):
         update_source_modules()
 
+# =============================================== Command import_from_clipboard
 # view.run_command('import_from_clipboard')
 class ImportFromClipboardCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -170,12 +194,27 @@ class UpdateSourceEventListener(sublime_plugin.EventListener):
 # view.run_command('test')
 # class TestCommand(sublime_plugin.TextCommand):
 #     def run(self, edit):
+#         # sublime.decode_value
+#         # tsconfig = read_json('x/Packages/ImportHelper/tsconfig.json')
+#         # compilerOptions = tsconfig.get('compilerOptions')
+#         # baseUrl = compilerOptions.get('compilerOptions')
+#         # paths = compilerOptions.get('paths')
+#         # path_list = []
+#         # for pathKey, pathValues in paths.items():
+#         #     for path_value in pathValues:
+#         #         path_list.append((path_value, pathKey))
+#         # print("path_list", path_list)
+
+
+#         # print("key, value", key, values)
+#         # print("paths", paths)
+#         # print("tsconfig", tsconfig)
+#         # print("tsconfig", )
 #         # pong = run_command('ping')
 #         # debug('pong', pong)
-#         def callback(err, result):
-#             debug('err', err)
-#             if (bool(err)): return
-#             debug('result', result)
-#         pong = run_command_async('ping',data=None, callback=callback)
+#         # def callback(err, result):
+#         #     debug('err', err)
+#         #     if (bool(err)): return
+#         #     debug('result', result)
+#         # pong = run_command_async('ping',data=None, callback=callback)
 #         # debug('pong', pong)
-

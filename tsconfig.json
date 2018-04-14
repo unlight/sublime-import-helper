@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@Components/*": [
+        "./test_playground/component/*"
+      ],
+      "@Libs/*": [
+        "./test_playground/lib/*"
+      ]
+    }
+  }
+}

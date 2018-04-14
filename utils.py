@@ -9,7 +9,7 @@ import traceback
 import fnmatch
 
 DEBUG = True
-DEBUG = False
+# DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
@@ -195,3 +195,11 @@ def get_exclude_patterns():
         for pattern in file_exclude_patterns:
             result.append(pattern)
     return result
+
+def read_json(file):
+    if not os.path.isfile(file):
+        return None
+    fo = open(file, 'r')
+    data = fo.read()
+    fo.close()
+    return sublime.decode_value(data)

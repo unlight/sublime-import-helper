@@ -32,12 +32,11 @@ class TestDoInsertImport(TestCase):
         self.assertIn('dinah_widdoes', first_row)
         self.assertFalse(first_row.endswith(';'))
 
-class TestUpdateImports(TestCase):
-    # window.run_command('update_imports')
+class TestInitializeSetup(TestCase):
 
     def setUp(self):
         self.window = sublime.active_window()
-        self.window.run_command('update_imports')
+        self.window.run_command('initialize_setup')
 
     def test_check_node_modules(self):
         yield 5000
