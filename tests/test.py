@@ -32,6 +32,13 @@ class TestDoInsertImport(TestCase):
         self.assertIn('dinah_widdoes', first_row)
         self.assertFalse(first_row.endswith(';'))
 
+    def test_typescript_paths_default(self):
+        typescript_paths = [{'path_to': '@Libs/*', 'path_value': './test_playground/lib/*', 'base_dir': '/base_dir'}]
+        self.setText('')
+        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/test_playground/lib/a/b/c.ts', 'name': 'name', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        first_row = self.getRow(0)
+        self.assertIn('@Libs/a/b/c', first_row)
+
 class TestInitializeSetup(TestCase):
 
     def setUp(self):

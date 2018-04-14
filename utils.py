@@ -9,7 +9,7 @@ import traceback
 import fnmatch
 
 DEBUG = True
-# DEBUG = False
+DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
@@ -203,3 +203,17 @@ def read_json(file):
     data = fo.read()
     fo.close()
     return sublime.decode_value(data)
+
+def get_source_folders():
+    window = sublime.active_window()
+    project_file = window.project_file_name()
+    project_data = window.project_data()
+    result = []
+    for folder in project_data['folders']:
+        folder_path = folder['path']
+        path_source = project_data.get('path_source')
+        if bool(path_source):
+            folder_path = path_source
+        folder_path = norm_path(project_file, folder_path)
+        result.append(folder_path)
+    return result

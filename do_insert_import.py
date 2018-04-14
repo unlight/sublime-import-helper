@@ -91,16 +91,18 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
         return statement.startswith('{ ')
 
     def try_typescript_path(self, filepath, typescript_paths):
-        (drive, filepath) = os.path.splitdrive(filepath)
-        for ts_path in typescript_paths:
-            base_dir = ts_path['base_dir']
-            path_value = ts_path['path_value']
-            path_to = ts_path['path_to']
-            (drive, test_path) = os.path.splitdrive(os.path.normpath(os.path.join(base_dir, path_value)).replace('\\', '/'))
-            if test_path[-2:] == '/*' and path_to[-2:] == '/*':
-                filepath = filepath.replace('\\', '/')
-                test_path = test_path[0:-2]
-                if filepath.startswith(test_path):
-                    test_path = path_to[0:-2] + filepath[len(test_path):]
-                    return test_path
+        import_path_mapping = get_setting('import_path_mapping', 'none')
+        if import_path_mapping == 'default':
+            (drive, filepath) = os.path.splitdrive(filepath)
+            for ts_path in typescript_paths:
+                base_dir = ts_path['base_dir']
+                path_value = ts_path['path_value']
+                path_to = ts_path['path_to']
+                (drive, test_path) = os.path.splitdrive(os.path.normpath(os.path.join(base_dir, path_value)).replace('\\', '/'))
+                if test_path[-2:] == '/*' and path_to[-2:] == '/*':
+                    filepath = filepath.replace('\\', '/')
+                    test_path = test_path[0:-2]
+                    if filepath.startswith(test_path):
+                        test_path = path_to[0:-2] + filepath[len(test_path):]
+                        return test_path
         return None

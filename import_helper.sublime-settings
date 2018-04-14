@@ -3,5 +3,6 @@
 	"from_quote": "'",
 	"space_around_braces": true,
 	"node_bin": "",
-	"from_semicolon": true
+	"from_semicolon": true,
+	"import_path_mapping": "none"
 }

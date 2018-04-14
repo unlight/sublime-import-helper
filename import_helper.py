@@ -58,13 +58,14 @@ def update_node_modules():
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
 
 def update_typescript_paths():
+    typescript_paths.clear()
     # source_folders = get_source_folders()
     source_folders = [get_import_root()]
     for folder in source_folders:
         tsconfig_file = os.path.normpath(os.path.join(folder, 'tsconfig.json'))
         if not os.path.isfile(tsconfig_file):
             continue
-        tsconfig = read_json(tsconfig_file)
+        tsconfig = read_json(tsconfig_file) or {}
         compilerOptions = tsconfig.get('compilerOptions')
         if compilerOptions is None:
             continue
@@ -77,20 +78,6 @@ def update_typescript_paths():
             for path_value in pathValues:
                 typescript_paths.append({'base_dir': base_dir, 'path_value': path_value, 'path_to': path_to})
     debug('typescript_paths', typescript_paths)
-
-def get_source_folders():
-    window = sublime.active_window()
-    project_file = window.project_file_name()
-    project_data = window.project_data()
-    result = []
-    for folder in project_data['folders']:
-        folder_path = folder['path']
-        path_source = project_data.get('path_source')
-        if bool(path_source):
-            folder_path = path_source
-        folder_path = norm_path(project_file, folder_path)
-        result.append(folder_path)
-    return result
 
 def get_modules_callback(err, result):
     if err:

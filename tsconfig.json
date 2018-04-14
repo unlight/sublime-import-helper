@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": ".", // some comment
     "paths": {
       "@Components/*": [
         "./test_playground/component/*"
