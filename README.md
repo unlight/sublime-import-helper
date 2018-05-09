@@ -87,7 +87,7 @@ Add semicolon to the end of `import` string.
 - Default: `true`
 
 #### `import_path_mapping`
-How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html))
+How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html)).  
 Disabled by default (`disabled`).  
 If `enabled` implementation will try to find first matching alias.  
 - Type: `string`
