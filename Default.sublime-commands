@@ -2,7 +2,7 @@
     { "caption": "Import Helper: Insert import", "command": "insert_import" },
     { "caption": "Import Helper: List imports", "command": "list_imports" },
     { "caption": "Import Helper: Update source modules", "command": "update_source_modules" },
-    { "caption": "Import Helper: Update imports", "command": "update_imports" },
+    { "caption": "Import Helper: Initialize / Setup", "command": "initialize_setup" },
     { "caption": "Import Helper: Import from clipboard", "command": "import_from_clipboard" },
     { "caption": "Import Helper: Remove unused imports", "command": "remove_unused" }
 ]

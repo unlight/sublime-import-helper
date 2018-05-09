@@ -7,6 +7,7 @@ import threading
 import socket
 import traceback
 import fnmatch
+import time
 
 DEBUG = True
 DEBUG = False
@@ -194,4 +195,44 @@ def get_exclude_patterns():
         if file_exclude_patterns is None: file_exclude_patterns = []
         for pattern in file_exclude_patterns:
             result.append(pattern)
+    return result
+
+def read_json(file):
+    if not os.path.isfile(file):
+        return None
+    fo = open(file, 'r')
+    data = fo.read()
+    fo.close()
+    return sublime.decode_value(data)
+
+def get_source_folders():
+    window = sublime.active_window()
+    project_file = window.project_file_name()
+    project_data = window.project_data()
+    result = []
+    for folder in project_data['folders']:
+        folder_path = folder['path']
+        path_source = project_data.get('path_source')
+        if bool(path_source):
+            folder_path = path_source
+        folder_path = norm_path(project_file, folder_path)
+        result.append(folder_path)
+    return result
+
+def get_time():
+    return time.time()
+
+def query_completions_modules(prefix, source_modules, node_modules):
+    result = []
+    for item in source_modules:
+        name = item.get('name')
+        if name is None: continue
+        if not name.startswith(prefix): continue
+        result.append([name + '\t' + 'source_modules', name])
+    for item in node_modules:
+        name = item.get('name')
+        module = item.get('module')
+        if name is None or module is None: continue
+        if not name.startswith(prefix): continue
+        result.append([name + '\t' + 'node_modules' + '/' + module, name])
     return result

@@ -2,29 +2,35 @@ import sublime
 import sublime_plugin
 import os
 import re
-from .utils import unixify, debug, get_setting
+from .utils import *
 
-# view.run_command('do_insert_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}}))
+# view.run_command('do_insert_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}, 'typescript_paths': []}))
+# view.run_command('do_insert_import', args=({'name': 'AbcComponent', 'filepath': 'D:\\Progs\\Sublime-Text-3\\Data\\Packages\\ImportHelper\\test_playground\\component\\abc.component.ts', 'isDefault': False}))
 
 class DoInsertImportCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         super().__init__(view)
 
-    def run(self, edit, item):
+    def run(self, edit, item, typescript_paths = []):
         if (item.get('module')):
             from_path = item['module']
         else:
-            file_name = self.view.file_name() or '.'
-            from_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
-            from_path = unixify(from_path)
-            if from_path[0] != '.':
-                from_path = './' + from_path
+            typescript_path = self.try_typescript_path(item['filepath'], typescript_paths)
+            if typescript_path is not None:
+                from_path = unixify(typescript_path)
+            else:
+                file_name = self.view.file_name() or '.'
+                from_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
+                from_path = unixify(from_path)
+                if from_path[0] != '.':
+                    from_path = './' + from_path
         from_quote = get_setting('from_quote', "'")
         import_end = ';' if get_setting('from_semicolon', True) else ''
         import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
         name = item['name']
         import_info = self.get_import_info(from_path)
+        debug("import_info", import_info)
         if not import_info.get('line_region') or item['isDefault']:
             if not item['isDefault']:
                 name = self.wrap_imports([name])
@@ -83,3 +89,26 @@ class DoInsertImportCommand(sublime_plugin.TextCommand):
 
     def is_spaced_import(self, statement):
         return statement.startswith('{ ')
+
+    def try_typescript_path(self, filepath, typescript_paths):
+        import_path_mapping = get_setting('import_path_mapping', 'none')
+        if import_path_mapping == 'enabled':
+            (drive, filepath) = os.path.splitdrive(filepath)
+            filepath = filepath.replace('\\', '/')
+            # debug("filepath", filepath)
+            for ts_path in typescript_paths:
+                base_dir = ts_path['base_dir']
+                path_value = ts_path['path_value']
+                path_to = ts_path['path_to']
+                (drive, test_path) = os.path.splitdrive(os.path.normpath(os.path.join(base_dir, path_value)).replace('\\', '/'))
+                # debug("test_path", test_path)
+                # "@app/*" :["app/*"]
+                if test_path[-2:] == '/*' and path_to[-2:] == '/*':
+                    test_path = test_path[0:-2]
+                    if filepath.startswith(test_path):
+                        test_path = path_to[0:-2] + filepath[len(test_path):]
+                        return test_path
+                # "@lib": ["app/lib"]
+                if filepath == test_path or filepath in [test_path + '/index.ts', test_path + '/index.tsx', test_path + '/index.js', test_path + '/index.jsx']:
+                    return path_to
+        return None
