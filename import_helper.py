@@ -10,7 +10,7 @@ node_modules = []
 source_modules = []
 typescript_paths = []
 
-# =============================================== Plugin Lifecycle
+# Plugin Lifecycle
 
 def plugin_loaded():
     print()
@@ -90,31 +90,33 @@ def get_modules_callback(err, result):
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('Get packages result', len(result))
 
-# =============================================== Command insert_import
-
+# Command insert_import
 class InsertImportCommand(sublime_plugin.TextCommand):
     # Adds import of identifier near cursor
 
-    def run(self, edit, selected=None):
-        if (selected is None):
-            selected_region = self.view.sel()[0]
-            selected = self.view.substr(selected_region)
-        if not bool(selected):
-            cursor_region = self.view.expand_by_class(selected_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
-            selected = self.view.substr(cursor_region)
-        debug('Selected word region', selected)
+    def run(self, edit, name=None, point=None):
+        if name is None:
+            point_region = self.view.sel()[0]
+            if point is not None:
+                point_region = sublime.Region(point, point)
+            name = self.view.substr(point_region).strip()
+            if not bool(name):
+                cursor_region = self.view.expand_by_class(point_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
+                name = self.view.substr(cursor_region)
+                name = name.strip()
+        debug('Trying to import', '`' + name + '`')
         import_root = get_import_root()
         match_items = []
         panel_items = []
         # Iterate through source modules + node modules
         for item in source_modules + node_modules:
-            if (item.get('name') == selected):
+            if (item.get('name') == name):
                 panel_item = get_panel_item(import_root, item)
                 if panel_item is not None:
                     panel_items.append(panel_item)
                     match_items.append(item)
         if (len(panel_items) == 0):
-            self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(selected))
+            self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(name))
             return
         if (len(panel_items) == 1):
             self.view.run_command('do_insert_import', {'item': match_items[0], 'typescript_paths': typescript_paths})
@@ -126,7 +128,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         debug('Selected item', selected_item)
         self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
     
-# =============================================== Command list_imports
+# Command list_imports
 # view.run_command('list_imports')
 class ListImportsCommand(sublime_plugin.TextCommand):
     # Show all available imports
@@ -159,14 +161,15 @@ class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
     def run(self):
         update_source_modules()
 
-# =============================================== Command import_from_clipboard
+# Command import_from_clipboard
 # view.run_command('import_from_clipboard')
 class ImportFromClipboardCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        self.view.run_command('insert_import', args=({'selected': sublime.get_clipboard()}))
+        self.view.run_command('insert_import', args=({'name': sublime.get_clipboard()}))
 
-class UpdateSourceEventListener(sublime_plugin.EventListener):
-    
+# ImportHelperEventListener
+class ImportHelperViewEventListener(sublime_plugin.EventListener):
+
     def __init__(self):
         self.viewIds = []
 
@@ -178,30 +181,37 @@ class UpdateSourceEventListener(sublime_plugin.EventListener):
             self.viewIds.remove(view.id())
             update_source_modules()
 
-# view.run_command('test')
-# class TestCommand(sublime_plugin.TextCommand):
-#     def run(self, edit):
-#         # sublime.decode_value
-#         # tsconfig = read_json('x/Packages/ImportHelper/tsconfig.json')
-#         # compilerOptions = tsconfig.get('compilerOptions')
-#         # baseUrl = compilerOptions.get('compilerOptions')
-#         # paths = compilerOptions.get('paths')
-#         # path_list = []
-#         # for pathKey, pathValues in paths.items():
-#         #     for path_value in pathValues:
-#         #         path_list.append((path_value, pathKey))
-#         # print("path_list", path_list)
+# ImportHelperViewEventListener
+class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
 
+    def __init__(self, view):
+        super().__init__(view)
+        self.completions_info = {'time': 0, 'result': []}
+        self.in_auto_complete = False
 
-#         # print("key, value", key, values)
-#         # print("paths", paths)
-#         # print("tsconfig", tsconfig)
-#         # print("tsconfig", )
-#         # pong = run_command('ping')
-#         # debug('pong', pong)
-#         # def callback(err, result):
-#         #     debug('err', err)
-#         #     if (bool(err)): return
-#         #     debug('result', result)
-#         # pong = run_command_async('ping',data=None, callback=callback)
-#         # debug('pong', pong)
+    def on_query_completions(self, prefix, locations):
+        result = self.completions_info['result']
+        if self.view.match_selector(locations[0], 'source.ts, source.tsx, source.js, source.jsx') and getTime() > self.completions_info['time'] + 1:
+            self.completions_info['time'] = getTime() 
+            result = []
+            for item in source_modules:
+                name = item.get('name')
+                if name is None: continue
+                trigger = name + '\t' + 'source_modules'
+                result.append([trigger, name])
+            for item in node_modules:
+                name = item.get('name')
+                module = item.get('module')
+                if name is None or module is None: continue
+                trigger = name + '\t' + 'node_modules' + '/' + module
+                result.append([trigger, name])
+            self.completions_info['result'] = result
+        return result
+    
+    def on_post_text_command(self, command_name, args):
+        if command_name == 'insert_best_completion':
+            self.view.run_command('insert_import')
+        elif command_name == 'auto_complete':
+            self.in_auto_complete = True
+        elif command_name == 'insert_dimensions' and self.in_auto_complete:
+            self.view.run_command('insert_import')
