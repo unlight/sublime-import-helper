@@ -110,6 +110,20 @@ class TestUtilFunctions(TestCase):
         result = get_panel_item('/', {})
         self.assertTrue(result is None)
 
+    def test_query_completions_modules(self):
+        query_completions_modules = import_helper.query_completions_modules
+        source_modules = [
+            {'name': 'good', 'filepath':'/usr/home/good'},
+            {'name': 'ugly', 'filepath':'/usr/home/ugly'}
+        ]
+        node_modules = [
+            {'name': 'Chicky', 'module': 'chicken'}
+        ]
+        result = query_completions_modules('goo', source_modules, node_modules)
+        self.assertListEqual(result, [['good\tsource_modules', 'good']])
+        result = query_completions_modules('Chic', source_modules, node_modules)
+        self.assertListEqual(result, [['Chicky\tnode_modules/chicken', 'Chicky']])
+
 class TestUnsedImports(TestCase):
 
     def setUp(self):

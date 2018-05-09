@@ -10,7 +10,7 @@ import fnmatch
 import time
 
 DEBUG = True
-# DEBUG = False
+DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
@@ -219,5 +219,20 @@ def get_source_folders():
         result.append(folder_path)
     return result
 
-def getTime():
+def get_time():
     return time.time()
+
+def query_completions_modules(prefix, source_modules, node_modules):
+    result = []
+    for item in source_modules:
+        name = item.get('name')
+        if name is None: continue
+        if not name.startswith(prefix): continue
+        result.append([name + '\t' + 'source_modules', name])
+    for item in node_modules:
+        name = item.get('name')
+        module = item.get('module')
+        if name is None or module is None: continue
+        if not name.startswith(prefix): continue
+        result.append([name + '\t' + 'node_modules' + '/' + module, name])
+    return result
