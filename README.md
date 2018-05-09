@@ -88,11 +88,11 @@ Add semicolon to the end of `import` string.
 
 #### `import_path_mapping`
 How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html))
-Disabled by default ('none').  
-X implementation ('x') tries to find first matching alias.  
+Disabled by default (`disabled`).  
+If `enabled` implementation will try to find first matching alias.  
 - Type: `string`
-- Enum: `['none', 'default']`
-- Default: `none`
+- Enum: `['disabled', 'enabled']`
+- Default: `disabled`
 
 #### `import_root` (project file only)
 Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.

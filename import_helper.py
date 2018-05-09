@@ -197,14 +197,11 @@ class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
         return result
     
     def on_post_text_command(self, command_name, args):
-        if command_name == 'insert_best_completion':
+        if command_name == 'insert_best_completion' or command_name == 'insert_dimensions' and self.in_auto_complete:
             self.in_auto_complete = False
             self.view.run_command('insert_import')
         elif command_name == 'auto_complete':
             self.in_auto_complete = True
-        elif command_name == 'insert_dimensions' and self.in_auto_complete:
-            self.in_auto_complete = False
-            self.view.run_command('insert_import')
 
     def on_activated(self):
         self.in_auto_complete = False
