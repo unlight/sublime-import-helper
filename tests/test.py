@@ -16,14 +16,11 @@ class TestDoInsertImport(TestCase):
             self.view.window().focus_view(self.view)
             self.view.window().run_command("close_file")
 
-    def setText(self, string):
-        self.view.run_command("insert", {"characters": string})
-
     def getRow(self, row):
         return self.view.substr(self.view.line(self.view.text_point(row, 0)))
 
     def test_smoke(self):
-        self.setText('')
+        setText(self.view, '')
         self.view.run_command('do_insert_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
         first_row = self.getRow(0)
         self.assertTrue(first_row.startswith('import {'))
@@ -32,12 +29,23 @@ class TestDoInsertImport(TestCase):
         self.assertIn('dinah_widdoes', first_row)
         self.assertFalse(first_row.endswith(';'))
 
-    def test_typescript_paths_default(self):
-        typescript_paths = [{'path_to': '@Libs/*', 'path_value': './test_playground/lib/*', 'base_dir': '/base_dir'}]
-        self.setText('')
+    def test_typescript_paths(self):
+        typescript_paths = [
+            {'path_to': '@Libs/*', 'path_value': './test_playground/lib/*', 'base_dir': '/base_dir'},
+            {'path_to': '@z_component', 'path_value': './app/components/z.ts', 'base_dir': '/base_dir'},
+            {'path_to': '@components', 'path_value': './app/components', 'base_dir': '/base_dir'},
+        ]
+        setText(self.view, '')
         self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/test_playground/lib/a/b/c.ts', 'name': 'name', 'isDefault': False }, 'typescript_paths': typescript_paths })
-        first_row = self.getRow(0)
-        self.assertIn('@Libs/a/b/c', first_row)
+        self.assertIn('@Libs/a/b/c', self.getRow(0))
+        
+        setText(self.view, '')
+        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/app/components/z.ts', 'name': 'zoo', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.assertIn("import {zoo} from '@z_component'", self.getRow(0))
+
+        setText(self.view, '')
+        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/app/components/index.ts', 'name': 'koo', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.assertIn("import {koo} from '@components'", self.getRow(0))
 
 class TestInitializeSetup(TestCase):
 
@@ -138,20 +146,17 @@ class TestUnsedImports(TestCase):
             self.view.window().focus_view(self.view)
             self.view.window().run_command("close_file")
 
-    def setText(self, string):
-        self.view.run_command("insert", {"characters": string})
-
     def getRow(self, row):
         return self.view.substr(self.view.line(self.view.text_point(row, 0)))
 
     def test_partial_as(self):
-        self.setText("import { FullName as f, createname as cr } from './createname'; // Partial")
+        setText(self.view, "import { FullName as f, createname as cr } from './createname'; // Partial")
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":[{"line":1,"pos":22,"name":"f"}]}}))
         first_row = self.getRow(0)
         self.assertEqual(first_row, "import { createname as cr } from './createname'; // Partial")
 
     def test_unused_all(self):
-        self.setText("import {a, b, xx as c} from './createname';  // Unused all")
+        setText(self.view, "import {a, b, xx as c} from './createname';  // Unused all")
         # line1 format of data which we are receiving from backend typescript check
         line1 = [{"line":1,"name":"a"}, {"line":1,"name":"b"}, {"line":1,"name":"c"}]
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
@@ -159,21 +164,21 @@ class TestUnsedImports(TestCase):
         self.assertEqual(first_row, "")
 
     def test_unused_single_as(self):
-        self.setText("import { Greeter as gr } from './greeter'; // Unused")
+        setText(self.view, "import { Greeter as gr } from './greeter'; // Unused")
         line1 = [{"line":1,"name":"gr"}]
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
         first_row = self.getRow(0)
         self.assertEqual(first_row, "")
 
     def test_used_should_not_be_removed(self):
-        self.setText("import {a} from './greeter';\nimport { b } from './greeter';")
+        setText(self.view, "import {a} from './greeter';\nimport { b } from './greeter';")
         line1 = [{"line":1,"name":"a"}]
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
         first_row = self.getRow(0)
         self.assertEqual(first_row, "import { b } from './greeter';")
 
     def test_unused_import_all(self):
-        self.setText("import * as someLib from 'prettier'; // Unused")
+        setText(self.view, "import * as someLib from 'prettier'; // Unused")
         line1 = [{"line":1,"name":"someLib"}]
         self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
         first_row = self.getRow(0)
@@ -193,9 +198,6 @@ class TestExample(TestCase):
             self.view.window().focus_view(self.view)
             self.view.window().run_command("close_file")
 
-    def setText(self, string):
-        self.view.run_command("insert", {"characters": string})
-
     def getRow(self, row):
         return self.view.substr(self.view.line(self.view.text_point(row, 0)))
 
@@ -205,3 +207,8 @@ class TestExample(TestCase):
     def test_hello_world(self):
         self.view.run_command("hello_world")
         first_row = self.getRow(0)
+
+def setText(view, string):
+    view.run_command("select_all")
+    view.run_command("left_delete")
+    view.run_command("insert", {"characters": string})

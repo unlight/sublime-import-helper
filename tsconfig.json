@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // some comment
+    "baseUrl": ".",
     "paths": {
-      "@Components/*": [
-        "./test_playground/component/*"
-      ],
       "@Libs/*": [
         "./test_playground/lib/*"
+      ],
+      "@Dummy": [
+        "./test_playground/component/dummy.component.ts"
+      ],
+      "@Components": [
+        "./test_playground/component"
       ]
     }
   }
