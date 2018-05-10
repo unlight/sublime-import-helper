@@ -17,3 +17,7 @@ button.onclick = function() {
 }
 // createName FullName Animal
 document.body.appendChild(button);
+// HTTP_STATUS_CONTINUE
+function(res) {
+	res.json(typeof HTTP2_HEADER_STATUS);
+}

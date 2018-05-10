@@ -1,5 +1,6 @@
 import sublime
 import sublime_plugin
+import re
 from .utils import *
 
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
@@ -100,10 +101,12 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             if point is not None:
                 point_region = sublime.Region(point, point)
             name = self.view.substr(point_region).strip()
-            if not bool(name):
-                cursor_region = self.view.expand_by_class(point_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
+            if not name:
+                cursor_region = self.view.expand_by_class(point_region, sublime.CLASS_WORD_START | sublime.CLASS_LINE_START | sublime.CLASS_PUNCTUATION_START | sublime.CLASS_WORD_END | sublime.CLASS_PUNCTUATION_END | sublime.CLASS_LINE_END)
                 name = self.view.substr(cursor_region)
-                name = name.strip()
+        name = re.sub(r'\W', '', name)
+        if not name:
+            return
         debug('Trying to import', '`' + name + '`')
         import_root = get_import_root()
         match_items = []
@@ -119,7 +122,8 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(name))
             return
         if (len(panel_items) == 1):
-            self.view.run_command('do_insert_import', {'item': match_items[0], 'typescript_paths': typescript_paths})
+            item = match_items[0]
+            self.view.run_command('do_insert_import', {'item': item, 'typescript_paths': typescript_paths})
             return
         on_done = on_done_func(match_items, self.on_select)
         self.view.window().show_quick_panel(panel_items, on_done)
@@ -188,27 +192,26 @@ class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
         super().__init__(view)
         self.completions_info = {'time': -1, 'result': [], 'prefix': ''}
         self.in_auto_complete = False
+        self.auto_complete_point = 0
 
     def on_query_completions(self, prefix, locations):
-        if not (len(prefix) > 0 and self.view.match_selector(locations[0], 'source.ts, source.tsx, source.js, source.jsx')):
+        self.auto_complete_point = locations[0]
+        if not (len(prefix) > 0 and self.view.match_selector(self.auto_complete_point, 'source.ts, source.tsx, source.js, source.jsx')):
             return []
         if get_time() > self.completions_info['time'] + 1 or prefix != self.completions_info['prefix']:
-            # debug('on_query_completions', [prefix, locations])
             self.completions_info['time'] = get_time()
             self.completions_info['prefix'] = prefix
             self.completions_info['result'] = query_completions_modules(prefix, source_modules, node_modules)
         return self.completions_info['result']
     
     def on_post_text_command(self, command_name, args):
-        if self.in_auto_complete and (command_name == 'insert_best_completion' or command_name == 'insert_dimensions'):
+        if self.in_auto_complete and command_name in ['insert_best_completion', 'insert_dimensions']:
             self.in_auto_complete = False
-            self.view.run_command('insert_import')
-        elif command_name == 'auto_complete' or command_name == 'replace_completion_with_next_completion' or command_name == 'replace_completion_with_auto_complete':
+            self.view.run_command('insert_import', args=({'point': self.auto_complete_point - 1}))
+        elif command_name in ['auto_complete', 'replace_completion_with_next_completion', 'replace_completion_with_auto_complete']:
             self.in_auto_complete = True
         elif command_name == 'hide_auto_complete':
             self.in_auto_complete = False
-        # debug('after on_post_text_command', [command_name, args, 'self.in_auto_complete', self.in_auto_complete])
 
     def on_activated(self):
-        # debug('on_activated')
         self.in_auto_complete = False
