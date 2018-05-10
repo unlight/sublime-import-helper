@@ -186,18 +186,20 @@ class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
 
     def __init__(self, view):
         super().__init__(view)
-        self.completions_info = {'time': -1, 'result': []}
+        self.completions_info = {'time': -1, 'result': [], 'prefix': ''}
         self.in_auto_complete = False
 
     def on_query_completions(self, prefix, locations):
-        result = self.completions_info['result']
-        if self.view.match_selector(locations[0], 'source.ts, source.tsx, source.js, source.jsx') and get_time() > self.completions_info['time'] + 1:
-            self.completions_info['time'] = get_time() 
+        if not (len(prefix) > 0 and self.view.match_selector(locations[0], 'source.ts, source.tsx, source.js, source.jsx')):
+            return []
+        if get_time() > self.completions_info['time'] + 1 or prefix != self.completions_info['prefix']:
+            # debug('on_query_completions', [prefix, locations])
+            self.completions_info['time'] = get_time()
+            self.completions_info['prefix'] = prefix
             self.completions_info['result'] = query_completions_modules(prefix, source_modules, node_modules)
-        return result
+        return self.completions_info['result']
     
     def on_post_text_command(self, command_name, args):
-        # debug('on_post_text_command', [command_name, args])
         if self.in_auto_complete and (command_name == 'insert_best_completion' or command_name == 'insert_dimensions'):
             self.in_auto_complete = False
             self.view.run_command('insert_import')
@@ -205,7 +207,8 @@ class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
             self.in_auto_complete = True
         elif command_name == 'hide_auto_complete':
             self.in_auto_complete = False
+        # debug('after on_post_text_command', [command_name, args, 'self.in_auto_complete', self.in_auto_complete])
 
     def on_activated(self):
-        # debug("on_activated")
+        # debug('on_activated')
         self.in_auto_complete = False
