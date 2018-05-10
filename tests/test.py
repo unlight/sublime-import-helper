@@ -21,7 +21,7 @@ class TestDoInsertImport(TestCase):
 
     def test_smoke(self):
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
+        self.view.run_command('paste_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
         first_row = self.getRow(0)
         self.assertTrue(first_row.startswith('import {'))
         self.assertIn('}', first_row)
@@ -36,15 +36,15 @@ class TestDoInsertImport(TestCase):
             {'path_to': '@components', 'path_value': './app/components', 'base_dir': '/base_dir'},
         ]
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/test_playground/lib/a/b/c.ts', 'name': 'name', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/test_playground/lib/a/b/c.ts', 'name': 'name', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn('@Libs/a/b/c', self.getRow(0))
         
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/app/components/z.ts', 'name': 'zoo', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/app/components/z.ts', 'name': 'zoo', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn("import {zoo} from '@z_component'", self.getRow(0))
 
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/app/components/index.ts', 'name': 'koo', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/app/components/index.ts', 'name': 'koo', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn("import {koo} from '@components'", self.getRow(0))
 
 class TestInitializeSetup(TestCase):

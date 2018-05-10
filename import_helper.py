@@ -1,6 +1,5 @@
 import sublime
 import sublime_plugin
-import re
 from .utils import *
 
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
@@ -82,76 +81,14 @@ def update_typescript_paths():
 
 def get_modules_callback(err, result):
     if err:
-        sublime.error_message(PROJECT_NAME + '\n' + str(err))
+        sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
         return
     if type(result) is not list:
-        sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(result))
+        sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
         return
     node_modules.extend(result)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('Get packages result', len(result))
-
-# Command insert_import
-class InsertImportCommand(sublime_plugin.TextCommand):
-    # Adds import of identifier near cursor
-
-    def run(self, edit, name=None, point=None):
-        if name is None:
-            point_region = self.view.sel()[0]
-            if point is not None:
-                point_region = sublime.Region(point, point)
-            name = self.view.substr(point_region).strip()
-            if not name:
-                cursor_region = self.view.expand_by_class(point_region, sublime.CLASS_WORD_START | sublime.CLASS_LINE_START | sublime.CLASS_PUNCTUATION_START | sublime.CLASS_WORD_END | sublime.CLASS_PUNCTUATION_END | sublime.CLASS_LINE_END)
-                name = self.view.substr(cursor_region)
-        name = re.sub(r'\W', '', name)
-        if not name:
-            return
-        debug('Trying to import', '`' + name + '`')
-        import_root = get_import_root()
-        match_items = []
-        panel_items = []
-        # Iterate through source modules + node modules
-        for item in source_modules + node_modules:
-            if (item.get('name') == name):
-                panel_item = get_panel_item(import_root, item)
-                if panel_item is not None:
-                    panel_items.append(panel_item)
-                    match_items.append(item)
-        if (len(panel_items) == 0):
-            self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(name))
-            return
-        if (len(panel_items) == 1):
-            item = match_items[0]
-            self.view.run_command('do_insert_import', {'item': item, 'typescript_paths': typescript_paths})
-            return
-        on_done = on_done_func(match_items, self.on_select)
-        self.view.window().show_quick_panel(panel_items, on_done)
-        
-    def on_select(self, selected_item):
-        debug('Selected item', selected_item)
-        self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
-    
-# Command list_imports
-# view.run_command('list_imports')
-class ListImportsCommand(sublime_plugin.TextCommand):
-    # Show all available imports
-
-    def run(self, edit):
-        import_root = get_import_root()
-        match_items = []
-        panel_items = []
-        for item in source_modules + node_modules:
-            panel_item = get_panel_item(import_root, item)
-            if panel_item is not None:
-                panel_items.append(panel_item)
-                match_items.append(item)
-        on_done = on_done_func(match_items, self.on_select)
-        self.view.window().show_quick_panel(panel_items, on_done)
-
-    def on_select(self, selected_item):
-        debug('Selected item', selected_item)
-        self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
 
 # window.run_command('initialize_setup')
 # sublime.active_window().run_command('initialize_setup', args={'a':'bar'})
