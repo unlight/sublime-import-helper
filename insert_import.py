@@ -20,7 +20,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         name = re.sub(r'\W', '', name)
         if not name:
             return
-        debug('Trying to import', '`' + name + '`')
+        debug('Trying to import', '`{0}`'.format(name))
         import_root = get_import_root()
         match_items = []
         panel_items = []
