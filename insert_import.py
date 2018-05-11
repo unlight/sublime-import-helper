@@ -8,7 +8,7 @@ from .utils import *
 class InsertImportCommand(sublime_plugin.TextCommand):
     # Adds import of identifier near cursor
 
-    def run(self, edit, name=None, point=None):
+    def run(self, edit, name=None, point=None, notify=True):
         if name is None:
             point_region = self.view.sel()[0]
             if point is not None:
@@ -31,7 +31,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
                 if panel_item is not None:
                     panel_items.append(panel_item)
                     match_items.append(item)
-        if (len(panel_items) == 0):
+        if (len(panel_items) == 0 and notify):
             self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(name))
             return
         if (len(panel_items) == 1):

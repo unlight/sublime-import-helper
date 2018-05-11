@@ -4,5 +4,7 @@
 	"space_around_braces": true,
 	"node_bin": "",
 	"from_semicolon": true,
-	"import_path_mapping": "none"
+	"import_path_mapping": "disabled",
+	"autocomplete_export_names": true,
+	"autocomplete_auto_import": false,
 }

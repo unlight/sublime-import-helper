@@ -90,9 +90,20 @@ Add semicolon to the end of `import` string.
 How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html)).  
 Disabled by default (`disabled`).  
 If `enabled` implementation will try to find first matching alias.  
-- Type: `string`
-- Enum: `['disabled', 'enabled']`
-- Default: `disabled`
+- Type: `string`  
+- Enum: `['disabled', 'enabled']`  
+- Default: `disabled`  
+
+#### `autocomplete_export_names`
+Show all possible export names from sources and node modules in autocomplete menu.  
+- Type: `boolean`  
+- Default: `true`
+
+#### `autocomplete_auto_import`
+Automatically add import statement if export name was selected from autocomplete menu (Ctrl + Space).  
+Requires `autocomplete_export_names: true`.  
+- Type: `boolean`  
+- Default: `false`
 
 #### `import_root` (project file only)
 Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
