@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "1-liners": "0.4.0",
-    "@angular/core": "6.0.0",
-    "@types/node": "10.0.6",
+    "@angular/core": "6.0.1",
+    "@types/node": "10.0.8",
     "browserify": "16.2.2",
     "cross-spawn": "6.0.5",
     "eslint": "4.19.1",
