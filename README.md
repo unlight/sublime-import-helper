@@ -25,8 +25,8 @@ git clone https://github.com/unlight/sublime-import-helper ImportHelper
 
 Usage
 ---
-#### Initialize / Setup
-* Update node_modules, source modules
+#### Initialize / Setup / Update modules
+* Restart plugin - update node_modules, source modules
 
 #### Insert import
 * Set cursor or select word
