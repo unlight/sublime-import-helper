@@ -2,6 +2,7 @@ import sublime
 import sys
 from unittest import TestCase
 import_helper = sys.modules['ImportHelper.import_helper']
+utils = sys.modules['ImportHelper.utils']
 
 class TestDoInsertImport(TestCase):
     
@@ -104,9 +105,12 @@ class TestUtilFunctions(TestCase):
         self.assertEqual(get_setting('insert_position', None), 'end')
         self.assertEqual(get_setting('from_quote', None), "'")
         self.assertEqual(get_setting('space_around_braces', None), False)
-        self.assertEqual(get_setting('node_bin', ''), 'node.exe')
         self.assertEqual(get_setting('from_semicolon', True), False)
         self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
+
+    def test_find_executable(self):
+        result = utils.find_executable('node')
+        self.assertEqual(result, 'C:\\nodejs\\node.exe')
 
     def test_get_import_root(self):
         get_import_root = import_helper.get_import_root

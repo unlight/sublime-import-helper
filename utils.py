@@ -20,7 +20,8 @@ def initialize():
     global NODE_BIN
     if NODE_BIN == 'node' or not bool(NODE_BIN):
         NODE_BIN = get_setting('node_bin', '')
-        if not bool(NODE_BIN): NODE_BIN = find_executable('node')
+        if not bool(NODE_BIN):
+            NODE_BIN = find_executable('node')
         if not bool(NODE_BIN): NODE_BIN = 'node'
 
 def debug(s, data=None, force=False):
@@ -210,8 +211,10 @@ def get_source_folders():
     project_file = window.project_file_name()
     project_data = window.project_data()
     result = []
-    for folder in project_data['folders']:
-        folder_path = folder['path']
+    for folder in (project_data.get('folders') or []):
+        folder_path = folder.get('path')
+        if folder_path is None:
+            continue
         path_source = project_data.get('path_source')
         if bool(path_source):
             folder_path = path_source
@@ -226,13 +229,17 @@ def query_completions_modules(prefix, source_modules, node_modules):
     result = []
     for item in source_modules:
         name = item.get('name')
-        if name is None: continue
-        if not name.startswith(prefix): continue
+        if name is None:
+            continue
+        if not name.startswith(prefix):
+            continue
         result.append([name + '\t' + 'source_modules', name])
     for item in node_modules:
         name = item.get('name')
         module = item.get('module')
-        if name is None or module is None: continue
-        if not name.startswith(prefix): continue
+        if name is None or module is None:
+            continue
+        if not name.startswith(prefix):
+            continue
         result.append([name + '\t' + 'node_modules' + '/' + module, name])
     return result
