@@ -4,10 +4,10 @@ import os
 import re
 from .utils import *
 
-# view.run_command('do_insert_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}, 'typescript_paths': []}))
-# view.run_command('do_insert_import', args=({'name': 'AbcComponent', 'filepath': 'D:\\Progs\\Sublime-Text-3\\Data\\Packages\\ImportHelper\\test_playground\\component\\abc.component.ts', 'isDefault': False}))
+# view.run_command('paste_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}, 'typescript_paths': []}))
+# view.run_command('paste_import', args=({'name': 'AbcComponent', 'filepath': 'D:\\Progs\\Sublime-Text-3\\Data\\Packages\\ImportHelper\\test_playground\\component\\abc.component.ts', 'isDefault': False}))
 
-class DoInsertImportCommand(sublime_plugin.TextCommand):
+class PasteImportCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         super().__init__(view)

@@ -1,8 +1,47 @@
 {
-	"insert_position": "end",
-	"from_quote": "'",
-	"space_around_braces": true,
-	"node_bin": "",
-	"from_semicolon": true,
-	"import_path_mapping": "none"
+    // Specifies where new import statement should be inserted, at the beginning ('start')
+    //   or at the end of imports block ('end').
+    //   - Type: `string`
+    //   - Enum: `['end', 'start']`
+    //   - Default: `end`
+    "insert_position": "end",
+    
+    // What kind of quotes will be used in import statement.
+    // - Type: `string`
+    // - Default: `'`
+    "from_quote": "'",
+    
+    // Paste space before opening and after closing curly brackets.
+    // - Type: `boolean`
+    // - Default: `true`
+    "space_around_braces": true,
+    
+    // Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
+    // - Type: `string`
+    // - Default: `` (auto detect)
+    "node_bin": "",
+    
+    // Add semicolon to the end of `import` string. 
+    // - Type: `boolean`
+    // - Default: `true`
+    "from_semicolon": true,
+    
+    // How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html)).  
+    // Disabled by default (`disabled`).  
+    // If `enabled` implementation will try to find first matching alias.  
+    // - Type: `string`  
+    // - Enum: `['disabled', 'enabled']`  
+    // - Default: `disabled`  
+    "import_path_mapping": "disabled",
+    
+    // Show all possible export names from sources and node modules in autocomplete menu.  
+    // - Type: `boolean`  
+    // - Default: `true`
+    "autocomplete_export_names": true,
+    
+    // Automatically add import statement if export name was selected from autocomplete menu (Ctrl + Space).  
+    // Requires `autocomplete_export_names: true`.  
+    // - Type: `boolean`  
+    // - Default: `false`
+    "autocomplete_auto_import": false,
 }

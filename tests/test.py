@@ -2,6 +2,7 @@ import sublime
 import sys
 from unittest import TestCase
 import_helper = sys.modules['ImportHelper.import_helper']
+utils = sys.modules['ImportHelper.utils']
 
 class TestDoInsertImport(TestCase):
     
@@ -21,7 +22,7 @@ class TestDoInsertImport(TestCase):
 
     def test_smoke(self):
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
+        self.view.run_command('paste_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
         first_row = self.getRow(0)
         self.assertTrue(first_row.startswith('import {'))
         self.assertIn('}', first_row)
@@ -36,15 +37,15 @@ class TestDoInsertImport(TestCase):
             {'path_to': '@components', 'path_value': './app/components', 'base_dir': '/base_dir'},
         ]
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/test_playground/lib/a/b/c.ts', 'name': 'name', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/test_playground/lib/a/b/c.ts', 'name': 'name', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn('@Libs/a/b/c', self.getRow(0))
         
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/app/components/z.ts', 'name': 'zoo', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/app/components/z.ts', 'name': 'zoo', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn("import {zoo} from '@z_component'", self.getRow(0))
 
         setText(self.view, '')
-        self.view.run_command('do_insert_import', {'item': {'filepath': '/base_dir/app/components/index.ts', 'name': 'koo', 'isDefault': False }, 'typescript_paths': typescript_paths })
+        self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/app/components/index.ts', 'name': 'koo', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn("import {koo} from '@components'", self.getRow(0))
 
 class TestInitializeSetup(TestCase):
@@ -104,9 +105,12 @@ class TestUtilFunctions(TestCase):
         self.assertEqual(get_setting('insert_position', None), 'end')
         self.assertEqual(get_setting('from_quote', None), "'")
         self.assertEqual(get_setting('space_around_braces', None), False)
-        self.assertEqual(get_setting('node_bin', ''), 'node.exe')
         self.assertEqual(get_setting('from_semicolon', True), False)
         self.assertEqual(get_setting('unknown', 'default_value'), 'default_value')
+
+    def test_find_executable(self):
+        result = utils.find_executable('node')
+        self.assertEqual(result, 'C:\\nodejs\\node.exe')
 
     def test_get_import_root(self):
         get_import_root = import_helper.get_import_root

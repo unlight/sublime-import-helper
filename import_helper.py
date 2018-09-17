@@ -81,73 +81,14 @@ def update_typescript_paths():
 
 def get_modules_callback(err, result):
     if err:
-        sublime.error_message(PROJECT_NAME + '\n' + str(err))
+        sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
         return
     if type(result) is not list:
-        sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(result))
+        sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
         return
     node_modules.extend(result)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('Get packages result', len(result))
-
-# Command insert_import
-class InsertImportCommand(sublime_plugin.TextCommand):
-    # Adds import of identifier near cursor
-
-    def run(self, edit, name=None, point=None):
-        if name is None:
-            point_region = self.view.sel()[0]
-            if point is not None:
-                point_region = sublime.Region(point, point)
-            name = self.view.substr(point_region).strip()
-            if not bool(name):
-                cursor_region = self.view.expand_by_class(point_region, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END)
-                name = self.view.substr(cursor_region)
-                name = name.strip()
-        debug('Trying to import', '`' + name + '`')
-        import_root = get_import_root()
-        match_items = []
-        panel_items = []
-        # Iterate through source modules + node modules
-        for item in source_modules + node_modules:
-            if (item.get('name') == name):
-                panel_item = get_panel_item(import_root, item)
-                if panel_item is not None:
-                    panel_items.append(panel_item)
-                    match_items.append(item)
-        if (len(panel_items) == 0):
-            self.view.show_popup('No imports found for `<strong>{0}</strong>`'.format(name))
-            return
-        if (len(panel_items) == 1):
-            self.view.run_command('do_insert_import', {'item': match_items[0], 'typescript_paths': typescript_paths})
-            return
-        on_done = on_done_func(match_items, self.on_select)
-        self.view.window().show_quick_panel(panel_items, on_done)
-        
-    def on_select(self, selected_item):
-        debug('Selected item', selected_item)
-        self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
-    
-# Command list_imports
-# view.run_command('list_imports')
-class ListImportsCommand(sublime_plugin.TextCommand):
-    # Show all available imports
-
-    def run(self, edit):
-        import_root = get_import_root()
-        match_items = []
-        panel_items = []
-        for item in source_modules + node_modules:
-            panel_item = get_panel_item(import_root, item)
-            if panel_item is not None:
-                panel_items.append(panel_item)
-                match_items.append(item)
-        on_done = on_done_func(match_items, self.on_select)
-        self.view.window().show_quick_panel(panel_items, on_done)
-
-    def on_select(self, selected_item):
-        debug('Selected item', selected_item)
-        self.view.run_command('do_insert_import', {'item': selected_item, 'typescript_paths': typescript_paths})
 
 # window.run_command('initialize_setup')
 # sublime.active_window().run_command('initialize_setup', args={'a':'bar'})
@@ -161,51 +102,3 @@ class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
     def run(self):
         update_source_modules()
 
-# Command import_from_clipboard
-# view.run_command('import_from_clipboard')
-class ImportFromClipboardCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.run_command('insert_import', args=({'name': sublime.get_clipboard()}))
-
-# ImportHelperEventListener
-class ImportHelperViewEventListener(sublime_plugin.EventListener):
-
-    def __init__(self):
-        self.viewIds = []
-
-    def on_new(self, view):
-        self.viewIds.append(view.id())
-
-    def on_post_save(self, view):
-        if view.id() in self.viewIds:
-            self.viewIds.remove(view.id())
-            update_source_modules()
-
-# ImportHelperViewEventListener
-class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
-
-    def __init__(self, view):
-        super().__init__(view)
-        self.completions_info = {'time': -1, 'result': []}
-        self.in_auto_complete = False
-
-    def on_query_completions(self, prefix, locations):
-        result = self.completions_info['result']
-        if self.view.match_selector(locations[0], 'source.ts, source.tsx, source.js, source.jsx') and get_time() > self.completions_info['time'] + 1:
-            self.completions_info['time'] = get_time() 
-            self.completions_info['result'] = query_completions_modules(prefix, source_modules, node_modules)
-        return result
-    
-    def on_post_text_command(self, command_name, args):
-        # debug('on_post_text_command', [command_name, args])
-        if self.in_auto_complete and (command_name == 'insert_best_completion' or command_name == 'insert_dimensions'):
-            self.in_auto_complete = False
-            self.view.run_command('insert_import')
-        elif command_name == 'auto_complete' or command_name == 'replace_completion_with_next_completion' or command_name == 'replace_completion_with_auto_complete':
-            self.in_auto_complete = True
-        elif command_name == 'hide_auto_complete':
-            self.in_auto_complete = False
-
-    def on_activated(self):
-        # debug("on_activated")
-        self.in_auto_complete = False
