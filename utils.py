@@ -13,7 +13,8 @@ DEBUG = True
 DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
-if DEBUG: RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
+if DEBUG:
+    RUN_PATH = os.path.join(PACKAGE_PATH, 'backend', 'run.js')
 NODE_BIN = 'node'
 
 def initialize():
@@ -183,10 +184,8 @@ def find_executable(executable, path = None):
     else:
         return None
 
-def get_exclude_patterns():
+def get_exclude_patterns(project_data = sublime.active_window().project_data()):
     result = []
-    project_data = sublime.active_window().project_data()
-    project_file = sublime.active_window().project_file_name()
     for folder in project_data['folders']:
         folder_exclude_patterns = folder.get('folder_exclude_patterns')
         if folder_exclude_patterns is None: folder_exclude_patterns = []

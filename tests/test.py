@@ -48,6 +48,18 @@ class TestDoInsertImport(TestCase):
         self.view.run_command('paste_import', {'item': {'filepath': '/base_dir/app/components/index.ts', 'name': 'koo', 'isDefault': False }, 'typescript_paths': typescript_paths })
         self.assertIn("import {koo} from '@components'", self.getRow(0))
 
+    def test_remove_importpath_index(self):
+        setText(self.view, '')
+        self.view.run_command('paste_import', {'item': {'filepath': './component/x/index', 'name': 'x1', 'isDefault': False}})
+        self.assertIn("import {x1} from './component/x'", self.getRow(0))
+        self.view.run_command('paste_import', {'item': {'filepath': './component/x/index', 'name': 'x2', 'isDefault': False}})
+        self.assertIn("import {x1, x2} from './component/x'", self.getRow(0))
+
+    def test_paste_import_module(self):
+        setText(self.view, '')
+        self.view.run_command('paste_import', {'item': {'module': '@angular/core', 'specifier': './debug/debug_node', 'isDefault': False, 'name': 'Inject'}})
+        self.assertIn("import {Inject} from '@angular/core'", self.getRow(0))
+
 class TestInitializeSetup(TestCase):
 
     def setUp(self):
@@ -110,7 +122,7 @@ class TestUtilFunctions(TestCase):
 
     def test_find_executable(self):
         result = utils.find_executable('node')
-        self.assertEqual(result, 'C:\\nodejs\\node.exe')
+        self.assertEqual(result, 'C:\\nodejs\\node.exe'.lower())
 
     def test_get_import_root(self):
         get_import_root = import_helper.get_import_root
@@ -135,6 +147,11 @@ class TestUtilFunctions(TestCase):
         self.assertListEqual(result, [['good\tsource_modules', 'good']])
         result = query_completions_modules('Chic', source_modules, node_modules)
         self.assertListEqual(result, [['Chicky\tnode_modules/chicken', 'Chicky']])
+
+    def test_get_exclude_patterns_fault_tollerance(self):
+        get_exclude_patterns = import_helper.get_exclude_patterns
+        result = get_exclude_patterns({'folders': {}})
+        self.assertListEqual(result, [])
 
 class TestUnsedImports(TestCase):
 
