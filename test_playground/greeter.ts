@@ -15,7 +15,7 @@ button.textContent = "Say Hello";
 button.onclick = function() {
     alert(greeter.greet());
 }
-// createName FullName Animal
+// createName FullName Animal index1 index2
 document.body.appendChild(button);
 // HTTP_STATUS_CONTINUE
 function(res) {

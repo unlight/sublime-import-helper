@@ -15,6 +15,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
     def run(self, edit, item, typescript_paths = []):
         if (item.get('module')):
             from_path = item['module']
+            from_paths = [from_path]
         else:
             typescript_path = self.try_typescript_path(item['filepath'], typescript_paths)
             if typescript_path is not None:
@@ -25,12 +26,16 @@ class PasteImportCommand(sublime_plugin.TextCommand):
                 from_path = unixify(from_path)
                 if from_path[0] != '.':
                     from_path = './' + from_path
+            from_paths = [from_path]
+            if from_path[-6:] == '/index' and get_setting('remove_trailing_index', True):
+                from_paths.insert(0, from_path[:-6])
         from_quote = get_setting('from_quote', "'")
         import_end = ';' if get_setting('from_semicolon', True) else ''
         import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
         name = item['name']
-        import_info = self.get_import_info(from_path)
-        debug("import_info", import_info)
+        import_info = self.get_import_info(from_paths)
+        debug('Result of import_info', import_info)
+        from_path = import_info['from_path']
         if not import_info.get('line_region') or item['isDefault']:
             if not item['isDefault']:
                 name = self.wrap_imports([name])
@@ -51,7 +56,8 @@ class PasteImportCommand(sublime_plugin.TextCommand):
             debug('Import string', import_string)
             self.view.replace(edit, line_region, import_string)
 
-    def get_import_info(self, from_path):
+    def get_import_info(self, from_paths):
+        from_path = from_paths[0];
         row = -1
         found = False
         last_row = self.view.rowcol(self.view.size())[0]
@@ -61,23 +67,28 @@ class PasteImportCommand(sublime_plugin.TextCommand):
             line_region = self.view.full_line(self.view.text_point(row, 0))
             line_contents = self.view.substr(line_region)
             match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
-            # match = re.search(r"import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
             if match:
                 last_import_row = row
-                if match.group(3) == from_path:
-                    found = True
+                test_path = match.group(3)
+                for from_path in from_paths:
+                    if test_path == from_path:
+                        debug('Found from_path', from_path)
+                        found = True
+                        break
+                if found:
                     break
         if not found:
-            return {'last_import_row': last_import_row}
+            from_path = from_paths[0];
+            return {'from_path': from_path, 'last_import_row': last_import_row}
         dirty_names = match.group(1)
         if dirty_names[0] != '{' and dirty_names[-1] != '}':
             # Found unexpected statement.
-            return {'last_import_row': last_import_row}
+            return {'from_path': from_path, 'last_import_row': last_import_row}
         else:
             imports = []
             for m in re.finditer(r"(\w+(\s+as\s+\w+)?)", dirty_names):
                 imports.append(m.group(1))
-            return {'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
+            return {'from_path': from_path, 'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
 
     def wrap_imports(self, imports):
         start = '{'

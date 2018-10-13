@@ -44,4 +44,9 @@
     // - Type: `boolean`  
     // - Default: `false`
     "autocomplete_auto_import": false,
+
+    // Remove trailing index in import path
+    // - Type: `boolean`  
+    // - Default: `false`
+    "remove_trailing_index": true,
 }
