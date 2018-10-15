@@ -186,7 +186,7 @@ def find_executable(executable, path = None):
 
 def get_exclude_patterns(project_data = sublime.active_window().project_data()):
     result = []
-    for folder in project_data['folders']:
+    for folder in ((project_data or {}).get('folders') or []):
         folder_exclude_patterns = folder.get('folder_exclude_patterns')
         if folder_exclude_patterns is None: folder_exclude_patterns = []
         for pattern in folder_exclude_patterns:
