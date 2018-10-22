@@ -148,6 +148,7 @@ CHANGELOG
 | Version | Date        | Description                                                                                               |
 |:--------|:------------|:----------------------------------------------------------------------------------------------------------|
 | 2.0.2   | 13 Oct 2018 | Remove trailing index in import path [#59](https://github.com/unlight/sublime-import-helper/issues/59)    |
+|         |             | Null reference [#60](https://github.com/unlight/sublime-import-helper/issues/60)                          |
 | 2.0.1   | 13 Aug 2018 | Added key bind to update source modules [#58](https://github.com/unlight/sublime-import-helper/issues/58) |
 | 2.0.0   | 20 Apr 2018 | Path mapping [#54](https://github.com/unlight/sublime-import-helper/issues/54)                            |
 |         |             | Autocomplete support [#57](https://github.com/unlight/sublime-import-helper/issues/57)                    |
