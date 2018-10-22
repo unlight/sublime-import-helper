@@ -74,6 +74,8 @@ def update_typescript_paths():
             continue
         base_dir = os.path.normpath(os.path.join(os.path.dirname(tsconfig_file), baseUrl))
         paths = compilerOptions.get('paths')
+        if not paths:
+            continue
         for path_to, pathValues in paths.items():
             for path_value in pathValues:
                 typescript_paths.append({'base_dir': base_dir, 'path_value': path_value, 'path_to': path_to})
