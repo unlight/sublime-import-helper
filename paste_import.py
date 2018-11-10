@@ -17,18 +17,28 @@ class PasteImportCommand(sublime_plugin.TextCommand):
             from_path = item['module']
             from_paths = [from_path]
         else:
+            file_name = self.view.file_name() or '.'
+            from_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
+            from_path = unixify(from_path)
+            if from_path[0] != '.':
+                from_path = './' + from_path
+            from_paths = [from_path]
             typescript_path = self.try_typescript_path(item['filepath'], typescript_paths)
             if typescript_path is not None:
-                from_path = unixify(typescript_path)
-            else:
-                file_name = self.view.file_name() or '.'
-                from_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
-                from_path = unixify(from_path)
-                if from_path[0] != '.':
-                    from_path = './' + from_path
-            from_paths = [from_path]
-            if from_path[-6:] == '/index' and get_setting('remove_trailing_index', True):
-                from_paths.insert(0, from_path[:-6])
+                typescript_path = unixify(typescript_path)
+                from_paths.insert(0, typescript_path)
+            remove_trailing_index = get_setting('remove_trailing_index', True)
+            for i, from_path in enumerate(from_paths):
+                if remove_trailing_index and from_path[-6:] == '/index':
+                    from_paths[i] = from_path[:-6]
+            if len(from_paths) > 1:
+                choices = [{'item': item, 'path': path} for path in from_paths]
+                def on_select(selected):
+                    item = selected.get('item')
+                    item['module'] = selected.get('path')
+                    self.view.run_command('paste_import', {'item': item, 'typescript_paths': []})
+                self.view.window().show_quick_panel(from_paths, on_done_func(choices, on_select))
+                return
         from_quote = get_setting('from_quote', "'")
         import_end = ';' if get_setting('from_semicolon', True) else ''
         import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
