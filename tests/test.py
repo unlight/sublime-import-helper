@@ -191,6 +191,13 @@ class TestUnsedImports(TestCase):
         first_row = self.getRow(0)
         self.assertEqual(first_row, "")
 
+    def test_unused_all_dollar_sign(self):
+        setText(self.view, "import {$x, x as $xx, $x as $xxx, $a as x$} from './goo';")
+        line1 = [{"line":1,"name":"$x"}, {"line":1,"name":"$xx"}, {"line":1,"name":"$xxx"}, {"line":1,"name":"x$"}]
+        self.view.run_command('edit_remove_unsed_imports', args=({'data': {"1":line1}}))
+        first_row = self.getRow(0)
+        self.assertEqual(first_row, "")
+
     def test_unused_single_as(self):
         setText(self.view, "import { Greeter as gr } from './greeter'; // Unused")
         line1 = [{"line":1,"name":"gr"}]

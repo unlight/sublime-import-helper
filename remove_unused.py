@@ -43,9 +43,18 @@ class EditRemoveUnsedImports(sublime_plugin.TextCommand):
                 continue
             # import_names = match.group(1)
             for info in infoList:
+                if info.get('all') == True:
+                    empty_lines.append(line_index)
+                    continue
                 name = info['name']
-                line_contents = re.sub(r"((,\s*)((\*|\w+)\s+as\s+)?\b" + name + r"\b|((\*|\w+)\s+as\s+)?\b" + name + r"\b(,\s*)|((\*|\w+)\s+as\s+)?\b" + name + r"\b)", '', line_contents, 1)
-            remove_line = re.search(r"import\s+({\s*})?\s+from", line_contents) is not None
+                if name:
+                    name = name.replace('$', '\\$');
+                    # Slashb just means word boundary equivalent to ((?<=\w)(?=\W)|(?<=\W)(?=\w))
+                    b = r"((?<=[\w|\$])(?=\W)|(?<=\W)(?=[\w|\$]))"
+                    line_contents = re.sub(r"(,\s*)((\*|[\w|\$]+)\s+as\s+)?" + b + name + b, '', line_contents, 1)
+                    line_contents = re.sub(r"((\*|[\w|\$]+)\s+as\s+)?" + b + name + b + r"(,\s*)", '', line_contents, 1)
+                    line_contents = re.sub(r"((\*|[\w|\$]+)\s+as\s+)?" + b + name + b, '', line_contents, 1)
+            remove_line = re.search(r"import\s+({\s*}|{\s+as\s+})?\s+from", line_contents) is not None
             if remove_line:
                 # debug("Line has to be removed", self.view.substr(self.view.line(self.view.text_point(line_index, 0))))
                 empty_lines.append(line_index)

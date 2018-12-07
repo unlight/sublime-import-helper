@@ -21,3 +21,6 @@ document.body.appendChild(button);
 function foo(res) {
 	res.json(typeof HTTP2_HEADER_STATUS);
 }
+
+export const $goo = 1;
+export const goo$ = 2;

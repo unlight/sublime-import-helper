@@ -14,22 +14,38 @@ module.exports = (data, callback) => {
         var result = {};
         for (var i = 0; i < outlines.length; i++) {
             var outline = outlines[i];
-            var match = outline.match(/^(.+)\((\d+),(\d+)\): error TS(\d+): '(\w+)'/);
-            if (!match || match[4] !== '6133') continue;
+            var match = outline.match(/^(.+)\((\d+),(\d+)\): error TS(6133|6192):/);
+            if (!match) continue;
             var file = match[1].replace(/\\/g, '/');
             if (file_name.slice(-file.length) !== file) continue;
             var line = Number(match[2]);
             var pos = Number(match[3]);
-            var name = match[5];
             if (!Array.isArray(result[line])) {
                 result[line] = [];
             }
-            result[line].push({
-                file: file,
-                line: line,
-                pos: pos,
-                name: name,
-            });
+            switch (match[4]) {
+                case '6133': {
+                    match = outline.match(/^(.+)\((\d+),(\d+)\): error TS(\d+): '(.+)'/);
+                    if (!match) continue;
+                    result[line].push({
+                        file: file,
+                        line: line,
+                        pos: pos,
+                        name: match[5],
+                        all: false,
+                    });
+                } break;
+                case '6192': {
+                    debugger;
+                    result[line].push({
+                        file: file,
+                        line: line,
+                        pos: pos,
+                        name: null,
+                        all: true,
+                    });
+                } break;
+            }
         }
         callback(null, result);
     });
