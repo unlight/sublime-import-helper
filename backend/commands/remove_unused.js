@@ -36,7 +36,6 @@ module.exports = (data, callback) => {
                     });
                 } break;
                 case '6192': {
-                    debugger;
                     result[line].push({
                         file: file,
                         line: line,
