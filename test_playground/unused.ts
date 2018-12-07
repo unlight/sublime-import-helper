@@ -8,6 +8,8 @@ import {greeter as lg} from './greeter'; // Used
 import * as someLib1 from 'prettier'; // Unused
 import someLib2 from 'prettier'; // Unused
 import $x from 'prettier'; // Unused
+import { $x$ } from 'prettier'; // Unused
+import {$goo} from './greeter';  // Unused
 
 console.log("Greeter", Greeter);
 console.log("cr", cr);
