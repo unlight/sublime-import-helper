@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { Greeter as gr1 } from './greeter'; // Unused
-import { FullName as f, createname as cr } from './createname'; // Partial
+import { FullName as f, createname as cr } from './createname'; // Partial Used
 import {createname, FullName, createname as xx} from './createname';  // Unused all
 import {Greeter} from './greeter'; // Used
 import { Greeter as gr } from './greeter'; // Unused

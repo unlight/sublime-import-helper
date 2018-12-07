@@ -12,10 +12,10 @@
     "release:patch": "npm run prerelease && npm version patch",
     "release:minor": "npm run prerelease && npm version minor",
     "test": "npm run prerelease",
-    "mocha": "mocha --timeout 5000",
+    "mocha": "mocha --timeout 8000",
     "t": "npm run mocha -- backend/test.js",
     "test:w": "npm run mocha -- --watch backend/test.js",
-    "inspect": "inspect node_modules/mocha/bin/_mocha --no-timeouts backend/test.js",
+    "test:d": "node --inspect node_modules/mocha/bin/_mocha --no-timeouts backend/test.js",
     "updtr": "updtr --test-stdout -R simple --test \"npm run t\""
   },
   "devDependencies": {

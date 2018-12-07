@@ -6,6 +6,7 @@ const pkgDir = require('pkg-dir');
 const getFoldersCmd = require('./commands/get_folders');
 const getModulesCmd = require('./commands/get_modules');
 const ping = require('./commands/ping');
+const removeUnused = require('./commands/remove_unused');
 
 const rootPath = pkgDir.sync(__dirname);
 
@@ -165,3 +166,22 @@ describe('if error undefined we should set it to unknown err', () => {
     });
 });
 
+it('remove_unused', (done) => {
+    removeUnused({
+        file_name: 'test_playground/unused.ts',
+    }, (err, result) => {
+        if (err) {
+            return done(err);
+        }
+        assert(Object.keys(result).length > 0);
+        assert.equal(result[3][0].name, 'f');
+        assert.equal(result[2][0].name, 'gr1');
+        assert.equal(result[6][0].name, 'gr');
+        assert.equal(result[8][0].name, 'someLib1');
+        assert.equal(result[9][0].name, 'someLib2');
+
+        assert.equal(result[4][0].all, true);
+
+        done();
+    });
+});
