@@ -18,6 +18,6 @@ button.onclick = function() {
 // createName FullName Animal index1 index2
 document.body.appendChild(button);
 // HTTP_STATUS_CONTINUE
-function(res) {
+function foo(res) {
 	res.json(typeof HTTP2_HEADER_STATUS);
 }
