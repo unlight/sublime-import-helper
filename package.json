@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "eslint backend",
     "postinstall": "npm run build:backend",
-    "build:backend": "browserify -x spawn-sync --bare backend/run.js > backend_run.js",
+    "build:backend": "browserify --bare backend/run.js > backend_run.js",
     "bb": "npm run build:backend",
     "prerelease": "npm run eslint && npm run t && npm run build:backend",
     "release:patch": "npm run prerelease && npm version patch",
@@ -20,19 +20,18 @@
   },
   "devDependencies": {
     "1-liners": "0.4.0",
-    "@angular/core": "6.0.1",
-    "@types/node": "10.0.8",
-    "browserify": "16.2.2",
+    "@angular/core": "7.1.2",
+    "@types/node": "10.12.12",
+    "browserify": "16.2.3",
     "cross-spawn": "6.0.5",
-    "eslint": "4.19.1",
-    "eslint-plugin-mocha": "5.0.0",
-    "esm-exports": "2.2.0",
-    "mocha": "5.1.1",
+    "eslint": "5.9.0",
+    "eslint-plugin-mocha": "5.2.0",
+    "esm-exports": "2.3.0",
+    "mocha": "5.2.0",
     "object-values": "2.0.0",
-    "pkg-dir": "2.0.0",
-    "read-pkg-up": "3.0.0",
-    "source-map-support": "0.5.5",
-    "spawn-sync": "1.0.15"
+    "pkg-dir": "3.0.0",
+    "read-pkg-up": "4.0.0",
+    "source-map-support": "0.5.9"
   },
   "repository": {
     "type": "git",
