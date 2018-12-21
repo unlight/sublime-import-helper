@@ -147,6 +147,7 @@ CHANGELOG
 ---
 | Version | Date        | Description                                                                                               |
 |:--------|:------------|:----------------------------------------------------------------------------------------------------------|
+| 2.0.5   | 22 Dec 2018 | Fixed [#61](https://github.com/unlight/sublime-import-helper/issues/61)                                   |
 | 2.0.4   | 08 Dec 2018 | Fixed #62 (remove unsed imports with dollar sign                                                          |
 | 2.0.3   | 10 Nov 2018 | Alllow to select import path (typescript paths)                                                           |
 | 2.0.2   | 13 Oct 2018 | Remove trailing index in import path [#59](https://github.com/unlight/sublime-import-helper/issues/59)    |
