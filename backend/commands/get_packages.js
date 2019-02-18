@@ -1,4 +1,4 @@
-const esm = require('esm-exports');
+const { esmExports } = require('esm-exports');
 const pick = require('1-liners/pick');
 const readPkgUp = require('read-pkg-up');
 const objectValues = require('object-values');
@@ -13,7 +13,7 @@ const emptyPkg = {
 module.exports = (data, callback) => {
     const folderList = data.folders || [];
     const result = [];
-    const requests = folderList.map(d => esm.directory(d).then(items => {
+    const requests = folderList.map(d => esmExports(d, { type: 'directory' }).then(items => {
         result.push(...items);
     }));
     const importRoot = data.importRoot;
@@ -28,7 +28,7 @@ module.exports = (data, callback) => {
                 return Object.keys(values);
             })
             .then(names => {
-                const promises = names.map(n => esm.module(n, { dirname: importRoot }).then(items => {
+                const promises = names.map(n => esmExports(n, { dirname: importRoot, type: 'module' }).then(items => {
                     result.push(...items);
                 }));
                 return Promise.all(promises);

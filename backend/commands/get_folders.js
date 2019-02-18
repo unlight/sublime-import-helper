@@ -1,4 +1,4 @@
-const esm = require('esm-exports');
+const { esmExports } = require('esm-exports');
 const fs = require('fs');
 
 module.exports = (data, callback) => {
@@ -9,7 +9,7 @@ module.exports = (data, callback) => {
     const result = [];
     const promises = folders
         .filter(d => fs.existsSync(d))
-        .map(d => esm.directory(d).then(items => {
+        .map(d => esmExports(d, { type: 'directory' }).then(items => {
             result.push(...items);
         }));
     return Promise.all(promises)

@@ -1,4 +1,4 @@
-const esm = require('esm-exports');
+const { esmExports } = require('esm-exports');
 const pick = require('1-liners/pick');
 const readPkgUp = require('read-pkg-up');
 const objectValues = require('object-values');
@@ -21,7 +21,7 @@ module.exports = (data, callback) => {
             return Object.keys(values);
         })
         .then(names => {
-            const promises = names.map(n => esm.module(n, { basedir: importRoot }).then(items => {
+            const promises = names.map(n => esmExports(n, { basedir: importRoot, type: 'module' }).then(items => {
                 result.push(...items);
             }));
             return Promise.all(promises);

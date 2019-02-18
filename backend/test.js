@@ -110,8 +110,7 @@ it('get_modules command', (done) => {
 
     }, (err, result) => {
         if (err) return done(err);
-        assert(result.find(m => m.name === 'parse')); // esm-exports
-        assert(result.find(m => m.name === 'directory'));
+        assert(result.find(m => m.name === 'esmExports')); // esm-exports
         assert(result.find(m => m.name === 'Component')); // @angular/core
         assert(result.find(m => m.name === 'inject')); // @angular/core/testing
         done();
