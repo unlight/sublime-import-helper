@@ -160,6 +160,14 @@ class TestUtilFunctions(TestCase):
         result = get_exclude_patterns({'folders': {}})
         self.assertListEqual(result, [])
 
+    def test_is_import_all(self):
+        self.assertTrue(utils.is_import_all("import * as worker_threads from 'worker_threads'"))
+        self.assertFalse(utils.is_import_all("import worker_threads from 'worker_threads'"))
+
+    def test_is_import_default(self):
+        self.assertFalse(utils.is_import_default("import * as worker_threads from 'worker_threads'"))
+        self.assertTrue(utils.is_import_default("import worker_threads from 'worker_threads'"))
+
 class TestUnsedImports(TestCase):
 
     def setUp(self):

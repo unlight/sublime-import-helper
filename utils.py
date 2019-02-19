@@ -8,6 +8,7 @@ import socket
 import traceback
 import fnmatch
 import time
+import re
 
 DEBUG = True
 DEBUG = False
@@ -96,7 +97,9 @@ def get_panel_item(root, item):
     # TODO: Handle case when name is none (browserify)
     if name is None:
         return None
-    if (module is not None):
+    if module is not None:
+        if module == name and item.get('isDefault') == True:
+            return module + '/default'
         return module + '/' + name
     filepath = os.path.normpath(item['filepath'])[len(root) + 1:]
     return unixify(filepath) + '/' + name
@@ -232,7 +235,7 @@ def query_completions_modules(prefix, source_modules, node_modules):
             continue
         if not name.startswith(prefix):
             continue
-        result.append([name + '\t' + 'source_modules', name])
+        result.append([name + '\tsource_modules', name])
     for item in node_modules:
         name = item.get('name')
         module = item.get('module')
@@ -240,5 +243,11 @@ def query_completions_modules(prefix, source_modules, node_modules):
             continue
         if not name.startswith(prefix):
             continue
-        result.append([name + '\t' + 'node_modules' + '/' + module, name])
+        result.append([name + '\tnode_modules/' + module, name])
     return result
+
+def is_import_all(string):
+    return re.match(r"^import\s+\*\s+as\s+(.+)\s+from\s+(['\"])(.+)\2", string)
+
+def is_import_default(string):
+    return re.match(r"^import\s+([^ ,]+)\s+from\s+(['\"])(.+)\2", string)

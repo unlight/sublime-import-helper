@@ -20,5 +20,5 @@ class ListImportsCommand(sublime_plugin.TextCommand):
         self.view.window().show_quick_panel(panel_items, on_done)
 
     def on_select(self, selected_item):
-        debug('Selected Item', selected_item)
+        debug('list_imports:on_select', selected_item)
         self.view.run_command('paste_import', {'item': selected_item, 'typescript_paths': typescript_paths})

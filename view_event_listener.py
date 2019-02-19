@@ -1,5 +1,5 @@
 import sublime_plugin
-from .import_helper import node_modules, source_modules
+from .import_helper import source_modules, node_modules
 from .utils import *
 
 class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):

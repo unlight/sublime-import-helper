@@ -6,7 +6,7 @@ from .utils import *
 # sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 
 PROJECT_NAME = 'Import Helper'
-node_modules = []
+node_modules = [] # Collection of entries
 source_modules = []
 typescript_paths = []
 
@@ -88,9 +88,17 @@ def get_modules_callback(err, result):
     if type(result) is not list:
         sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
         return
+    node_modules_names = set(())
+    for item in result:
+        module = item.get('module')
+        if module is not None:
+            node_modules_names.add(module)
+    for name in node_modules_names:
+        node_modules.append({'module': name, 'name': name, 'isDefault': True})
     node_modules.extend(result)
+    print("node_modules", node_modules)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
-    debug('Get packages result', len(result))
+    debug('get_modules_callback:len(result)', len(result))
 
 # window.run_command('initialize_setup')
 # sublime.active_window().run_command('initialize_setup', args={'a':'bar'})

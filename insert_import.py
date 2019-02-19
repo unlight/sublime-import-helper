@@ -20,7 +20,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         name = re.sub(r'\W', '', name)
         if not name:
             return
-        debug('Trying to import', '`{0}`'.format(name))
+        debug('insert_import:trying to import', '`{0}`'.format(name))
         import_root = get_import_root()
         match_items = []
         panel_items = []
@@ -42,5 +42,5 @@ class InsertImportCommand(sublime_plugin.TextCommand):
         self.view.window().show_quick_panel(panel_items, on_done)
         
     def on_select(self, selected_item):
-        debug('Selected item', selected_item)
+        debug('insert_import:on_select', selected_item)
         self.view.run_command('paste_import', {'item': selected_item, 'typescript_paths': typescript_paths})
