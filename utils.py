@@ -250,4 +250,4 @@ def is_import_all(string):
     return re.match(r"^import\s+\*\s+as\s+(.+)\s+from\s+(['\"])(.+)\2", string)
 
 def is_import_default(string):
-    return re.match(r"^import\s+([^ ,]+)\s+from\s+(['\"])(.+)\2", string)
+    return re.match(r"^import\s+([^ ,{}]+)\s+from\s+(['\"])(.+)\2", string)

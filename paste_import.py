@@ -43,7 +43,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
         import_end = ';' if get_setting('from_semicolon', True) else ''
         import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
         name = item['name']
-        import_info = self.get_import_info(from_paths)
+        import_info = self.get_import_info(item, from_paths)
         debug('Result of import_info', import_info)
         from_path = import_info['from_path']
         if not import_info.get('line_region') or item['isDefault']:
@@ -76,7 +76,8 @@ class PasteImportCommand(sublime_plugin.TextCommand):
         debug('Import string', import_string)
         self.view.replace(edit, line_region, import_string)
 
-    def get_import_info(self, from_paths):
+    def get_import_info(self, item, from_paths):
+        is_default_import = item.get('isDefault') == True
         from_path = from_paths[0];
         row = -1
         found = False
@@ -87,7 +88,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
             line_region = self.view.full_line(self.view.text_point(row, 0))
             line_contents = self.view.substr(line_region)
             match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
-            if match:
+            if match and is_default_import == bool(is_import_default(line_contents) or is_import_all(line_contents)):
                 last_import_row = row
                 test_path = match.group(3)
                 for from_path in from_paths:
