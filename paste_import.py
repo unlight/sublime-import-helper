@@ -89,16 +89,16 @@ class PasteImportCommand(sublime_plugin.TextCommand):
                     break
         if not found:
             from_path = from_paths[0];
-            return {'from_path': from_path, 'last_import_row': last_import_row}
+            return {'from_path': from_path, 'last_import_row': last_import_row, 'found': False}
         dirty_names = match.group(1)
         if dirty_names[0] != '{' and dirty_names[-1] != '}':
             # Found unexpected statement.
-            return {'from_path': from_path, 'last_import_row': last_import_row}
+            return {'from_path': from_path, 'last_import_row': last_import_row, 'default_all': True, 'found': True}
         else:
             imports = []
             for m in re.finditer(r"(\w+(\s+as\s+\w+)?)", dirty_names):
                 imports.append(m.group(1))
-            return {'from_path': from_path, 'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
+            return {'from_path': from_path, 'found': True, 'imports': imports, 'line_region': line_region, 'last_import_row': last_import_row}
 
     def wrap_imports(self, imports):
         start = '{'
