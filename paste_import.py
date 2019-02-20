@@ -44,23 +44,13 @@ class PasteImportCommand(sublime_plugin.TextCommand):
         import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
         name = item['name']
         import_info = self.get_import_info(from_paths)
-        debug('paste_import:import_info', import_info)
+        debug('Result of import_info', import_info)
         from_path = import_info['from_path']
-        if import_info.get('last_import_row') >= 0 and item['isDefault'] == True:
-            # Already found import statement and it is default, switch to import all statement
-            row = import_info.get('last_import_row')
-            line_region = self.view.full_line(self.view.text_point(row, 0))
-            line_contents = self.view.substr(line_region)
-            if is_import_default(line_contents):
-                import_string = import_string.format('* as ' + name, from_path)
-            else:
-                import_string = import_string.format(name, from_path)
-            self.view.replace(edit, line_region, import_string)
-        elif not import_info.get('line_region') or item['isDefault']:
+        if not import_info.get('line_region') or item['isDefault']:
             if not item['isDefault']:
                 name = self.wrap_imports([name])
             import_string = import_string.format(name, from_path)
-            debug('paste_import:import_string', import_string)
+            debug('Import string', import_string)
             pos = 0
             if 'end' == get_setting('insert_position', 'end'):
                 pos = self.view.text_point(import_info['last_import_row'] + 1, 0)
