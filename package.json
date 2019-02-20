@@ -20,18 +20,18 @@
   },
   "devDependencies": {
     "1-liners": "0.4.0",
-    "@angular/core": "7.1.4",
-    "@types/node": "10.12.18",
+    "@angular/core": "7.2.5",
+    "@types/node": "11.9.4",
     "browserify": "16.2.3",
     "cross-spawn": "6.0.5",
-    "eslint": "5.10.0",
-    "eslint-plugin-mocha": "5.2.0",
-    "esm-exports": "2.3.1",
-    "mocha": "5.2.0",
+    "eslint": "5.14.1",
+    "eslint-plugin-mocha": "5.3.0",
+    "esm-exports": "3.0.1",
+    "mocha": "6.0.0",
     "object-values": "2.0.0",
     "pkg-dir": "3.0.0",
     "read-pkg-up": "4.0.0",
-    "source-map-support": "0.5.9"
+    "source-map-support": "0.5.10"
   },
   "repository": {
     "type": "git",
