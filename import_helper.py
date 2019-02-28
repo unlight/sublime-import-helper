@@ -96,7 +96,6 @@ def get_modules_callback(err, result):
     for name in node_modules_names:
         node_modules.append({'module': name, 'name': name, 'isDefault': True})
     node_modules.extend(result)
-    print("node_modules", node_modules)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
     debug('get_modules_callback:len(result)', len(result))
 
