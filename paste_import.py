@@ -13,6 +13,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
         super().__init__(view)
 
     def run(self, edit, item, typescript_paths = []):
+        debug('paste_import: item', item)
         if (item.get('module')):
             from_path = item['module']
             from_paths = [from_path]
@@ -43,8 +44,10 @@ class PasteImportCommand(sublime_plugin.TextCommand):
         import_end = ';' if get_setting('from_semicolon', True) else ''
         import_string = "import {{0}} from {0}{{1}}{0}{1}\n".format(from_quote, import_end)
         name = item['name']
+        if item.get('from_package') == True:
+            name = get_identifier_name(name)
         import_info = self.get_import_info(item, from_paths)
-        debug('Result of import_info', import_info)
+        debug('paste_import: import_info', import_info)
         from_path = import_info['from_path']
         if not import_info.get('line_region') or item['isDefault']:
             if import_info.get('default_all') == True and item['isDefault']:
@@ -60,7 +63,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
             if not item['isDefault']:
                 name = self.wrap_imports([name])
             import_string = import_string.format(name, from_path)
-            debug('Import string', import_string)
+            debug('paste_import: import_string', import_string)
             pos = 0
             if 'end' == get_setting('insert_position', 'end'):
                 pos = self.view.text_point(import_info['last_import_row'] + 1, 0)
@@ -73,7 +76,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
         imports.append(name)
         name = self.wrap_imports(imports)
         import_string = import_string.format(name, from_path)
-        debug('Import string', import_string)
+        debug('paste_import: import_string', import_string)
         self.view.replace(edit, line_region, import_string)
 
     def get_import_info(self, item, from_paths):
@@ -93,7 +96,7 @@ class PasteImportCommand(sublime_plugin.TextCommand):
                 test_path = match.group(3)
                 for from_path in from_paths:
                     if test_path == from_path:
-                        debug('Found from_path', from_path)
+                        debug('get_import_info: found from_path', from_path)
                         found = True
                         break
                 if found:

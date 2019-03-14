@@ -17,7 +17,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             if not name:
                 cursor_region = self.view.expand_by_class(point_region, sublime.CLASS_WORD_START | sublime.CLASS_LINE_START | sublime.CLASS_PUNCTUATION_START | sublime.CLASS_WORD_END | sublime.CLASS_PUNCTUATION_END | sublime.CLASS_LINE_END)
                 name = self.view.substr(cursor_region)
-        name = re.sub(r'\W', '', name)
+        name = re.sub(r'[^\w\-\@\/]', '', name)
         if not name:
             return
         debug('insert_import:trying to import', '`{0}`'.format(name))
