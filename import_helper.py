@@ -53,9 +53,10 @@ def update_source_modules():
 def update_node_modules():
     node_modules.clear()
     import_root = get_import_root()
-    debug('import_root', import_root)
+    debug('update_node_modules: import_root', import_root)
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_modules_callback)
     run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
+    run_command_async('get_from_package', {'importRoot': import_root}, get_from_package_callback)
 
 def update_typescript_paths():
     typescript_paths.clear()
@@ -88,16 +89,24 @@ def get_modules_callback(err, result):
     if type(result) is not list:
         sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
         return
-    node_modules_names = set(())
-    for item in result:
-        module = item.get('module')
-        if module is not None:
-            node_modules_names.add(module)
-    for name in node_modules_names:
-        node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
     node_modules.extend(result)
     sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
-    debug('get_modules_callback:len(result)', len(result))
+    debug('get_modules_callback: len(result)', len(result))
+
+def get_from_package_callback(err, result):
+    if err:
+        sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
+        return
+    if type(result) is not list:
+        sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
+        return
+    node_modules_names = set(())
+    for name in result:
+        if type(name) == str and len(name) > 0:
+            node_modules_names.add(name)
+    debug('get_from_package_callback: node_modules_names', node_modules_names)
+    for name in node_modules_names:
+        node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
 
 # window.run_command('initialize_setup')
 # sublime.active_window().run_command('initialize_setup', args={'a':'bar'})

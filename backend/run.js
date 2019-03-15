@@ -15,6 +15,7 @@ const commands = {
 	remove_unused: () => require('./commands/remove_unused'),
 	get_folders: () => require('./commands/get_folders'),
 	get_modules: () => require('./commands/get_modules'),
+	get_from_package: () => require('./commands/get_from_package'),
 };
 
 const runCommand = commands[cmd]();

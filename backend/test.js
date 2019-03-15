@@ -7,6 +7,7 @@ const getFoldersCmd = require('./commands/get_folders');
 const getModulesCmd = require('./commands/get_modules');
 const ping = require('./commands/ping');
 const removeUnused = require('./commands/remove_unused');
+const getFromPackage = require('./commands/get_from_package');
 
 const rootPath = pkgDir.sync(__dirname);
 
@@ -137,7 +138,7 @@ it('get folders error', () => {
 });
 
 describe('if error undefined we should set it to unknown err', () => {
-    
+
     before(() => {
         const esm = require('esm-exports');
         esm.module = () => Promise.reject(undefined);
@@ -181,6 +182,17 @@ it('remove_unused', (done) => {
 
         assert.equal(result[4][0].all, true);
 
+        done();
+    });
+});
+
+it('get from package', (done) => {
+    getFromPackage({ importRoot: rootPath }, (err, result) => {
+        if (err) {
+            return done(err);
+        }
+        assert(result);
+        assert(result.length > 0);
         done();
     });
 });
