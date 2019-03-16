@@ -11,7 +11,7 @@ import time
 import re
 
 DEBUG = True
-DEBUG = False
+# DEBUG = False
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, 'backend_run.js')
 if DEBUG:
@@ -47,7 +47,7 @@ def run_command(command, data=None, callback=None):
         if callback is not None:
             return callback(err, None)
         raise err
-    debug('Trying to decode', out)
+    # debug('run_command: trying to decode', out)
     result = sublime.decode_value(out)
     if callback is not None:
         return callback(None, result)
@@ -273,3 +273,56 @@ def camelcase(*arguments):
 
 def get_identifier_name(text):
     return camelcase(text)
+
+def try_typescript_path(filepath, typescript_paths):
+    import_path_mapping = get_setting('import_path_mapping', 'none')
+    if import_path_mapping == 'enabled':
+        (drive, filepath) = os.path.splitdrive(filepath)
+        filepath = filepath.replace('\\', '/')
+        # debug("filepath", filepath)
+        for ts_path in typescript_paths:
+            base_dir = ts_path['base_dir']
+            path_value = ts_path['path_value']
+            path_to = ts_path['path_to']
+            (drive, test_path) = os.path.splitdrive(os.path.normpath(os.path.join(base_dir, path_value)).replace('\\', '/'))
+            # debug("test_path", test_path)
+            # "@app/*" :["app/*"]
+            if test_path[-2:] == '/*' and path_to[-2:] == '/*':
+                test_path = test_path[0:-2]
+                if filepath.startswith(test_path):
+                    test_path = path_to[0:-2] + filepath[len(test_path):]
+                    return test_path
+            # "@lib": ["app/lib"]
+            if filepath == test_path or filepath in [test_path + '/index.ts', test_path + '/index.tsx', test_path + '/index.js', test_path + '/index.jsx']:
+                return path_to
+    return None
+
+# Check if possible insert name multiple ways (different paths)
+def get_from_paths(item, file_name = None, typescript_paths = []):
+    if (item.get('module')):
+        from_path = item['module']
+        return [from_path]
+    if not file_name:
+        file_name = '.'
+    from_path = os.path.relpath(item['filepath'], os.path.dirname(file_name))
+    from_path = unixify(from_path)
+    if from_path[0] != '.':
+        from_path = './' + from_path
+    result = [from_path]
+    typescript_path = try_typescript_path(item['filepath'], typescript_paths)
+    if typescript_path is not None:
+        typescript_path = unixify(typescript_path)
+        result.insert(0, typescript_path)
+    remove_trailing_index = get_setting('remove_trailing_index', True)
+    for i, from_path in enumerate(result):
+        if remove_trailing_index and from_path[-6:] == '/index':
+            result[i] = from_path[:-6]
+    return result
+
+def wrap_imports(imports):
+    start = '{'
+    end = '}'
+    if get_setting('space_around_braces', True):
+        start = start + ' '
+        end = ' ' + end
+    return start + ', '.join(imports) + end

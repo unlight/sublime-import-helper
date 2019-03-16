@@ -1,3 +1,6 @@
+import {index2} from './component'
+import mocha from 'mocha'
+
 export class Greeter<T> {
     greeting: T;
     constructor(message: T) {
@@ -16,7 +19,7 @@ button.onclick = function() {
     alert(greeter.greet());
 }
 // createName FullName Animal index1 index2 worker_threads fs readFileSync copyFileSync
-// `cross-spawn`
+// `cross-spawn` mocha
 document.body.appendChild(button);
 // HTTP_STATUS_CONTINUE
 function foo(res) {
