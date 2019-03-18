@@ -1,5 +1,8 @@
-import {index2} from './component'
+import {index2} from '@Components'
 import mocha from 'mocha'
+import {createName, FullName} from './createname'
+import {index1} from './component/x.component'
+import * as crossSpawn from 'cross-spawn'
 
 export class Greeter<T> {
     greeting: T;
@@ -18,8 +21,8 @@ button.textContent = "Say Hello";
 button.onclick = function() {
     alert(greeter.greet());
 }
-// createName FullName Animal index1 index2 worker_threads fs readFileSync copyFileSync
-// `cross-spawn` mocha
+// createName FullName index1 index2 worker_threads mocha fs readFileSync copyFileSync
+// `cross-spawn` mocha Animal Snake Horse
 document.body.appendChild(button);
 // HTTP_STATUS_CONTINUE
 function foo(res) {

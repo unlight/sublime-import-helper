@@ -5,7 +5,7 @@ export class Animal {
     }
 }
 
-class Snake extends Animal {
+export class Snake extends Animal {
     constructor(name) { super(name); }
     move(distanceInMeters = 5) {
         console.log("Slithering...");
@@ -13,7 +13,7 @@ class Snake extends Animal {
     }
 }
 
-class Horse extends Animal {
+export class Horse extends Animal {
     constructor(name) { super(name); }
     move(distanceInMeters = 45) {
         console.log("Galloping...");
