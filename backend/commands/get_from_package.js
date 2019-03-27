@@ -8,7 +8,6 @@ const emptyPkg = {
 };
 
 module.exports = (data, callback) => {
-    const result = [];
     const importRoot = data.importRoot;
     const packageKeys = data.packageKeys || ['dependencies', 'devDependencies'];
     return readPkgUp({ cwd: importRoot, normalize: false })
