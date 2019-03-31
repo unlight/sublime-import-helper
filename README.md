@@ -1,17 +1,14 @@
-sublime-import-helper
-=====================
+# sublime-import-helper
 A Sublime Text Plugin that helps you to import your modules.
 
-Supported Languages
----
+## Supported Languages
 * TypeScript
 * JavaScript (ES2015)
 
 ## Requirements
 * Node.JS 6.0+
 
-Installation
----
+## Installation
 #### [PackageControl](https://packagecontrol.io/packages/ImportHelper)
 * Select `Package Control: Install Package` from command palette
 * Select `ImportHelper`
@@ -23,8 +20,7 @@ within sublime packages directory (Preferences > Browse Packages):
 git clone https://github.com/unlight/sublime-import-helper ImportHelper
 ```
 
-Usage
----
+## Usage
 #### Initialize / Setup / Update modules
 * Restart plugin - update node_modules, source modules
 
@@ -45,12 +41,10 @@ Usage
 #### Remove unused imports (TypeScript only)
 * Press `alt+i, alt+u`, or select the command from command palette
 
-Screenshots
----
+## Screenshots
 ![](https://raw.githubusercontent.com/unlight/sublime-import-helper/master/screenshots/insert-import.gif)
 
-Settings
----
+## Settings
 There are some several configuration settings. Open plugin settings file by opening in menu:  
 Preferences -> Package Settings -> Import Helper  
 Also, there are some optional project specific settings.  
@@ -116,8 +110,7 @@ Path to your project root folder (not source folder). If not set, `folders[0].pa
 #### `folders[i].path_source` (project file only)
 Path to your source. If not set `folders[i].path` will be used.
 
-Example of settings in project file:
----
+#### Example of settings in project file:
 Example of project file:
 ```
 {
@@ -131,8 +124,7 @@ Example of project file:
 } 
 ```
 
-FAQ
----
+## FAQ
 #### No imports found for...
 Or if you see such message in status bar and console:
 ```
@@ -143,10 +135,10 @@ You must create project from your working files and folders, you can do it in to
 Save project file in any place you want.  
 Then restart Sublime.  
 
-CHANGELOG
----
+## CHANGELOG
 | Version | Date        | Description                                                                                               |
 |:--------|:------------|:----------------------------------------------------------------------------------------------------------|
+| 2.1.0   | 31 Mar 2019 | Refactoring, updated esm-exports, allow import default, fixed exclude logic                               |
 | 2.0.5   | 22 Dec 2018 | Fixed [#61](https://github.com/unlight/sublime-import-helper/issues/61)                                   |
 | 2.0.4   | 08 Dec 2018 | Fixed #62 (remove unsed imports with dollar sign                                                          |
 | 2.0.3   | 10 Nov 2018 | Alllow to select import path (typescript paths)                                                           |
@@ -186,9 +178,7 @@ CHANGELOG
 | 1.0.1   | 19 Dec 2016 | Fixed loading settings bug                                                                                |
 | 1.0.0   | 18 Dec 2016 | First release                                                                                             |
 
-TODO
----
-* handle case when name is none (browserify, cjs: true)
+## TODO
 * parse single file
 * handle all selections
 * watch for project file changes
