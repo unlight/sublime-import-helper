@@ -29,7 +29,7 @@
     "esm-exports": "3.0.3",
     "mocha": "6.0.2",
     "object-values": "2.0.0",
-    "pkg-dir": "4.0.0",
+    "pkg-dir": "3.0.0",
     "read-pkg-up": "4.0.0",
     "source-map-support": "0.5.11"
   },
