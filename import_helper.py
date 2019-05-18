@@ -37,18 +37,17 @@ def update_source_modules():
             sublime.error_message(PROJECT_NAME + '\n' + str(err))
             return
         source_modules.clear();
-        exclude_patterns = get_exclude_patterns()
         if type(result) is not list:
             sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(result))
             return
         for item in result:
             filepath = item.get('filepath')
             if filepath is None: continue
-            if is_excluded_file(filepath, exclude_patterns): continue
             source_modules.append(item)
         sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
         debug('Update source modules', len(source_modules))
-    run_command_async('get_folders', {'folders': source_folders}, get_source_modules_callback)
+    exclude_patterns = get_exclude_patterns()
+    run_command_async('get_folders', { 'folders': source_folders, 'ignore': exclude_patterns }, get_source_modules_callback)
 
 def update_node_modules():
     node_modules.clear()
@@ -116,7 +115,7 @@ class InitializeSetupCommand(sublime_plugin.WindowCommand):
 
 # window.run_command('update_source_modules')
 class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
-    
+
     def run(self):
         update_source_modules()
 
