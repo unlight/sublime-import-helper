@@ -3,6 +3,7 @@ const fs = require('fs');
 
 module.exports = (data, callback) => {
     const folders = data.folders || [];
+    const ignore = data.ignore || {};
     if (folders.length === 0 && data.importRoot) {
         folders.push(data.importRoot);
     }
@@ -10,7 +11,8 @@ module.exports = (data, callback) => {
     const promises = folders
         .map(d => {
             if (fs.existsSync(d)) {
-                return esmExports(d, { type: 'directory', ignorePatterns: (data.ignore || {})[d] })
+                const ignorePatterns = ignore[d];
+                return esmExports(d, { type: 'directory', ignorePatterns })
                     .then(items => result.push(...items));
             }
         });

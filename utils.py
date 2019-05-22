@@ -187,25 +187,34 @@ def find_executable(executable, path = None):
     else:
         return None
 
-def get_exclude_patterns(project_data = None):
-    if project_data is None: project_data = sublime.active_window().project_data()
-    data = {}
+def get_exclude_patterns(project_data = None, project_file = None):
+    if project_data is None:
+        project_data = sublime.active_window().project_data()
+    if project_file is None:
+        project_file = sublime.active_window().project_file_name()
+    result = {}
     for folder in ((project_data or {}).get('folders') or []):
-        result = []
+        exclude_patterns = []
         folder_exclude_patterns = folder.get('folder_exclude_patterns')
-        if folder_exclude_patterns is None: folder_exclude_patterns = []
+        if folder_exclude_patterns is None:
+            folder_exclude_patterns = []
         for pattern in folder_exclude_patterns:
-            result.append(pattern)
+            exclude_patterns.append(pattern)
         file_exclude_patterns = folder.get('file_exclude_patterns')
-        if file_exclude_patterns is None: file_exclude_patterns = []
+        if file_exclude_patterns is None:
+            file_exclude_patterns = []
         for pattern in file_exclude_patterns:
-            result.append(pattern)
+            exclude_patterns.append(pattern)
         binary_file_patterns = folder.get('binary_file_patterns')
-        if binary_file_patterns is None: binary_file_patterns = []
+        if binary_file_patterns is None:
+            binary_file_patterns = []
         for pattern in binary_file_patterns:
-            result.append(pattern)
-        data[folder] = result
-    return data
+            exclude_patterns.append(pattern)
+        if len(exclude_patterns) > 0:
+            path = folder.get('path')
+            path = norm_path(project_file, path)
+            result[path] = exclude_patterns
+    return result
 
 def read_json(file):
     if not os.path.isfile(file):

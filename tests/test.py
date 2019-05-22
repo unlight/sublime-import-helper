@@ -158,7 +158,7 @@ class TestUtilFunctions(TestCase):
     def test_get_exclude_patterns_fault_tollerance(self):
         get_exclude_patterns = import_helper.get_exclude_patterns
         result = get_exclude_patterns({'folders': {}})
-        self.assertListEqual(result, [])
+        self.assertDictEqual(result, {})
 
     def test_is_import_all(self):
         self.assertTrue(utils.is_import_all("import * as worker_threads from 'worker_threads'"))
