@@ -189,8 +189,9 @@ def find_executable(executable, path = None):
 
 def get_exclude_patterns(project_data = None):
     if project_data is None: project_data = sublime.active_window().project_data()
-    result = []
+    data = {}
     for folder in ((project_data or {}).get('folders') or []):
+        result = []
         folder_exclude_patterns = folder.get('folder_exclude_patterns')
         if folder_exclude_patterns is None: folder_exclude_patterns = []
         for pattern in folder_exclude_patterns:
@@ -199,7 +200,12 @@ def get_exclude_patterns(project_data = None):
         if file_exclude_patterns is None: file_exclude_patterns = []
         for pattern in file_exclude_patterns:
             result.append(pattern)
-    return result
+        binary_file_patterns = folder.get('binary_file_patterns')
+        if binary_file_patterns is None: binary_file_patterns = []
+        for pattern in binary_file_patterns:
+            result.append(pattern)
+        data[folder] = result
+    return data
 
 def read_json(file):
     if not os.path.isfile(file):

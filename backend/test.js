@@ -106,6 +106,46 @@ it('get_folders command', (done) => {
     });
 });
 
+it('get_folders command with ignore patterns', (done) => {
+    const folder1 = Path.join(rootPath, 'test_playground/app/t1');
+    const folder2 = Path.join(rootPath, 'test_playground/app/t2');
+    const ignore = {
+        [folder1]: ['**/volumes'],
+        [folder2]: ['dummy.component.ts'],
+    };
+
+    getFoldersCmd({
+        folders: [folder1, folder2],
+        ignore,
+    }, (err, result) => {
+        if (err) return done(err);
+
+        let hasTest = false;
+        let numX2 = 0;
+        let hasVolume = false;
+        let hasDummy = false;
+        result.forEach(({ filepath, name }) => {
+            if (name === 'test') {
+                hasTest = true;
+            }
+            if (name === 'x2') {
+                numX2++;
+            }
+            if (name === 'VOLUME' || filepath.indexOf('/volumes/') !== -1) {
+                hasVolume = true;
+            }
+            if (name === 'DummyComponent' || /dummy\.component\.ts$/.test(filepath)) {
+                hasDummy = true;
+            }
+        });
+        assert(hasTest === true);
+        assert(numX2 > 1);
+        assert(hasVolume === false);
+        assert(hasDummy === false);
+        done();
+    });
+});
+
 it('get_modules command', (done) => {
     getModulesCmd({
 

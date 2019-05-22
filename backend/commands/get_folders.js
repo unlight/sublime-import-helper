@@ -8,10 +8,13 @@ module.exports = (data, callback) => {
     }
     const result = [];
     const promises = folders
-        .filter(d => fs.existsSync(d))
-        .map(d => esmExports(d, { type: 'directory' }).then(items => {
-            result.push(...items);
-        }));
+        .map(d => {
+            if (fs.existsSync(d)) {
+                return esmExports(d, { type: 'directory', ignorePatterns: (data.ignore || {})[d] })
+                    .then(items => result.push(...items));
+            }
+        });
+
     return Promise.all(promises)
         .then(() => {
             callback(null, result);
