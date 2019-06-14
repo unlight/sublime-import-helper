@@ -352,11 +352,11 @@ def get_import_line_info(view, from_path):
     while row <= last_row:
         line_region = view.full_line(view.text_point(row, 0))
         line_contents = view.substr(line_region)
-        match = re.search(r"^import\s+(.+)\s+from\s+(['\"])(.+)\2", line_contents)
+        match = re.search(r"^import\s+((.+)\s+from\s+)?(['\"])(.+)\3", line_contents)
         if match:
             last_import_row = row
             no_match_count = 0
-            if match.group(3) == from_path:
+            if match.group(4) == from_path:
                 import_row = row
                 break
         else:
@@ -368,6 +368,6 @@ def get_import_line_info(view, from_path):
         row = row + 1
     imports = []
     if import_row != -1:
-        for m in re.finditer(r"(\w+(\s+as\s+\w+)?)", match.group(1)):
+        for m in re.finditer(r"(\w+(\s+as\s+\w+)?)", match.group(2)):
             imports.append(m.group(1))
     return {'import_row': import_row, 'imports': imports, 'from_path': from_path, 'last_import_row': last_import_row, 'line_contents': line_contents}

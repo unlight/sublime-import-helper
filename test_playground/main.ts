@@ -3,6 +3,7 @@ import mocha from 'mocha'
 import {createName, FullName} from './createname'
 import {index1} from './component/x.component'
 import * as crossSpawn from 'cross-spawn'
+import 'rxjs/operators/map';
 
 export class Greeter<T> {
     greeting: T;

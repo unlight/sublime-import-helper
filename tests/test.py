@@ -20,6 +20,9 @@ class TestDoInsertImport(TestCase):
     def getRow(self, row):
         return self.view.substr(self.view.line(self.view.text_point(row, 0)))
 
+    def getAll(self):
+        return self.view.substr(sublime.Region(0, self.view.size()));
+
     def test_smoke(self):
         setText(self.view, '')
         self.view.run_command('paste_import', {'item': {'filepath': 'dinah_widdoes', 'name': 'Lakia', 'isDefault': False}})
@@ -30,6 +33,12 @@ class TestDoInsertImport(TestCase):
         self.assertIn('dinah_widdoes', first_row)
         self.assertFalse(first_row.endswith(';'))
 
+    def test_side_effect_import(self):
+        setText(self.view, 'import "rxjs/operators/map"\n');
+        self.view.run_command('paste_import', {'item': {'filepath': 'side/effect', 'name': 'effect', 'isDefault': False}})
+        self.assertIn('./side/effect', self.getRow(1))
+
+    # These tests shows additional popup
     # def test_typescript_paths(self):
     #     typescript_paths = [
     #         {'path_to': '@Libs/*', 'path_value': './test_playground/lib/*', 'base_dir': '/base_dir'},
