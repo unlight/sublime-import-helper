@@ -38,6 +38,12 @@ class TestDoInsertImport(TestCase):
         self.view.run_command('paste_import', {'item': {'filepath': 'side/effect', 'name': 'effect', 'isDefault': False}})
         self.assertIn('./side/effect', self.getRow(1))
 
+    def test_paste_import_if_imports_statements_in_the_middle(self):
+        setText(self.view, ('\n' * 14) + 'import x from "x"\n');
+        self.view.run_command('paste_import', {'item': {'filepath': 'filepath', 'name': 'name', 'isDefault': False}})
+        self.assertNotIn('./filepath', self.getRow(0))
+        self.assertNotIn('name', self.getRow(0))
+
     # These tests shows additional popup
     # def test_typescript_paths(self):
     #     typescript_paths = [

@@ -347,6 +347,7 @@ def get_import_line_info(view, from_path):
     row = 0
     import_row = -1 # initial value -1 not found
     last_row = view.rowcol(view.size())[0]
+    import_no_match_count = get_setting('import_no_match_count', 15)
     no_match_count = 0
     last_import_row = -1
     while row <= last_row:
@@ -361,8 +362,8 @@ def get_import_line_info(view, from_path):
                 break
         else:
             no_match_count = no_match_count + 1
-        # Break loop if cannot find 3+ lines with import
-        if no_match_count >= 3:
+        # Break loop if cannot find lines with import
+        if no_match_count >= import_no_match_count:
             break
         # Go to next line
         row = row + 1

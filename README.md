@@ -104,6 +104,11 @@ Remove index suffix ending in file path
 - Type: `boolean`  
 - Default: `true`  
 
+#### `import_no_match_count`
+Usually imports are at the top of the file, this settings controls how far countinue scan lines  
+- Type: `number`  
+- Default: `15`  
+
 #### `import_root` (project file only)
 Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
 
@@ -138,6 +143,7 @@ Then restart Sublime.
 ## CHANGELOG
 | Version | Date        | Description                                                                                                     |
 |:--------|:------------|:----------------------------------------------------------------------------------------------------------------|
+| 2.2.1   | 15 Jun 2019 | Minor fixes                                                                                                     |
 | 2.2.0   | 22 May 2019 | Support passing file / folder exclude options [#64](https://github.com/unlight/sublime-import-helper/issues/64) |
 | 2.1.0   | 31 Mar 2019 | Refactoring, updated esm-exports, allow import default, fixed exclude logic                                     |
 | 2.0.5   | 22 Dec 2018 | Fixed [#61](https://github.com/unlight/sublime-import-helper/issues/61)                                         |

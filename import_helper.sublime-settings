@@ -49,4 +49,9 @@
     // - Type: `boolean`  
     // - Default: `false`
     "remove_trailing_index": true,
+
+    // Usually imports are at the top of the file, this settings controls how far countinue scan lines
+    // - Type: `number`  
+    // - Default: `15`
+    "import_no_match_count": 15
 }
