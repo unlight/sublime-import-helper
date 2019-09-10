@@ -56,16 +56,19 @@ def update_node_modules():
     debug('update_node_modules: import_root', import_root)
     is_loading = True
     loading_module_name = None
+    loading_count = 0
 
     def load_module_timer():
-        nonlocal is_loading, loading_module_name
+        nonlocal is_loading, loading_module_name, loading_count
         if is_loading:
+            loading_count += 1
             if loading_module_name is not None:
-                sublime.status_message('{0}: Processing {1}...'.format(PROJECT_NAME, loading_module_name))
-            sublime.set_timeout(load_module_timer, 1000)
+                sublime.status_message('{0}: Processing {1}..{2}'.format(PROJECT_NAME, loading_module_name, '.' * loading_count))
+            sublime.set_timeout(load_module_timer, 4000)
 
     def load_module(name):
-        nonlocal loading_module_name
+        nonlocal loading_module_name, loading_count
+        loading_count = 0
         loading_module_name = name
         result = run_command('get_module', {'importRoot': import_root, 'name': name})
         get_modules_callback(None, result, {'name': name, 'count': len(result)})
