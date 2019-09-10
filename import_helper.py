@@ -1,5 +1,6 @@
 import sublime
 import sublime_plugin
+import concurrent.futures
 from .utils import *
 
 # sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
@@ -53,8 +54,30 @@ def update_node_modules():
     node_modules.clear()
     import_root = get_import_root()
     debug('update_node_modules: import_root', import_root)
-    run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['devDependencies']}, get_modules_callback)
-    run_command_async('get_modules', {'importRoot': import_root, 'packageKeys': ['dependencies']}, get_modules_callback)
+
+    def load_module(name):
+        result = run_command('get_module', {'importRoot': import_root, 'name': name})
+        get_modules_callback(None, result, {'name': name, 'count': len(result)})
+
+    def get_from_package_callback(err, result):
+        if err:
+            sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
+            return
+        if type(result) is not list:
+            sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
+            return
+        node_modules_names = set(())
+        for name in result:
+            if type(name) == str and len(name) > 0:
+                node_modules_names.add(name)
+        debug('get_from_package_callback: node_modules_names', node_modules_names)
+
+        for name in node_modules_names:
+            node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future_to_name = {executor.submit(load_module, name): name for name in node_modules_names}
+
     run_command_async('get_from_package', {'importRoot': import_root}, get_from_package_callback)
 
 def update_typescript_paths():
@@ -81,7 +104,7 @@ def update_typescript_paths():
                 typescript_paths.append({'base_dir': base_dir, 'path_value': path_value, 'path_to': path_to})
     debug('typescript_paths', typescript_paths)
 
-def get_modules_callback(err, result):
+def get_modules_callback(err, result, sender = None):
     if err:
         sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
         return
@@ -89,23 +112,11 @@ def get_modules_callback(err, result):
         sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
         return
     node_modules.extend(result)
-    sublime.status_message('{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules)))
+    message = '{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules))
+    if sender is not None:
+        message = message + ', {0} +{1}'.format(sender['name'], sender['count'])
+    sublime.status_message(message)
     debug('get_modules_callback: len(result)', len(result))
-
-def get_from_package_callback(err, result):
-    if err:
-        sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
-        return
-    if type(result) is not list:
-        sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
-        return
-    node_modules_names = set(())
-    for name in result:
-        if type(name) == str and len(name) > 0:
-            node_modules_names.add(name)
-    debug('get_from_package_callback: node_modules_names', node_modules_names)
-    for name in node_modules_names:
-        node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
 
 # window.run_command('initialize_setup')
 # sublime.active_window().run_command('initialize_setup', args={'a':'bar'})

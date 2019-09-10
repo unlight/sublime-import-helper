@@ -4,7 +4,6 @@ const Path = require('path');
 const pkgDir = require('pkg-dir');
 
 const getFoldersCmd = require('./commands/get_folders');
-const getModulesCmd = require('./commands/get_modules');
 const ping = require('./commands/ping');
 const removeUnused = require('./commands/remove_unused');
 const getFromPackage = require('./commands/get_from_package');
@@ -146,27 +145,6 @@ it('get_folders command with ignore patterns', (done) => {
     });
 });
 
-it('get_modules command', (done) => {
-    getModulesCmd({
-
-    }, (err, result) => {
-        if (err) return done(err);
-        assert(result.find(m => m.name === 'esmExports')); // esm-exports
-        assert(result.find(m => m.name === 'Component')); // @angular/core
-        assert(result.find(m => m.name === 'inject')); // @angular/core/testing
-        done();
-    });
-});
-
-it('get only dependencies', () => {
-    getModulesCmd({
-        packageKeys: ['dependencies'],
-    }, (err, result) => {
-        assert.ifError(err);
-        assert.deepEqual(result, []);
-    });
-});
-
 it('get folders error', () => {
     return getFoldersCmd({
         folders: null,
@@ -187,13 +165,6 @@ describe('if error undefined we should set it to unknown err', () => {
 
     after(() => {
         delete require.cache[require.resolve('esm-exports')];
-    });
-
-    it('get modules', () => {
-        return getModulesCmd({
-        }, (err) => {
-            assert(err);
-        });
     });
 
     it('get folders', () => {
