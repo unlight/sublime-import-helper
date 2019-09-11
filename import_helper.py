@@ -54,27 +54,27 @@ def update_node_modules():
     node_modules.clear()
     import_root = get_import_root()
     debug('update_node_modules: import_root', import_root)
-    is_loading = True
-    loading_module_name = None
+    loading_module_names = []
     loading_count = 0
 
     def load_module_timer():
-        nonlocal is_loading, loading_module_name, loading_count
+        nonlocal loading_module_names, loading_count
+        is_loading = len(loading_module_names) > 0
         if is_loading:
             loading_count += 1
-            if loading_module_name is not None:
-                sublime.status_message('{0}: Processing {1}..{2}'.format(PROJECT_NAME, loading_module_name, '.' * loading_count))
-            sublime.set_timeout(load_module_timer, 4000)
+            if loading_module_names is not None:
+                sublime.status_message('{0}: Processing {1}..{2}'.format(PROJECT_NAME, ', '.join(loading_module_names), '.' * loading_count))
+            sublime.set_timeout(load_module_timer, 5000)
 
     def load_module(name):
-        nonlocal loading_module_name, loading_count
+        nonlocal loading_module_names, loading_count
         loading_count = 0
-        loading_module_name = name
+        loading_module_names.append(name)
         result = run_command('get_module', {'importRoot': import_root, 'name': name})
         get_modules_callback(None, result, {'name': name, 'count': len(result)})
+        loading_module_names.remove(name)
 
     def get_from_package_callback(err, result):
-        nonlocal is_loading
         if err:
             sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
             return
@@ -89,12 +89,11 @@ def update_node_modules():
         for name in node_modules_names:
             node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
         load_module_timer()
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             futures = [executor.submit(load_module, name) for name in node_modules_names]
             concurrent.futures.wait(futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
             # future_to_name = {executor.submit(load_module, name): name for name in node_modules_names}
-            is_loading = False
-            loading_module_name = None
+            loading_module_names.clear()
             debug('Stopped processing node modules')
 
     run_command_async('get_from_package', {'importRoot': import_root}, get_from_package_callback)
