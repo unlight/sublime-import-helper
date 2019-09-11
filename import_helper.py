@@ -56,15 +56,16 @@ def update_node_modules():
     debug('update_node_modules: import_root', import_root)
     loading_module_names = []
     loading_count = 0
+    interval = 4
 
     def load_module_timer():
         nonlocal loading_module_names, loading_count
         is_loading = len(loading_module_names) > 0
+        debug('load_module_timer: loading_module_names', loading_module_names)
         if is_loading:
             loading_count += 1
-            if loading_module_names is not None:
-                sublime.status_message('{0}: Processing {1}..{2}'.format(PROJECT_NAME, ', '.join(loading_module_names), '.' * loading_count))
-            sublime.set_timeout(load_module_timer, 5000)
+            sublime.status_message('{0}: Processing {1}... {2}'.format(PROJECT_NAME, ' and '.join(loading_module_names), interval * loading_count))
+            sublime.set_timeout(load_module_timer, interval * 1000)
 
     def load_module(name):
         nonlocal loading_module_names, loading_count
@@ -75,6 +76,7 @@ def update_node_modules():
         loading_module_names.remove(name)
 
     def get_from_package_callback(err, result):
+        nonlocal loading_module_names
         if err:
             sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
             return
@@ -88,13 +90,13 @@ def update_node_modules():
         debug('get_from_package_callback: node_modules_names', node_modules_names)
         for name in node_modules_names:
             node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
-        load_module_timer()
+        sublime.set_timeout(load_module_timer, 0)
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             futures = [executor.submit(load_module, name) for name in node_modules_names]
             concurrent.futures.wait(futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
             # future_to_name = {executor.submit(load_module, name): name for name in node_modules_names}
             loading_module_names.clear()
-            debug('Stopped processing node modules')
+            debug('Processing node modules is stopped')
 
     run_command_async('get_from_package', {'importRoot': import_root}, get_from_package_callback)
 
