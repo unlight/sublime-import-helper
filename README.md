@@ -143,6 +143,7 @@ Then restart Sublime.
 ## CHANGELOG
 | Version | Date        | Description                                                                                                     |
 |:--------|:------------|:----------------------------------------------------------------------------------------------------------------|
+| 2.3.0   | 14 Sep 2019 | Minor fixes, progress status                                                                                    |
 | 2.2.1   | 15 Jun 2019 | Minor fixes                                                                                                     |
 | 2.2.0   | 22 May 2019 | Support passing file / folder exclude options [#64](https://github.com/unlight/sublime-import-helper/issues/64) |
 | 2.1.0   | 31 Mar 2019 | Refactoring, updated esm-exports, allow import default, fixed exclude logic                                     |
