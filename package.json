@@ -24,7 +24,7 @@
     "@types/node": "12.12.5",
     "browserify": "16.5.0",
     "cross-spawn": "6.X.X",
-    "eslint": "6.6.0",
+    "eslint": "5.X.X",
     "eslint-plugin-mocha": "6.2.1",
     "esm-exports": "3.1.2",
     "mocha": "6.2.2",
