@@ -4,6 +4,12 @@ import {createName, FullName} from './createname'
 import {index1} from './component/x.component'
 import * as crossSpawn from 'cross-spawn'
 import 'rxjs/operators/map';
+import React, { useState, useCallback } from 'react'
+import {x1} from './component'
+
+// Cases:
+// React: useState useCallback
+// in {x1} add x2
 
 export class Greeter<T> {
     greeting: T;
