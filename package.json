@@ -23,17 +23,17 @@
     "@angular/core": "8.2.13",
     "@types/node": "12.12.5",
     "@types/react": "16.9.35",
-    "browserify": "16.5.1",
+    "browserify": "16.5.0",
     "cross-spawn": "6.X.X",
-    "eslint": "7",
-    "eslint-plugin-mocha": "7.0.0",
+    "eslint": "5.X.X",
+    "eslint-plugin-mocha": "6.2.1",
     "esm-exports": "3.1.2",
-    "mocha": "7.2.0",
+    "mocha": "6.2.2",
     "object-values": "2.X.X",
     "pkg-dir": "3.X.X",
     "react": "16.13.1",
     "read-pkg-up": "4.X.X",
-    "source-map-support": "0.5.19"
+    "source-map-support": "0.5.16"
   },
   "repository": {
     "type": "git",
