@@ -47,18 +47,36 @@ class PasteImportCommand(sublime_plugin.TextCommand):
                 name = wrap_imports([name])
             self.view.insert(edit, pos, import_string.format(name))
             return
-        # Found import default
-        if (import_line_info['import_row'] != -1 and item['isDefault']):
+        # Import row found
+        debug("import_line_info", import_line_info)
+        line_region = self.view.full_line(self.view.text_point(import_line_info['import_row'], 0))
+        # Trying to import in import default row
+        if is_import_default(import_line_info['line_contents']) and item['isDefault'] == False:
+            name = import_line_info['imports'][0] + ', { ' + name + ' }';
+            debug("name", name)
+            self.view.replace(edit, line_region, import_string.format(name))
+        # Trying to import non default item to mixed line
+        elif is_import_mixed(import_line_info['line_contents']) and item['isDefault'] == False:
+            other_imports = import_line_info['imports'][1:]
+            try: other_imports.remove(name)
+            except: pass
+            other_imports.append(name)
+            name = import_line_info['imports'][0] + ', { ' + ', '.join(other_imports) + ' }'
+            debug("name", name)
+            self.view.replace(edit, line_region, import_string.format(name))
+        # Ttrying to import item default
+        elif item['isDefault']:
             if is_import_default(import_line_info['line_contents']):
                 name = '* as ' + name
-            line_region = self.view.full_line(self.view.text_point(import_line_info['import_row'], 0))
+            debug("name", name)
             self.view.replace(edit, line_region, import_string.format(name))
-            return
         # Regular import
-        imports = import_line_info['imports']
-        try: imports.remove(name)
-        except: pass
-        imports.append(name)
-        line_region = self.view.full_line(self.view.text_point(import_line_info['import_row'], 0))
-        name = wrap_imports(imports)
-        self.view.replace(edit, line_region, import_string.format(name))
+        else:
+            imports = import_line_info['imports']
+            try: imports.remove(name)
+            except: pass
+            imports.append(name)
+            line_region = self.view.full_line(self.view.text_point(import_line_info['import_row'], 0))
+            name = wrap_imports(imports)
+            debug("name", name)
+            self.view.replace(edit, line_region, import_string.format(name))

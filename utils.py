@@ -268,6 +268,11 @@ def is_import_all(string):
 def is_import_default(string):
     return re.match(r"^import\s+([^ ,{}]+)\s+from\s+(['\"])(.+)\2", string)
 
+# import React, { useState } from 'react'
+# import React, { useState, useCallback } from 'react'
+def is_import_mixed(string):
+    return re.match(r"^import\s+\w+,\s+\{.+?\}\s+from\s+(['\"])(.+)\1", string)
+
 # https://github.com/ecrmnn/camelcase
 def camelcase(*arguments):
     if type(arguments[0]) == list:

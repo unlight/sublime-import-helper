@@ -143,7 +143,8 @@ Then restart Sublime.
 ## CHANGELOG
 | Version | Date        | Description                                                                                                     |
 |:--------|:------------|:----------------------------------------------------------------------------------------------------------------|
-| 2.3.1   | 03 Nov 2019 | Fixed [#71](https://github.com/unlight/sublime-import-helper/issues/71)                                                                                    |
+| 2.3.2   | 27 May 2020 | Improved import to import default statement                                                                     |
+| 2.3.1   | 03 Nov 2019 | Fixed [#71](https://github.com/unlight/sublime-import-helper/issues/71)                                         |
 | 2.3.0   | 14 Sep 2019 | Minor fixes, progress status                                                                                    |
 | 2.2.1   | 15 Jun 2019 | Minor fixes                                                                                                     |
 | 2.2.0   | 22 May 2019 | Support passing file / folder exclude options [#64](https://github.com/unlight/sublime-import-helper/issues/64) |

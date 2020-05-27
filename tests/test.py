@@ -44,6 +44,16 @@ class TestDoInsertImport(TestCase):
         self.assertNotIn('./filepath', self.getRow(0))
         self.assertNotIn('name', self.getRow(0))
 
+    def test_add_specifier_to_default_import(self):
+        setText(self.view, "import React from 'react'\n");
+        self.view.run_command('paste_import', {'item': {'name': 'useCallback', 'module': 'react', 'isDefault': False}})
+        self.assertIn("import React, { useCallback } from 'react", self.getRow(0))
+
+    def test_add_specifier_to_mixed_import(self):
+        setText(self.view, "import React, { useCallback } from 'react'\n");
+        self.view.run_command('paste_import', {'item': {'name': 'useState', 'module': 'react', 'isDefault': False}})
+        self.assertIn("import React, { useCallback, useState } from 'react", self.getRow(0))
+
     # These tests shows additional popup
     # def test_typescript_paths(self):
     #     typescript_paths = [
@@ -182,6 +192,13 @@ class TestUtilFunctions(TestCase):
     def test_is_import_default(self):
         self.assertFalse(utils.is_import_default("import * as worker_threads from 'worker_threads'"))
         self.assertTrue(utils.is_import_default("import worker_threads from 'worker_threads'"))
+        self.assertTrue(utils.is_import_default("import React from 'react'"))
+        self.assertFalse(utils.is_import_default("import React, { useState } from 'react'"))
+
+    def test_is_import_mixed(self):
+        self.assertFalse(utils.is_import_mixed("import React from 'react'"))
+        self.assertTrue(utils.is_import_mixed("import React, { useState } from 'react'"))
+        self.assertTrue(utils.is_import_mixed("import React, { useState, useCallback } from 'react'"))
 
 class TestUnsedImports(TestCase):
 

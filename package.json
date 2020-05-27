@@ -1,6 +1,6 @@
 {
   "name": "sublime-import-helper",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "license": "MIT",
   "homepage": "https://github.com/unlight/sublime-import-helper#readme",
   "scripts": {
@@ -22,6 +22,7 @@
     "1-liners": "0.4.2",
     "@angular/core": "8.2.13",
     "@types/node": "12.12.5",
+    "@types/react": "16.9.35",
     "browserify": "16.5.0",
     "cross-spawn": "6.X.X",
     "eslint": "5.X.X",
@@ -30,6 +31,7 @@
     "mocha": "6.2.2",
     "object-values": "2.X.X",
     "pkg-dir": "3.X.X",
+    "react": "16.13.1",
     "read-pkg-up": "4.X.X",
     "source-map-support": "0.5.16"
   },
