@@ -188,6 +188,8 @@ def find_executable(executable, path = None):
         return None
 
 def get_exclude_patterns(project_data = None, project_file = None):
+    # todo: get_setting() folder_exclude_patterns file_exclude_patterns binary_file_patterns
+    # and combine them for each folder
     if project_data is None:
         project_data = sublime.active_window().project_data()
     if project_file is None:
