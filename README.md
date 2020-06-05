@@ -9,7 +9,7 @@ A Sublime Text Plugin that helps you to import your modules.
 
 ## Requirements
 
--   Node.JS 6.0+
+-   Node.JS 10.0+
 
 ## Installation
 
@@ -191,6 +191,7 @@ python3 -m black .
 
 ## TODO
 
+-   ignore patterns
 -   move all commands to main file
 -   parse single file
 -   handle all selections
