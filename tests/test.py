@@ -205,7 +205,6 @@ class TestUtilFunctions(TestCase):
         self.assertEqual(get_setting("insert_position", None), "end")
         self.assertEqual(get_setting("from_quote", None), "'")
         self.assertEqual(get_setting("space_around_braces", None), False)
-        self.assertEqual(get_setting("from_semicolon", True), False)
         self.assertEqual(get_setting("unknown", "default_value"), "default_value")
 
     def test_find_executable(self):

@@ -57,7 +57,7 @@ def paste_import_command(args):
 # debug("paste_import: import_line_info", import_line_info)
 # # Prepare import string template
 # from_quote = get_setting("from_quote", "'")
-# import_end = ";" if get_setting("from_semicolon", True) else ""
+# import_end = ";"
 # import_string = "import {{0}} from {0}{2}{0}{1}\n".format(
 #     from_quote, import_end, from_path
 # )
