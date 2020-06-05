@@ -1,147 +1,110 @@
 import sublime
 import sublime_plugin
+import os
 import concurrent.futures
-from .utils import *
 
-# sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
-# sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
+PROJECT_NAME = "Import Helper"
+PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
+RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
+NODE_BIN = "node"
+DEBUG = True
+NODE_MODULES = []  # Collection of entries
+SOURCE_MODULES = []
+TYPESCRIPT_PATHS = []
 
-PROJECT_NAME = 'Import Helper'
-node_modules = [] # Collection of entries
-source_modules = []
-typescript_paths = []
+from .library.get_setting import get_setting
+from .library.debug import debug
+from .library.find_executable import find_executable
+from .library.update_source_modules import update_source_modules
 
-# Plugin Lifecycle
 
 def plugin_loaded():
     print()
-    debug('Plugin loaded', PROJECT_NAME)
+    debug("Plugin loaded", PROJECT_NAME)
     sublime.set_timeout(initialize, 0)
-    sublime.set_timeout(setup, 0)
+    # sublime.set_timeout(setup, 0)
+
+
+def initialize():
+    global NODE_BIN
+    if NODE_BIN == "node" or not bool(NODE_BIN):
+        NODE_BIN = get_setting("node_bin", "")
+        if not bool(NODE_BIN):
+            NODE_BIN = find_executable("node")
+        if not bool(NODE_BIN):
+            NODE_BIN = "node"
+
 
 def setup():
     project_file = sublime.active_window().project_file_name()
     if project_file is None:
-        message = 'There is no project file, {0} will not work without project.'.format(PROJECT_NAME)
+        message = "There is no project file, {0} will not work without project.".format(
+            PROJECT_NAME
+        )
         debug(message, force=True)
         sublime.status_message(message)
         return
     update_source_modules()
-    update_node_modules()
-    update_typescript_paths()
+    # update_node_modules()
+    # update_typescript_paths()
 
-def update_source_modules():
-    source_folders = get_source_folders()
-    debug('source_folders', source_folders)
-    def get_source_modules_callback(err, result):
-        if err:
-            sublime.error_message(PROJECT_NAME + '\n' + str(err))
+
+# Command insert_import
+class InsertImportCommand(sublime_plugin.TextCommand):
+    # Adds import of identifier near cursor
+
+    def run(self, edit, name=None, point=None, notify=True):
+        if name is None:
+            point_region = self.view.sel()[0]
+            if point is not None:
+                point_region = sublime.Region(point, point)
+            name = self.view.substr(point_region).strip()
+            if not name:
+                cursor_region = self.view.expand_by_class(
+                    point_region,
+                    sublime.CLASS_WORD_START
+                    | sublime.CLASS_LINE_START
+                    | sublime.CLASS_PUNCTUATION_START
+                    | sublime.CLASS_WORD_END
+                    | sublime.CLASS_PUNCTUATION_END
+                    | sublime.CLASS_LINE_END,
+                )
+                name = self.view.substr(cursor_region)
+        name = re.sub(r"[^\w\-\@\/]", "", name)
+        if not name:
             return
-        source_modules.clear();
-        if type(result) is not list:
-            sublime.error_message(PROJECT_NAME + '\n' + 'Unexpected type of result: ' + type(result))
+        debug("insert_import: trying to import", "`{0}`".format(name))
+        import_root = get_import_root()
+        match_items = []
+        panel_items = []
+        # Iterate through source modules + node modules
+        for item in source_modules + node_modules:
+            if item.get("name") == name:
+                panel_item = get_panel_item(import_root, item)
+                if panel_item is not None:
+                    panel_items.append(panel_item)
+                    match_items.append(item)
+        if len(panel_items) == 0 and notify:
+            self.view.show_popup(
+                "No imports found for `<strong>{0}</strong>`".format(name)
+            )
             return
-        for item in result:
-            filepath = item.get('filepath')
-            if filepath is None: continue
-            source_modules.append(item)
-        sublime.status_message('{0}: {1} source modules found'.format(PROJECT_NAME, len(source_modules)))
-        debug('Update source modules', len(source_modules))
-    exclude_patterns = get_exclude_patterns()
-    run_command_async('get_folders', { 'folders': source_folders, 'ignore': exclude_patterns }, get_source_modules_callback)
-
-def update_node_modules():
-    node_modules.clear()
-    import_root = get_import_root()
-    debug('update_node_modules: import_root', import_root)
-    loading_modules = {}
-    interval = 4
-
-    def load_module_timer():
-        nonlocal loading_modules
-        is_loading = len(loading_modules) > 0
-        debug('load_module_timer: loading_modules', loading_modules)
-        if is_loading:
-            loading_count = 0
-            loading_names = []
-            for key, value in loading_modules.items():
-                loading_modules[key] = value + 1
-                loading_names.append(key)
-                loading_count += loading_modules[key]
-            message_names = ' and '.join(loading_names)
-            message = '{0}: Processing {1}... {2}'.format(PROJECT_NAME, message_names, interval * loading_count)
-            sublime.status_message(message)
-            sublime.set_timeout(load_module_timer, interval * 1000)
-
-    def load_module(name):
-        nonlocal loading_modules
-        loading_modules.update({name: 0})
-        result = run_command('get_module', {'importRoot': import_root, 'name': name})
-        get_modules_callback(None, result, {'name': name, 'count': len(result)})
-        loading_modules.pop(name)
-
-    def get_from_package_callback(err, result):
-        nonlocal loading_modules
-        if err:
-            sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
+        if len(panel_items) == 1:
+            item = match_items[0]
+            self.view.run_command(
+                "paste_import", {"item": item, "typescript_paths": typescript_paths}
+            )
             return
-        if type(result) is not list:
-            sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
-            return
-        node_modules_names = set(())
-        for name in result:
-            if type(name) == str and len(name) > 0:
-                node_modules_names.add(name)
-        debug('get_from_package_callback: node_modules_names', node_modules_names)
-        for name in node_modules_names:
-            node_modules.append({'module': name, 'name': name, 'isDefault': True, 'from_package': True})
-        sublime.set_timeout(load_module_timer, interval)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            futures = [executor.submit(load_module, name) for name in node_modules_names]
-            concurrent.futures.wait(futures, timeout=None, return_when=concurrent.futures.ALL_COMPLETED)
-            # future_to_name = {executor.submit(load_module, name): name for name in node_modules_names}
-            loading_modules.clear()
-            debug('Processing node modules is stopped')
+        on_done = on_done_func(match_items, self.on_select)
+        self.view.window().show_quick_panel(panel_items, on_done)
 
-    run_command_async('get_from_package', {'importRoot': import_root}, get_from_package_callback)
+    def on_select(self, selected_item):
+        debug("insert_import: on_select", selected_item)
+        self.view.run_command(
+            "paste_import",
+            {"item": selected_item, "typescript_paths": typescript_paths},
+        )
 
-def update_typescript_paths():
-    typescript_paths.clear()
-    # source_folders = get_source_folders()
-    source_folders = [get_import_root()]
-    for folder in source_folders:
-        tsconfig_file = os.path.normpath(os.path.join(folder, 'tsconfig.json'))
-        if not os.path.isfile(tsconfig_file):
-            continue
-        tsconfig = read_json(tsconfig_file) or {}
-        compilerOptions = tsconfig.get('compilerOptions')
-        if compilerOptions is None:
-            continue
-        baseUrl = compilerOptions.get('baseUrl')
-        if baseUrl is None:
-            continue
-        base_dir = os.path.normpath(os.path.join(os.path.dirname(tsconfig_file), baseUrl))
-        paths = compilerOptions.get('paths')
-        if not paths:
-            continue
-        for path_to, pathValues in paths.items():
-            for path_value in pathValues:
-                typescript_paths.append({'base_dir': base_dir, 'path_value': path_value, 'path_to': path_to})
-    debug('typescript_paths', typescript_paths)
-
-def get_modules_callback(err, result, sender = None):
-    if err:
-        sublime.error_message('{0}:\n{1}'.format(PROJECT_NAME, str(err)))
-        return
-    if type(result) is not list:
-        sublime.error_message('{0}:\nUnexpected type of result: {1}'.format(PROJECT_NAME, type(result)))
-        return
-    node_modules.extend(result)
-    message = '{0}: {1} node modules found'.format(PROJECT_NAME, len(node_modules))
-    if sender is not None:
-        message = message + ', {0} +{1}'.format(sender['name'], sender['count'])
-    sublime.status_message(message)
-    debug('get_modules_callback: len(result)', len(result))
 
 # window.run_command('initialize_setup')
 # sublime.active_window().run_command('initialize_setup', args={'a':'bar'})
@@ -149,9 +112,50 @@ class InitializeSetupCommand(sublime_plugin.WindowCommand):
     def run(self):
         setup()
 
+
 # window.run_command('update_source_modules')
 class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
-
     def run(self):
         update_source_modules()
 
+
+# view.run_command('import_from_clipboard')
+class ImportFromClipboardCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("insert_import", args=({"name": sublime.get_clipboard()}))
+
+
+# Command list_imports - Show all available imports
+# view.run_command('list_imports')
+class ListImportsCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        import_root = get_import_root()
+        match_items = []
+        panel_items = []
+        for item in source_modules + node_modules:
+            panel_item = get_panel_item(import_root, item)
+            if panel_item is not None:
+                panel_items.append(panel_item)
+                match_items.append(item)
+        on_done = on_done_func(match_items, self.on_select)
+        self.view.window().show_quick_panel(panel_items, on_done)
+
+    def on_select(self, selected_item):
+        debug("list_imports:on_select", selected_item)
+        self.view.run_command(
+            "paste_import",
+            {"item": selected_item, "typescript_paths": typescript_paths},
+        )
+
+
+class ImportHelperEventListener(sublime_plugin.EventListener):
+    def __init__(self):
+        self.viewIds = []
+
+    def on_new(self, view):
+        self.viewIds.append(view.id())
+
+    def on_post_save(self, view):
+        if view.id() in self.viewIds:
+            self.viewIds.remove(view.id())
+            update_source_modules()
