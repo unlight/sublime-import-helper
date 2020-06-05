@@ -2,6 +2,7 @@ import os
 
 from .unixify import unixify
 from .get_setting import get_setting
+from .try_typescript_path import try_typescript_path
 
 # Check if possible insert name multiple ways (different paths)
 def get_from_paths(item, file_name=None, typescript_paths=[]):

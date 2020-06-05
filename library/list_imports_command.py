@@ -18,6 +18,8 @@ def list_imports_command(args):
         match_items.append(item)
 
     def on_select(index):
+        if index == -1:
+            return
         selected_item = match_items[index]
         debug("list_imports_command:on_select", selected_item)
         view.run_command(
