@@ -106,7 +106,15 @@ class InitializeSetupCommand(sublime_plugin.WindowCommand):
 # view.run_command('import_from_clipboard')
 class ImportFromClipboardCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        self.view.run_command("insert_import", args=({"name": sublime.get_clipboard()}))
+        insert_import_command(
+            {
+                "view": self.view,
+                "name": sublime.get_clipboard(),
+                "notify": True,
+                "entry_modules": SOURCE_MODULES + NODE_MODULES,
+                "typescript_paths": TYPESCRIPT_PATHS,
+            }
+        )
 
 
 class ImportHelperEventListener(sublime_plugin.EventListener):

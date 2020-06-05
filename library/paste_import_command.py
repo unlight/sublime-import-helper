@@ -17,6 +17,7 @@ def paste_import_command(args):
     debug("paste_import_command:item", item)
     file_name = view.file_name() or "."
     from_paths = get_from_paths(item, file_name, typescript_paths)
+
     if len(from_paths) > 1:
         choices = [{"item": item, "path": path} for path in from_paths]
 
@@ -27,8 +28,10 @@ def paste_import_command(args):
 
         view.window().show_quick_panel(from_paths, on_done_func(choices, on_select))
         return
-    elif len(from_paths) == 0:
+
+    if len(from_paths) == 0:
         raise Exception("len from_paths must be not empty")
+
     specifier = from_paths[0]
     soucefile_content = view.substr(sublime.Region(0, view.size()))
     result = run_command(

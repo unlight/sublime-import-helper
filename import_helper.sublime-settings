@@ -11,11 +11,6 @@
     // - Default: `'`
     "from_quote": "'",
     
-    // Paste space before opening and after closing curly brackets.
-    // - Type: `boolean`
-    // - Default: `true`
-    "space_around_braces": true,
-    
     // Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
     // - Type: `string`
     // - Default: `` (auto detect)

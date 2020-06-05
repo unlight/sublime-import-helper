@@ -1,10 +1,4 @@
-import sublime
 import os
-import sys
-import platform
-import subprocess
-import threading
-import socket
 import fnmatch
 import time
 import re
@@ -50,12 +44,3 @@ def is_import_default(string):
 # import React, { useState, useCallback } from 'react'
 def is_import_mixed(string):
     return re.match(r"^import\s+\w+,\s+\{.+?\}\s+from\s+(['\"])(.+)\1", string)
-
-
-def wrap_imports(imports):
-    start = "{"
-    end = "}"
-    if get_setting("space_around_braces", True):
-        start = start + " "
-        end = " " + end
-    return start + ", ".join(imports) + end

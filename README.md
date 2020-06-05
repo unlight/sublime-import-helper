@@ -82,13 +82,6 @@ What kind of quotes will be used in import statement.
 -   Type: `string`
 -   Default: `'`
 
-#### `space_around_braces`
-
-Paste space before opening and after closing curly brackets.
-
--   Type: `boolean`
--   Default: `true`
-
 #### `node_bin`
 
 Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
@@ -150,7 +143,7 @@ Example of project file:
 ```
 {
 	"import_root": ".",
-	"space_around_braces": false,
+	"from_quote": "'",
 	"folders": [
 		{
 			"path": "."
