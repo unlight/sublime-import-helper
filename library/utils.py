@@ -22,21 +22,6 @@ def get_time():
     return time.time()
 
 
-def get_panel_item(root, item):
-    # Prepare string to show in window's quick panel.
-    module = item.get("module")
-    name = item.get("name")
-    # TODO: Handle case when name is none (browserify)
-    if name is None:
-        return None
-    if module is not None:
-        if module == name and item.get("isDefault") == True:
-            return module + "/default"
-        return module + "/" + name
-    filepath = os.path.normpath(item["filepath"])[len(root) + 1 :]
-    return unixify(filepath) + "/" + name
-
-
 def is_excluded_file(filepath, exclude_patterns):
     if exclude_patterns is None or len(exclude_patterns) == 0:
         return False
@@ -51,18 +36,6 @@ def is_excluded_file(filepath, exclude_patterns):
             if fnmatch.fnmatch(filepath, os.path.normpath(pattern + "/*")):
                 return True
     return False
-
-
-def get_import_root():
-    window = sublime.active_window()
-    project_file = window.project_file_name()
-    if project_file is None:
-        return None
-    project_data = window.project_data() or {}
-    result = project_data.get("import_root")
-    if result is None:
-        result = project_data["folders"][0]["path"]
-    return norm_path(project_file, result)
 
 
 def is_import_all(string):

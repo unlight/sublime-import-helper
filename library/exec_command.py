@@ -9,7 +9,7 @@ from .debug import debug
 
 
 def run_command(command, data=None, callback=None):
-    debug("Run command", [NODE_BIN, command, data])
+    debug("run_command", [NODE_BIN, command, data])
     json = sublime.encode_value({"command": command, "args": data})
     err = None
     out = None

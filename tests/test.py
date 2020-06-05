@@ -270,6 +270,7 @@ class TestUtilFunctions(TestCase):
             )
         )
 
+
 class TestPasteImport(TestCase):
     def setUp(self):
         self.view = sublime.active_window().new_file()

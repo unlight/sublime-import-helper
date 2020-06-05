@@ -8,12 +8,11 @@ from .exec_command import run_command_async
 
 def update_source_modules():
     source_folders = get_source_folders()
-    debug("source_folders", source_folders)
+    debug("update_source_modules:source_folders", source_folders)
     exclude_patterns = get_exclude_patterns()
-    # todo: fix for multiples folders
     run_command_async(
-        "exportsFromDirectory",
-        {"directory": source_folders[0], "ignore": exclude_patterns},
+        "exportsFromFolders",
+        {"folders": source_folders, "excludePatterns": exclude_patterns},
         get_source_modules_callback,
     )
 

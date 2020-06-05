@@ -2,7 +2,7 @@ import sublime
 from .get_setting import get_setting
 from .utils import norm_path
 
-
+# Returns Record<path, { folderExcludePatterns: string[], fileExcludePatterns: string[] }
 def get_exclude_patterns(project_data=None, project_file=None):
     if project_data is None:
         project_data = sublime.active_window().project_data()
