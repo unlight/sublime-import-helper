@@ -1,3 +1,3 @@
-export class AbcComponent { }
+export class AbcComponent {}
 
 export const AbcConfig = 1;

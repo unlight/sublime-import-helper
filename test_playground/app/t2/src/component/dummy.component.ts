@@ -1,1 +1,1 @@
-export class DummyComponent { }
+export class DummyComponent {}

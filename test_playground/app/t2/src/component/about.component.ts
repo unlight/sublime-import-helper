@@ -1,1 +1,1 @@
-export class AboutComponent { }
+export class AboutComponent {}

@@ -1,1 +1,1 @@
-export function x2() { }
+export function x2() {}
