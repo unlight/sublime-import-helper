@@ -143,7 +143,8 @@ class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
         if not self.autocomplete_export_names or not (
             len(prefix) > 0
             and self.view.match_selector(
-                self.autocomplete_point, "source.ts, source.tsx, source.js, source.jsx"
+                self.autocomplete_point,
+                "source.ts, source.ts.unittest, source.tsx, source.js, source.jsx",
             )
         ):
             return []

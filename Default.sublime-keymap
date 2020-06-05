@@ -3,28 +3,28 @@
         "keys": ["ctrl+alt+i"],
         "command": "insert_import",
         "context": [
-            { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" }
+            { "key": "selector", "operator": "equal", "operand": "source.ts, source.ts.unittest, source.tsx, source.js, source.jsx" }
         ]
     },
     {
         "keys": ["alt+i", "alt+l"],
         "command": "list_imports",
         "context": [
-            { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" }
+            { "key": "selector", "operator": "equal", "operand": "source.ts, source.ts.unittest, source.tsx, source.js, source.jsx" }
         ]
     },
     {
         "keys": ["alt+i", "alt+k"],
         "command": "import_from_clipboard",
         "context": [
-            { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" }
+            { "key": "selector", "operator": "equal", "operand": "source.ts, source.ts.unittest, source.tsx, source.js, source.jsx" }
         ]
     },
     {
         "keys": ["alt+i", "alt+s"],
         "command": "update_source_modules",
         "context": [
-            { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" }
+            { "key": "selector", "operator": "equal", "operand": "source.ts, source.ts.unittest, source.tsx, source.js, source.jsx" }
         ]
     }
 ]
