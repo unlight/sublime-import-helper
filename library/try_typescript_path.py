@@ -1,5 +1,6 @@
 import os
 from .get_setting import get_setting
+from .debug import debug
 
 
 def try_typescript_path(filepath, typescript_paths):

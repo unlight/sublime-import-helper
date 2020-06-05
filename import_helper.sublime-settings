@@ -21,8 +21,8 @@
     // If `enabled` implementation will try to find first matching alias.  
     // - Type: `string`  
     // - Enum: `['disabled', 'enabled']`  
-    // - Default: `disabled`  
-    "import_path_mapping": "disabled",
+    // - Default: `enabled`  
+    "import_path_mapping": "enabled",
     
     // Show all possible export names from sources and node modules in autocomplete menu.  
     // - Type: `boolean`  

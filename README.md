@@ -91,13 +91,13 @@ Sometimes sublime cannot find node executable, if it happens. Set `node_bin` exp
 
 #### `import_path_mapping`
 
-How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html)).  
-Disabled by default (`disabled`).  
+How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html)).
+
 If `enabled` implementation will try to find first matching alias.
 
 -   Type: `string`
 -   Enum: `['disabled', 'enabled']`
--   Default: `disabled`
+-   Default: `enabled`
 
 #### `autocomplete_export_names`
 
@@ -177,8 +177,6 @@ python3 -m black .
 
 ## TODO
 
--   ignore patterns
--   move all commands to main file
 -   parse single file
 -   handle all selections
 -   watch for project file changes
