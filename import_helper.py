@@ -74,9 +74,10 @@ class ListImportsCommand(sublime_plugin.TextCommand):
 
 class PasteImportCommand(sublime_plugin.TextCommand):
     def run(self, edit, item, typescript_paths=TYPESCRIPT_PATHS):
-        paste_import_command(
+        replace_content = paste_import_command(
             {"view": self.view, "item": item, "typescript_paths": typescript_paths,}
         )
+        self.view.replace(edit, sublime.Region(0, self.view.size()), replace_content)
 
 
 # Adds import of identifier near cursor (insert_import)

@@ -8,13 +8,12 @@ export interface FullName {
 }
 
 export function createName(name: NameOrNameArray) {
-    if (typeof name === "string") {
-        return name;
-    }
-    else {
-        return name.join(" ");
-    }
+	if (typeof name === 'string') {
+		return name;
+	} else {
+		return name.join(' ');
+	}
 }
 
-var greetingMessage = `Greetings, ${ createName(["Sam", "Smith"]) }`;
+var greetingMessage = `Greetings, ${createName(['Sam', 'Smith'])}`;
 alert(greetingMessage);

@@ -1,6 +1,7 @@
 import re
 from .get_setting import get_setting
 
+
 def get_import_line_info(view, from_path):
     row = 0
     import_row = -1  # initial value -1 not found
