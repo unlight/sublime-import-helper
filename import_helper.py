@@ -16,6 +16,7 @@ from .library.get_setting import get_setting
 from .library.debug import debug
 from .library.find_executable import find_executable
 from .library.update_source_modules import update_source_modules
+from .library.update_node_modules import update_node_modules
 from .library.list_imports_command import list_imports_command
 from .library.get_from_paths import get_from_paths
 from .library.insert_import_command import insert_import_command
@@ -50,7 +51,7 @@ def setup():
         sublime.status_message(message)
         return
     update_source_modules(SOURCE_MODULES)
-    # update_node_modules(NODE_MODULES)
+    update_node_modules(NODE_MODULES)
     update_typescript_paths(TYPESCRIPT_PATHS)
 
 
