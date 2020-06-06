@@ -66,15 +66,6 @@ The precedence of getting of value of setting is following:
 2. Plugin file settings
 3. Default settings
 
-#### `insert_position`
-
-Specifies where new import statement should be inserted, at the beginning ('start')
-or at the end of imports block ('end').
-
--   Type: `string`
--   Enum: `['end', 'start']`
--   Default: `end`
-
 #### `from_quote`
 
 What kind of quotes will be used in import statement.

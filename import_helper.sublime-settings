@@ -1,11 +1,4 @@
 {
-    // Specifies where new import statement should be inserted, at the beginning ('start')
-    //   or at the end of imports block ('end').
-    //   - Type: `string`
-    //   - Enum: `['end', 'start']`
-    //   - Default: `end`
-    "insert_position": "end",
-    
     // What kind of quotes will be used in import statement.
     // - Type: `string`
     // - Default: `'`

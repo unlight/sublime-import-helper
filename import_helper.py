@@ -48,7 +48,7 @@ def setup():
         debug(message, force=True)
         sublime.status_message(message)
         return
-    update_source_modules()
+    update_source_modules(SOURCE_MODULES)
     # update_node_modules()
     # update_typescript_paths()
 
@@ -56,7 +56,7 @@ def setup():
 # window.run_command('update_source_modules')
 class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
     def run(self):
-        update_source_modules()
+        update_source_modules(SOURCE_MODULES)
 
 
 # Command list_imports - Show all available imports
@@ -127,7 +127,7 @@ class ImportHelperEventListener(sublime_plugin.EventListener):
     def on_post_save(self, view):
         if view.id() in self.viewIds:
             self.viewIds.remove(view.id())
-            update_source_modules()
+            update_source_modules(SOURCE_MODULES)
 
 
 class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
