@@ -1,6 +1,5 @@
 import sublime
 
-from ..import_helper import PROJECT_NAME
 from .get_setting import get_setting
 from .get_from_paths import get_from_paths
 from .on_done_func import on_done_func
@@ -45,7 +44,7 @@ def paste_import_command(args):
             "sourceFileContent": soucefile_content,
         },
     )
-    debug("paste_import_command:result", result)
+    # debug("paste_import_command:result", result)
     return result
 
 

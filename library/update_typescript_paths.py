@@ -1,7 +1,13 @@
-def update_typescript_paths():
+import os
+
+from .read_json import read_json
+from .get_source_folders import get_source_folders
+from .debug import debug
+
+
+def update_typescript_paths(typescript_paths=[]):
     typescript_paths.clear()
-    # source_folders = get_source_folders()
-    source_folders = [get_import_root()]
+    source_folders = get_source_folders()
     for folder in source_folders:
         tsconfig_file = os.path.normpath(os.path.join(folder, "tsconfig.json"))
         if not os.path.isfile(tsconfig_file):
@@ -24,4 +30,4 @@ def update_typescript_paths():
                 typescript_paths.append(
                     {"base_dir": base_dir, "path_value": path_value, "path_to": path_to}
                 )
-    debug("typescript_paths", typescript_paths)
+    debug("update_typescript_paths:typescript_paths", typescript_paths)

@@ -1,5 +1,6 @@
 import sublime
 
+from ..import_helper import PROJECT_NAME
 from .debug import debug
 from .get_source_folders import get_source_folders
 from .get_exclude_patterns import get_exclude_patterns

@@ -20,6 +20,7 @@ from .library.list_imports_command import list_imports_command
 from .library.get_from_paths import get_from_paths
 from .library.insert_import_command import insert_import_command
 from .library.paste_import_command import paste_import_command
+from .library.update_typescript_paths import update_typescript_paths
 
 
 def plugin_loaded():
@@ -49,8 +50,8 @@ def setup():
         sublime.status_message(message)
         return
     update_source_modules(SOURCE_MODULES)
-    # update_node_modules()
-    # update_typescript_paths()
+    # update_node_modules(NODE_MODULES)
+    update_typescript_paths(TYPESCRIPT_PATHS)
 
 
 # window.run_command('update_source_modules')
