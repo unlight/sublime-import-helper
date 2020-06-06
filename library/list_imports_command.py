@@ -5,11 +5,9 @@ from .get_panel_item import get_panel_item
 from .debug import debug
 
 
-def list_imports_command(args):
-    view = args.get("view")
-    entry_modules = args.get("entry_modules") or []
-    typescript_paths = args.get("typescript_paths") or []
-    import_root = args.get("import_root") or get_import_root()
+def list_imports_command(
+    view, import_root=get_import_root(), entry_modules=[], typescript_paths=[]
+):
     match_items = []
     panel_items = []
     for item in entry_modules:

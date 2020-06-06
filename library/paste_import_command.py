@@ -9,10 +9,7 @@ from .exec_command import run_command, run_command_async
 
 # view.run_command('paste_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}, 'typescript_paths': []}))
 # view.run_command('paste_import', args=({'item': {'isDefault': True, 'module': 'worker_threads', 'name': 'worker_threads'}}))
-def paste_import_command(args):
-    view = args.get("view")
-    item = args.get("item")
-    typescript_paths = args.get("typescript_paths") or []
+def paste_import_command(view, item, typescript_paths=[], test_selected_index=-1):
     debug("paste_import_command:item", item)
     file_name = view.file_name() or "."
     from_paths = get_from_paths(item, file_name, typescript_paths)
@@ -25,6 +22,9 @@ def paste_import_command(args):
             item["module"] = selected.get("path")
             view.run_command("paste_import", {"item": item, "typescript_paths": []})
 
+        if test_selected_index != -1:
+            on_select(choices[test_selected_index])
+            return
         view.window().show_quick_panel(from_paths, on_done_func(choices, on_select))
         return
 

@@ -7,13 +7,11 @@ from .get_import_root import get_import_root
 from .get_panel_item import get_panel_item
 
 
-def insert_import_command(args):
-    view = args.get("view")
-    point = args.get("point")
-    notify = args.get("notify")
-    entry_modules = args.get("entry_modules")
-    typescript_paths = args.get("typescript_paths") or []
-    name = args.get("name") or get_name_candidate({"view": view, "point": point})
+def insert_import_command(
+    view, point, notify, entry_modules, name=None, typescript_paths=[],
+):
+    if not name:
+        name = get_name_candidate(view, point)
     name = re.sub(r"[^\w\-\@\/]", "", name)
     if not name:
         return
@@ -50,9 +48,7 @@ def insert_import_command(args):
     view.window().show_quick_panel(panel_items, on_select)
 
 
-def get_name_candidate(args):
-    view = args.get("view")
-    point = args.get("point")
+def get_name_candidate(view, point):
     point_region = view.sel()[0]
     if point is not None:
         point_region = sublime.Region(point, point)

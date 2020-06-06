@@ -1,13 +1,11 @@
 import sublime
 import sublime_plugin
 import os
-import concurrent.futures
 
 PROJECT_NAME = "Import Helper"
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
 NODE_BIN = "node"
-DEBUG = True
 NODE_MODULES = []  # Collection of entries
 SOURCE_MODULES = []
 TYPESCRIPT_PATHS = []
@@ -22,6 +20,7 @@ from .library.get_from_paths import get_from_paths
 from .library.insert_import_command import insert_import_command
 from .library.paste_import_command import paste_import_command
 from .library.update_typescript_paths import update_typescript_paths
+from .library.query_completions_modules import query_completions_modules
 
 
 def plugin_loaded():
@@ -66,20 +65,26 @@ class UpdateSourceModulesCommand(sublime_plugin.WindowCommand):
 class ListImportsCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         list_imports_command(
-            {
-                "view": self.view,
-                "entry_modules": SOURCE_MODULES + NODE_MODULES,
-                "typescript_paths": TYPESCRIPT_PATHS,
-            }
+            view=self.view,
+            entry_modules=SOURCE_MODULES + NODE_MODULES,
+            typescript_paths=TYPESCRIPT_PATHS,
         )
 
 
 class PasteImportCommand(sublime_plugin.TextCommand):
-    def run(self, edit, item, typescript_paths=TYPESCRIPT_PATHS):
+    def run(
+        self, edit, item, typescript_paths=TYPESCRIPT_PATHS, test_selected_index=-1
+    ):
         replace_content = paste_import_command(
-            {"view": self.view, "item": item, "typescript_paths": typescript_paths,}
+            view=self.view,
+            item=item,
+            typescript_paths=typescript_paths,
+            test_selected_index=test_selected_index,
         )
-        self.view.replace(edit, sublime.Region(0, self.view.size()), replace_content)
+        if type(replace_content) == str:
+            self.view.replace(
+                edit, sublime.Region(0, self.view.size()), replace_content
+            )
 
 
 # Adds import of identifier near cursor (insert_import)
@@ -87,14 +92,12 @@ class PasteImportCommand(sublime_plugin.TextCommand):
 class InsertImportCommand(sublime_plugin.TextCommand):
     def run(self, edit, name=None, point=None, notify=True):
         insert_import_command(
-            {
-                "view": self.view,
-                "name": name,
-                "point": point,
-                "notify": notify,
-                "entry_modules": SOURCE_MODULES + NODE_MODULES,
-                "typescript_paths": TYPESCRIPT_PATHS,
-            }
+            view=self.view,
+            name=name,
+            point=point,
+            notify=notify,
+            entry_modules=SOURCE_MODULES + NODE_MODULES,
+            typescript_paths=TYPESCRIPT_PATHS,
         )
 
 
@@ -109,13 +112,11 @@ class InitializeSetupCommand(sublime_plugin.WindowCommand):
 class ImportFromClipboardCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         insert_import_command(
-            {
-                "view": self.view,
-                "name": sublime.get_clipboard(),
-                "notify": True,
-                "entry_modules": SOURCE_MODULES + NODE_MODULES,
-                "typescript_paths": TYPESCRIPT_PATHS,
-            }
+            view=self.view,
+            name=sublime.get_clipboard(),
+            notify=True,
+            entry_modules=SOURCE_MODULES + NODE_MODULES,
+            typescript_paths=TYPESCRIPT_PATHS,
         )
 
 

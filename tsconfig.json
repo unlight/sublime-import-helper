@@ -3,15 +3,9 @@
     "lib": ["es2017", "dom"],
     "baseUrl": ".",
     "paths": {
-      "@Libs/*": [
-        "./test_playground/lib/*"
-      ],
-      "@Dummy": [
-        "./test_playground/component/dummy.component.ts"
-      ],
-      "@Components": [
-        "./test_playground/component"
-      ]
+      "@Libs/*": ["./test_playground/lib/*"],
+      "@Dummy": ["./test_playground/component/dummy.component.ts"],
+      "@Components": ["./test_playground/component"]
     }
   }
 }

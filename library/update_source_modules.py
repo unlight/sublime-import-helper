@@ -4,7 +4,7 @@ from ..import_helper import PROJECT_NAME
 from .debug import debug
 from .get_source_folders import get_source_folders
 from .get_exclude_patterns import get_exclude_patterns
-from .error_message import error_message
+from .utils import error_message, status_message
 from .exec_command import run_command_async
 
 
@@ -34,7 +34,6 @@ def get_source_modules_callback(err, result, source_modules):
         if filepath is None:
             continue
         source_modules.append(item)
-    sublime.status_message(
-        "{0}: {1} source modules found".format(PROJECT_NAME, len(source_modules))
-    )
-    debug("Update source modules", len(source_modules))
+    count = len(source_modules)
+    status_message("{0} source modules found".format(count))
+    debug("Update source modules", count)
