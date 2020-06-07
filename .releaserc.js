@@ -5,5 +5,11 @@ module.exports = {
 		'@semantic-release/changelog',
 		'@semantic-release/github',
 		'@semantic-release/git',
+		[
+			'@semantic-release/exec',
+			{
+				prepareCmd: 'sh Taskfile prepare ${nextRelease.version}',
+			},
+		],
 	],
 };

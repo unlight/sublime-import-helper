@@ -1,0 +1,11 @@
+#!/bin/bash
+PATH="$PWD/node_modules/.bin":$PATH
+set -e
+
+prepare() {
+    set -x
+    messages=`cat messages.json`
+    echo "$messages" | jq --arg v "$1" '.[$v] = "CHANGELOG.md"' | tee messages.json
+}
+
+"$@"
