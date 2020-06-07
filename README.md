@@ -78,7 +78,7 @@ What kind of quotes will be used in import statement.
 Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
 
 -   Type: `string`
--   Default: '' (auto detect)
+-   Default: 'node' (auto detect)
 
 #### `import_path_mapping`
 
@@ -111,13 +111,6 @@ Remove index suffix ending in file path
 
 -   Type: `boolean`
 -   Default: `true`
-
-#### `import_no_match_count`
-
-Usually imports are at the top of the file, this settings controls how far countinue scan lines
-
--   Type: `number`
--   Default: `15`
 
 #### `import_root` (project file only)
 
@@ -168,6 +161,7 @@ python3 -m black .
 
 ## TODO
 
+-   multiple source folders
 -   parse single file
 -   handle all selections
 -   watch for project file changes

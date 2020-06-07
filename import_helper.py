@@ -10,7 +10,7 @@ NODE_MODULES = []  # Collection of entries
 SOURCE_MODULES = []
 TYPESCRIPT_PATHS = []
 
-from .library.utils import get_time
+from .library.utils import get_time, error_message, status_message
 from .library.get_setting import get_setting
 from .library.debug import debug
 from .library.find_executable import find_executable
@@ -48,7 +48,7 @@ def setup():
             PROJECT_NAME
         )
         debug(message, force=True)
-        sublime.status_message(message)
+        status_message(message)
         return
     update_source_modules(SOURCE_MODULES)
     update_node_modules(NODE_MODULES)

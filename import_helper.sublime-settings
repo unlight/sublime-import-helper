@@ -6,8 +6,8 @@
     
     // Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
     // - Type: `string`
-    // - Default: `` (auto detect)
-    "node_bin": "",
+    // - Default: `node` (auto detect)
+    "node_bin": "node",
     
     // How to apply path mapping (read more about [Module Resolution and Path Mapping](http://www.typescriptlang.org/docs/handbook/module-resolution.html)).  
     // Disabled by default (`disabled`).  
@@ -32,9 +32,4 @@
     // - Type: `boolean`  
     // - Default: `false`
     "remove_trailing_index": true,
-
-    // Usually imports are at the top of the file, this settings controls how far countinue scan lines
-    // - Type: `number`  
-    // - Default: `15`
-    "import_no_match_count": 15
 }
