@@ -10,6 +10,7 @@ NODE_MODULES = []  # Collection of entries
 SOURCE_MODULES = []
 TYPESCRIPT_PATHS = []
 
+from .library.utils import get_time
 from .library.get_setting import get_setting
 from .library.debug import debug
 from .library.find_executable import find_executable
@@ -159,7 +160,7 @@ class ImportHelperViewEventListener(sublime_plugin.ViewEventListener):
             self.completions_info["time"] = get_time()
             self.completions_info["prefix"] = prefix
             self.completions_info["result"] = query_completions_modules(
-                prefix, SOURCE_MODULES, NODE_MODULES
+                prefix=prefix, source_modules=SOURCE_MODULES, node_modules=NODE_MODULES
             )
         return self.completions_info["result"]
 
