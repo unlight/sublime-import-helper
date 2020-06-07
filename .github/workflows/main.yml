@@ -1,0 +1,34 @@
+name: Main
+on:
+  - push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: sudo apt-get update
+      - run: sudo apt-get install --no-install-recommends sudo apt-utils  -y
+      - run: sudo apt-get install --no-install-recommends python software-properties-common  -y
+      - run: sudo apt-get install --no-install-recommends git curl xvfb  -y
+      - run: sudo apt-get install --no-install-recommends libglib2.0-0 libgtk-3-0 -y
+      - run: sudo apt-get install --no-install-recommends psmisc -y
+      - run: sudo apt-get install --no-install-recommends locales locales-all -y
+      - run: wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+      - run: sudo apt-add-repository "deb https://download.sublimetext.com/ apt/stable/"
+      - run: sudo apt install sublime-text
+      - run: sudo cp xvfb /etc/init.d/xvfb
+      - run: sudo chmod +x /etc/init.d/xvfb
+      - run: sudo cp docker.sh /docker.sh
+      - run: sudo chmod +x /docker.sh
+      - env:
+          PACKAGE: ${{ secrets.PACKAGE }}
+          SUBLIME_TEXT_VERSION: '3'
+          DISPLAY: ':1'
+          LANGUAGE: 'en_US.UTF-8'
+          LANG: 'en_US.UTF-8'
+        run: |
+          echo PACKAGE = $PACKAGE
+          sudo sh -e /etc/init.d/xvfb start
+          /docker.sh bootstrap
+          /docker.sh install_package_control
+          /docker.sh run_tests --coverage
