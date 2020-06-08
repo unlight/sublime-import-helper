@@ -6,6 +6,7 @@ import_helper = sys.modules["ImportHelper.import_helper"]
 get_import_root = sys.modules["ImportHelper.library.get_import_root"].get_import_root
 common_path = sys.modules["ImportHelper.library.common_path"].common_path
 unixify = sys.modules["ImportHelper.library.unixify"].unixify
+panel_items = sys.modules["ImportHelper.library.panel_items"].panel_items
 query_completions_modules = sys.modules[
     "ImportHelper.library.query_completions_modules"
 ].query_completions_modules
@@ -35,7 +36,39 @@ class TestLibraryFunctions(TestCase):
         self.assertEqual(result, "/usr/project")
 
     def test_get_import_root(self):
-        result = get_import_root()
+        get_import_root()
+
+    def test_get_import_root_2(self):
+        result = get_import_root(project_data={}, folders=[])
+        result = result.replace("\\", "/")
+        self.assertIn("Data/Packages/ImportHelper/tests", result)
+
+    # def panel_items(name=None, entry_modules=[], import_root=get_import_root()):
+    def test_panel_items(self):
+        import_root = "/usr"
+        entry_modules = [
+            {"name": "entry1", "filepath": "/usr/src/1"},
+            {"name": "entry2", "filepath": "/usr/src/2"},
+            {"name": "entry3", "filepath": "/usr/src/3"},
+        ]
+        (items, matches) = panel_items(
+            entry_modules=entry_modules, import_root=import_root
+        )
+        self.assertEqual(len(items), 3)
+        self.assertEqual(len(matches), 3)
+
+    def test_panel_items_filter_by_name(self):
+        import_root = "/usr"
+        entry_modules = [
+            {"name": "entry1", "filepath": "/usr/src/1"},
+            {"name": "entry2", "filepath": "/usr/src/2"},
+        ]
+        (items, matches) = panel_items(
+            name="entry1", entry_modules=entry_modules, import_root=import_root
+        )
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0], "src/1/entry1")
+        self.assertEqual(len(matches), 1)
 
     def test_unixify(self):
         testFile = "\\local\\some\\file"

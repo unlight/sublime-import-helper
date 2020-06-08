@@ -6,7 +6,9 @@ from .get_import_root import get_import_root
 def panel_items(name=None, entry_modules=[], import_root=get_import_root()):
     result = []
     matches = []
-    slice_length = len(import_root) + 1
+    slice_length = 0
+    if import_root is not None:
+        slice_length = len(import_root) + 1
     for item in entry_modules:
         if name is not None and item.get("name") != name:
             continue

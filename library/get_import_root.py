@@ -6,8 +6,9 @@ from .debug import debug
 from .get_source_folders import get_source_folders
 from .utils import norm_path
 
-
-def get_import_root(project_data=None, project_file=None, folders=[]):
+# Returns import root - part of the file path which be cutted as common part.
+# Can return None if can't detect.
+def get_import_root(project_data=None, project_file=None, folders=None):
     if project_data is None:
         project_data = sublime.active_window().project_data() or {}
     import_root = project_data.get("import_root")
@@ -17,7 +18,8 @@ def get_import_root(project_data=None, project_file=None, folders=[]):
         if project_file is not None:
             result = norm_path(project_file, result)
         return result
-    folders = folders or sublime.active_window().folders()
+    if folders is None:
+        folders = get_source_folders()
     if len(folders) > 0:
         result = folders[0]
         if len(folders) != 1:
@@ -29,6 +31,6 @@ def get_import_root(project_data=None, project_file=None, folders=[]):
     result = None
     if active_view:
         file_name = active_view.file_name()
-        if not file_name:
+        if file_name:
             result = os.path.dirname(file_name)
     return result
