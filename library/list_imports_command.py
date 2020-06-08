@@ -5,9 +5,11 @@ from .panel_items import panel_items
 from .debug import debug
 
 
-def list_imports_command(
-    view, import_root=get_import_root(), entry_modules=[], typescript_paths=[]
-):
+def list_imports_command(view, import_root=None, entry_modules=[], typescript_paths=[]):
+
+    if import_root is None:
+        import_root = get_import_root()
+
     (items, matches) = panel_items(entry_modules=entry_modules, import_root=import_root)
 
     def on_select(index):

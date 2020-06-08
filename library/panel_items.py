@@ -1,9 +1,8 @@
 import os
 from .unixify import unixify
-from .get_import_root import get_import_root
 
 
-def panel_items(name=None, entry_modules=[], import_root=get_import_root()):
+def panel_items(name=None, entry_modules=[], import_root=None):
     result = []
     matches = []
     slice_length = 0

@@ -14,14 +14,19 @@ def insert_import_command(
     entry_modules,
     name=None,
     typescript_paths=[],
-    import_root=get_import_root(),
+    import_root=None,
 ):
     if not name:
         name = get_name_candidate(view, point)
     name = re.sub(r"[^\w\-\@\/]", "", name)
     if not name:
         return
+
     debug("insert_import: trying to import", "`{0}`".format(name))
+
+    if import_root is None:
+        import_root = get_import_root()
+
     (items, matches) = panel_items(
         name=name, entry_modules=entry_modules, import_root=import_root
     )
