@@ -10,7 +10,7 @@ NODE_MODULES = []  # Collection of entries
 SOURCE_MODULES = []
 TYPESCRIPT_PATHS = []
 
-from .library.utils import get_time, error_message, status_message
+from .library.utils import get_time
 from .library.get_setting import get_setting
 from .library.debug import debug
 from .library.find_executable import find_executable
@@ -42,14 +42,6 @@ def initialize():
 
 
 def setup():
-    project_file = sublime.active_window().project_file_name()
-    if project_file is None:
-        message = "There is no project file, {0} will not work without project.".format(
-            PROJECT_NAME
-        )
-        debug(message, force=True)
-        status_message(message)
-        return
     update_source_modules(SOURCE_MODULES)
     update_node_modules(NODE_MODULES)
     update_typescript_paths(TYPESCRIPT_PATHS)

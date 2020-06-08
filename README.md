@@ -116,10 +116,6 @@ Remove index suffix ending in file path
 
 Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
 
-#### `folders[i].path_source` (project file only)
-
-Path to your source. If not set `folders[i].path` will be used.
-
 #### Example of settings in project file:
 
 Example of project file:
@@ -140,13 +136,9 @@ Example of project file:
 
 #### No imports found for...
 
-Or if you see such message in status bar and console:
+Looks like you do not have opened folders in current Sublime window.
 
-```
-There is no project file, ... will not work without project.
-```
-
-You must create project from your working files and folders, you can do it in top menu:  
+It is recommended to create project from your working files and folders, you can do it in top menu:  
 `Project -> Save project as...`  
 Save project file in any place you want.  
 Then restart Sublime.
@@ -161,7 +153,8 @@ python3 -m black .
 
 ## TODO
 
--   multiple source folders
+-   limit to 100 panel items
+-   multiple source folders (import_root setting canbe removed)
 -   parse single file
 -   handle all selections
 -   watch for project file changes

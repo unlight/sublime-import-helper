@@ -4,17 +4,6 @@ from unittest import TestCase
 
 import_helper = sys.modules["ImportHelper.import_helper"]
 debug = sys.modules["ImportHelper.library.debug"].debug
-unixify = sys.modules["ImportHelper.library.unixify"].unixify
-get_import_root = sys.modules["ImportHelper.library.get_import_root"].get_import_root
-get_setting = sys.modules["ImportHelper.library.get_setting"].get_setting
-find_executable = sys.modules["ImportHelper.library.find_executable"].find_executable
-get_panel_item = sys.modules["ImportHelper.library.get_panel_item"].get_panel_item
-get_exclude_patterns = sys.modules[
-    "ImportHelper.library.get_exclude_patterns"
-].get_exclude_patterns
-query_completions_modules = sys.modules[
-    "ImportHelper.library.query_completions_modules"
-].query_completions_modules
 
 
 class TestDebugDisabled(TestCase):
@@ -213,49 +202,6 @@ class TestInitializeSetup(TestCase):
     def test_check_source_modules(self):
         yield 1000
         self.assertNotEqual(len(import_helper.SOURCE_MODULES), 0)
-
-
-class TestUtilFunctions(TestCase):
-    def test_unixify(self):
-        testFile = "\\local\\some\\file"
-        self.assertEqual(unixify(testFile), "/local/some/file")
-
-    def test_unixify_ts(self):
-        self.assertEqual(unixify("some\\file.ts"), "some/file")
-
-    def test_unixify_tsx(self):
-        self.assertEqual(unixify("d/file.tsx"), "d/file")
-
-    def test_unixify_js(self):
-        self.assertEqual(unixify("some\\file.js"), "some/file")
-
-    def test_get_setting(self):
-        self.assertEqual(get_setting("from_quote", None), "'")
-        self.assertEqual(get_setting("unknown", "default_value"), "default_value")
-
-    def test_find_executable(self):
-        result = find_executable("node")
-        self.assertNotEqual("node", result)
-
-    # def test_get_import_root(self):
-    #       todo: try set_project_data
-    #     result = get_import_root()
-    #     self.assertTrue("ImportHelper" in result)
-
-    def test_query_completions_modules(self):
-        source_modules = [
-            {"name": "good", "filepath": "/usr/home/good"},
-            {"name": "ugly", "filepath": "/usr/home/ugly"},
-        ]
-        node_modules = [{"name": "Chicky", "module": "chicken"}]
-        result = query_completions_modules("goo", source_modules, node_modules)
-        self.assertListEqual(result, [["good\tsource_modules", "good"]])
-        result = query_completions_modules("Chic", source_modules, node_modules)
-        self.assertListEqual(result, [["Chicky\tnode_modules/chicken", "Chicky"]])
-
-    def test_get_exclude_patterns_fault_tollerance(self):
-        result = get_exclude_patterns({"folders": {}})
-        self.assertDictEqual(result, {})
 
 
 class TestPasteImport(TestCase):

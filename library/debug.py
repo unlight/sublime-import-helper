@@ -1,4 +1,4 @@
-is_debug = False
+is_debug = True
 
 
 def debug(s, data=None, force=False):
@@ -7,3 +7,4 @@ def debug(s, data=None, force=False):
         if data is not None:
             message = "--- " + message + " ---" + "\n" + str(data)
         print(message)
+        print()

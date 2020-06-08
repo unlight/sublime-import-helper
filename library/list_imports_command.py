@@ -1,13 +1,14 @@
 from functools import partial
 
 from .get_import_root import get_import_root
-from .get_panel_item import get_panel_item
+from .panel_items import get_panel_item
 from .debug import debug
 
 
 def list_imports_command(
     view, import_root=get_import_root(), entry_modules=[], typescript_paths=[]
 ):
+    # todo: to new func
     match_items = []
     panel_items = []
     for item in entry_modules:

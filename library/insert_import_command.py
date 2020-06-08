@@ -4,11 +4,17 @@ from functools import partial
 
 from .debug import debug
 from .get_import_root import get_import_root
-from .get_panel_item import get_panel_item
+from .panel_items import get_panel_item
 
 
 def insert_import_command(
-    view, point, notify, entry_modules, name=None, typescript_paths=[],
+    view,
+    point,
+    notify,
+    entry_modules,
+    name=None,
+    typescript_paths=[],
+    import_root=get_import_root(),
 ):
     if not name:
         name = get_name_candidate(view, point)
@@ -16,7 +22,7 @@ def insert_import_command(
     if not name:
         return
     debug("insert_import: trying to import", "`{0}`".format(name))
-    import_root = get_import_root()
+    # todo: to new func
     match_items = []
     panel_items = []
     for item in entry_modules:

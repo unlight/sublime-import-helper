@@ -1,5 +1,6 @@
 import sublime
 from .get_setting import get_setting
+from .debug import debug
 from .utils import norm_path
 
 # Returns Record<path, { folderExcludePatterns: string[], fileExcludePatterns: string[] }
@@ -19,7 +20,8 @@ def get_exclude_patterns(project_data=None, project_file=None):
             folder.get("binary_file_patterns") or []
         )
         path = folder.get("path")
-        path = norm_path(project_file, path)
+        if project_file:
+            path = norm_path(project_file, path)
         result[path] = {
             "folderExcludePatterns": all_folder_exclude_patterns
             + folder_exclude_patterns,
