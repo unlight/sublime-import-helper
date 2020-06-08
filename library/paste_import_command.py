@@ -3,7 +3,6 @@ import sublime
 from .get_setting import get_setting
 from .get_from_paths import get_from_paths
 from .on_done_func import on_done_func
-from .identifier_name import identifier_name
 from .debug import debug
 from .exec_command import run_command, run_command_async
 
