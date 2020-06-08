@@ -1,4 +1,4 @@
-is_debug = True
+is_debug = False
 
 
 def debug(s, data=None, force=False):

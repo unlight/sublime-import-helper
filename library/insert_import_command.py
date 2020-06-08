@@ -4,7 +4,7 @@ from functools import partial
 
 from .debug import debug
 from .get_import_root import get_import_root
-from .panel_items import get_panel_item
+from .panel_items import panel_items
 
 
 def insert_import_command(
@@ -22,20 +22,15 @@ def insert_import_command(
     if not name:
         return
     debug("insert_import: trying to import", "`{0}`".format(name))
-    # todo: to new func
-    match_items = []
-    panel_items = []
-    for item in entry_modules:
-        if item.get("name") == name:
-            panel_item = get_panel_item(import_root, item)
-            if panel_item is not None:
-                panel_items.append(panel_item)
-                match_items.append(item)
-    if len(panel_items) == 0 and notify:
+    (items, matches) = panel_items(
+        name=name, entry_modules=entry_modules, import_root=import_root
+    )
+
+    if len(items) == 0 and notify:
         view.show_popup("No imports found for `<strong>{0}</strong>`".format(name))
         return
-    if len(panel_items) == 1:
-        item = match_items[0]
+    if len(items) == 1:
+        item = matches[0]
         view.run_command(
             "paste_import", {"item": item, "typescript_paths": typescript_paths}
         )
@@ -44,14 +39,14 @@ def insert_import_command(
     def on_select(index):
         if index == -1:
             return
-        selected_item = match_items[index]
+        selected_item = matches[index]
         debug("insert_import: on_select", selected_item)
         view.run_command(
             "paste_import",
             {"item": selected_item, "typescript_paths": typescript_paths},
         )
 
-    view.window().show_quick_panel(panel_items, on_select)
+    view.window().show_quick_panel(items, on_select)
 
 
 def get_name_candidate(view, point):
