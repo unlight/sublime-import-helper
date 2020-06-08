@@ -132,9 +132,7 @@ Example of project file:
 }
 ```
 
-## FAQ
-
-#### No imports found for...
+## Notes for `No imports found for ...` message
 
 Looks like you do not have opened folders in current Sublime window.
 
@@ -143,11 +141,15 @@ It is recommended to create project from your working files and folders, you can
 Save project file in any place you want.  
 Then restart Sublime.
 
-## Development
+Currently, it is not posssible to detect when project was switched (Project -> Quick Switch Project),
+in this case you need manually re-initialize plugin:  
+Select `Import Helper: Initialize / Setup / Update modules` from command palette
+
+## Dev Notes
 
 ```python
-# sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
-# sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
+sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(True)
+sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 python3 -m black .
 ```
 
