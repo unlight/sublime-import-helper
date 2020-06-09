@@ -127,7 +127,9 @@ Remove index suffix ending in file path
 
 #### `import_root` (project file only)
 
-Path to your project root folder (not source folder). If not set, `folders[0].path` will be used.
+Path to your project root folder (not source folder). If not set,
+tries automatically detect. For single souce folder `folders[0].path` will be used,
+for serveral source folders common path will be used.
 
 #### Example of settings in project file:
 
