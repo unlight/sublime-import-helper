@@ -42,9 +42,8 @@ class TestLibraryFunctions(TestCase):
         result = get_import_root(project_data={}, folders=[])
         if result:
             result = result.replace("\\", "/")
-            self.assertIn("Data/Packages/ImportHelper/", result)
+            self.assertIn("Data/Packages/ImportHelper", result)
 
-    # def panel_items(name=None, entry_modules=[], import_root=get_import_root()):
     def test_panel_items(self):
         import_root = "/usr"
         entry_modules = [

@@ -27,6 +27,19 @@ within sublime packages directory (Preferences > Browse Packages):
 git clone https://github.com/unlight/sublime-import-helper ImportHelper
 ```
 
+#### Install Old version
+
+Check https://github.com/unlight/sublime-import-helper/releases page,
+dowload source code archive, unzip to `Data/Packages/ImportHelper`.
+
+Or you can use git, see like in manual installation:
+
+```sh
+git clone https://github.com/unlight/sublime-import-helper ImportHelper
+cd ImportHelper
+git checkout -f v2.3.2
+```
+
 ## Usage
 
 #### Initialize / Setup / Update modules

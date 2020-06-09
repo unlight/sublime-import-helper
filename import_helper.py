@@ -64,6 +64,20 @@ class ListImportsCommand(sublime_plugin.TextCommand):
         )
 
 
+# Adds import of identifier near cursor (insert_import)
+# view.run_command('insert_import', args=({'name': 'createName'}))
+class InsertImportCommand(sublime_plugin.TextCommand):
+    def run(self, edit, name=None, point=None, notify=True):
+        insert_import_command(
+            view=self.view,
+            name=name,
+            point=point,
+            notify=notify,
+            entry_modules=SOURCE_MODULES + NODE_MODULES,
+            typescript_paths=TYPESCRIPT_PATHS,
+        )
+
+
 class PasteImportCommand(sublime_plugin.TextCommand):
     def run(
         self, edit, item, typescript_paths=TYPESCRIPT_PATHS, test_selected_index=-1
@@ -78,20 +92,6 @@ class PasteImportCommand(sublime_plugin.TextCommand):
             self.view.replace(
                 edit, sublime.Region(0, self.view.size()), replace_content
             )
-
-
-# Adds import of identifier near cursor (insert_import)
-# view.run_command('insert_import', args=({'name': 'createName'}))
-class InsertImportCommand(sublime_plugin.TextCommand):
-    def run(self, edit, name=None, point=None, notify=True):
-        insert_import_command(
-            view=self.view,
-            name=name,
-            point=point,
-            notify=notify,
-            entry_modules=SOURCE_MODULES + NODE_MODULES,
-            typescript_paths=TYPESCRIPT_PATHS,
-        )
 
 
 # window.run_command('initialize_setup')
