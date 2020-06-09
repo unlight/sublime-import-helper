@@ -1,3 +1,42 @@
+# [3.0.0](https://github.com/unlight/sublime-import-helper/compare/v2.3.2...v3.0.0) (2020-06-09)
+
+
+### Bug Fixes
+
+* Added scope TypeScript unit test ([2760b6c](https://github.com/unlight/sublime-import-helper/commit/2760b6ca883e17b4228def45a26cfd1c98d94021))
+* Panel items functions did not get call ([2846934](https://github.com/unlight/sublime-import-helper/commit/284693467d202a1d18e925e01b33a31fced22008))
+
+
+### Features
+
+* Auto detect import root from several source folders ([ed4a646](https://github.com/unlight/sublime-import-helper/commit/ed4a646a512b5f952c899178451278e9a49eba6f))
+* New bundler (webpack) ([e1dd06a](https://github.com/unlight/sublime-import-helper/commit/e1dd06aa259c3ab9b4348f9146ec253b90b1afad))
+* Removed `from_semicolon` setting ([48393dc](https://github.com/unlight/sublime-import-helper/commit/48393dc4123009560356d3a7769dcf0a2c246df6))
+* Removed `space_around_braces` setting ([12c7732](https://github.com/unlight/sublime-import-helper/commit/12c7732f426232031042e097b975137b7a1ff7e5))
+* Removed unused files and settings ([8f78077](https://github.com/unlight/sublime-import-helper/commit/8f78077758f3318a5a0bb25d2a353ab5692fc775))
+* Removed unused imports command ([b11a5de](https://github.com/unlight/sublime-import-helper/commit/b11a5de3797b251a76b2891b5d22e6164cfe6d14))
+* Replaced esm-exports by import-adjutor ([bea6160](https://github.com/unlight/sublime-import-helper/commit/bea61609690c0d5047e33313629bc5f2aa5a6f31))
+* Setting `import_path_mapping` changed to `enabled` by default ([03ff2c3](https://github.com/unlight/sublime-import-helper/commit/03ff2c3c6d1f04ac2de11f447f43ce6ab918b1e2))
+* Setting `insert_position` removed ([01eac3f](https://github.com/unlight/sublime-import-helper/commit/01eac3f6df909986afba1e93e4c4c58de2055686))
+
+
+### Performance Improvements
+
+* Load node_modules one by one from source folders ([fd8dbf1](https://github.com/unlight/sublime-import-helper/commit/fd8dbf13332a9742cc412b3d115796d59dcb0189))
+* Moved cut path outside of loop ([65605c2](https://github.com/unlight/sublime-import-helper/commit/65605c2dee81b50360b4c27a72da2d1126b2c804))
+
+
+### BREAKING CHANGES
+
+* Auto detect import root from several source folders (project file is not required)
+* Removed unused `import_no_match_count` setting
+* Setting `import_path_mapping` changed to `enabled` by default
+* Removed `space_around_braces` setting, now it is always true
+* Removed `from_semicolon` setting, now it is always true
+* Removed unused imports command, the replacement is eslint/tslint rules with fixers https://github.com/cartant/tslint-etc (no-unused-declaration)
+* New bundler (webpack)
+* Replaced esm-exports by import-adjutor, required Node.js 10+
+
 ### Old Changelog
 
 | Version | Date        | Description                                                                                                     |
@@ -46,4 +85,3 @@
 | 1.0.3   | 26 Dec 2016 | Setting `space_around_braces`                                                                                   |
 | 1.0.1   | 19 Dec 2016 | Fixed loading settings bug                                                                                      |
 | 1.0.0   | 18 Dec 2016 | First release                                                                                                   |
-
