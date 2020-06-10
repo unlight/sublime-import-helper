@@ -18,6 +18,7 @@ from .library.update_source_modules import update_source_modules
 from .library.update_node_modules import update_node_modules
 from .library.list_imports_command import list_imports_command
 from .library.get_from_paths import get_from_paths
+from .library.get_import_root import get_import_root
 from .library.insert_import_command import insert_import_command
 from .library.paste_import_command import paste_import_command
 from .library.update_typescript_paths import update_typescript_paths
@@ -59,6 +60,7 @@ class ListImportsCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         list_imports_command(
             view=self.view,
+            import_root=get_import_root(),
             entry_modules=SOURCE_MODULES + NODE_MODULES,
             typescript_paths=TYPESCRIPT_PATHS,
         )
@@ -74,6 +76,7 @@ class InsertImportCommand(sublime_plugin.TextCommand):
             point=point,
             notify=notify,
             entry_modules=SOURCE_MODULES + NODE_MODULES,
+            import_root=get_import_root(),
             typescript_paths=TYPESCRIPT_PATHS,
         )
 

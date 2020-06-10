@@ -8,13 +8,7 @@ from .panel_items import panel_items
 
 
 def insert_import_command(
-    view,
-    point,
-    notify,
-    entry_modules,
-    name=None,
-    typescript_paths=[],
-    import_root=None,
+    view, point, notify, entry_modules, import_root, name=None, typescript_paths=[],
 ):
     if not name:
         name = get_name_candidate(view, point)
@@ -23,9 +17,6 @@ def insert_import_command(
         return
 
     debug("insert_import: trying to import", "`{0}`".format(name))
-
-    if import_root is None:
-        import_root = get_import_root()
 
     (items, matches) = panel_items(
         name=name, entry_modules=entry_modules, import_root=import_root

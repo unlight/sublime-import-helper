@@ -5,7 +5,7 @@ from .get_source_folders import get_source_folders
 from .debug import debug
 
 
-def update_typescript_paths(typescript_paths=[]):
+def update_typescript_paths(typescript_paths):
     typescript_paths.clear()
     source_folders = get_source_folders()
     for folder in source_folders:
