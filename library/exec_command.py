@@ -14,7 +14,7 @@ def run_command(command, data=None, callback=None):
     err = None
     out = None
     try:
-        (err, out) = exec([NODE_BIN, RUN_PATH], json)
+        (err, out) = exec([NODE_BIN, "--no-warnings", RUN_PATH], json)
     except Exception as e:
         err = traceback.format_exc()
     if bool(err):

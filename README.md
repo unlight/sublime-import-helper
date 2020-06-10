@@ -170,6 +170,7 @@ python3 -m black .
 
 ## TODO
 
+-   run node check version on startup
 -   limit to 100 panel items
 -   multiple source folders (import_root setting canbe removed)
 -   parse single file
