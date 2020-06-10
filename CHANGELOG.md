@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/unlight/sublime-import-helper/compare/v3.0.0...v3.0.1) (2020-06-10)
+
+
+### Bug Fixes
+
+* Added no-warnings argument https://nodejs.org/api/cli.html#cli_no_warnings ([b6d78eb](https://github.com/unlight/sublime-import-helper/commit/b6d78ebc9a405e6afdd5a744c90bf2c824597912)), closes [#80](https://github.com/unlight/sublime-import-helper/issues/80)
+
 # [3.0.0](https://github.com/unlight/sublime-import-helper/compare/v2.3.2...v3.0.0) (2020-06-09)
 
 
