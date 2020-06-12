@@ -6,25 +6,40 @@ from .utils import error_message, status_message
 from .exec_command import run_command_async
 
 
-def update_source_modules(source_modules=[]):
+def update_source_modules(source_modules):
     source_folders = get_source_folders()
-    debug("update_source_modules:source_folders", source_folders)
     exclude_patterns = get_exclude_patterns()
 
+    debug("update_source_modules:source_folders", source_folders)
+
     def callback(err, result):
-        get_source_modules_callback(err, result, source_modules)
+        source_modules_callback(err, result, source_modules)
+        next()
 
-    run_command_async(
-        "exportsFromFolders",
-        {"folders": source_folders, "excludePatterns": exclude_patterns},
-        callback,
-    )
+    def next():
+        if len(source_folders) > 0:
+            source_folder = source_folders.pop(0)
+            folder_patterns = exclude_patterns.get(source_folder) or {}
+            debug("folder_patterns", folder_patterns)
+            run_command_async(
+                "exportsFromDirectory",
+                {
+                    "directory": source_folder,
+                    "folderExcludePatterns": folder_patterns.get(
+                        "folderExcludePatterns"
+                    ),
+                    "fileExcludePatterns": folder_patterns.get("fileExcludePatterns"),
+                },
+                callback,
+            )
+
+    source_modules.clear()
+    next()
 
 
-def get_source_modules_callback(err, result, source_modules):
+def source_modules_callback(err, result, source_modules):
     if err:
         return error_message(err)
-    source_modules.clear()
     if type(result) is not list:
         return error_message("Unexpected type of result: " + type(result))
     for item in result:
