@@ -22,8 +22,9 @@ def insert_import_command(
         name=name, entry_modules=entry_modules, import_root=import_root
     )
 
-    if len(items) == 0 and notify:
-        view.show_popup("No imports found for `<strong>{0}</strong>`".format(name))
+    if len(items) == 0:
+        if notify:
+            view.show_popup("No imports found for `<strong>{0}</strong>`".format(name))
         return
     if len(items) == 1:
         item = matches[0]

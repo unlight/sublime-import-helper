@@ -42,6 +42,7 @@ def paste_import_command(view, item, typescript_paths=[], test_selected_index=-1
             },
             "sourceFileContent": soucefile_content,
             "manipulationSettings": {"quoteKind": get_setting("from_quote", "'")},
+            "sorted": True,
         },
     )
     # debug("paste_import_command:result", result)
