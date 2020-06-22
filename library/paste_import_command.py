@@ -4,7 +4,7 @@ from .get_setting import get_setting
 from .get_from_paths import get_from_paths
 from .on_done_func import on_done_func
 from .debug import debug
-from .exec_command import run_command, run_command_async
+from .exec_command import run_command
 
 # view.run_command('paste_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}, 'typescript_paths': []}))
 # view.run_command('paste_import', args=({'item': {'isDefault': True, 'module': 'worker_threads', 'name': 'worker_threads'}}))

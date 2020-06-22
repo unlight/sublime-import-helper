@@ -10,19 +10,19 @@ NODE_MODULES = []  # Collection of entries
 SOURCE_MODULES = []
 TYPESCRIPT_PATHS = []
 
-from .library.utils import get_time
+from .library.utils import get_time, status_message
 from .library.get_setting import get_setting
 from .library.debug import debug
 from .library.find_executable import find_executable
 from .library.update_source_modules import update_source_modules
 from .library.update_node_modules import update_node_modules
 from .library.list_imports_command import list_imports_command
-from .library.get_from_paths import get_from_paths
 from .library.get_import_root import get_import_root
 from .library.insert_import_command import insert_import_command
 from .library.paste_import_command import paste_import_command
 from .library.update_typescript_paths import update_typescript_paths
 from .library.query_completions_modules import query_completions_modules
+from .library.exec_command import exec
 
 
 def plugin_loaded():
@@ -40,6 +40,10 @@ def initialize():
             NODE_BIN = find_executable("node")
         if not bool(NODE_BIN):
             NODE_BIN = "node"
+    (err, out) = exec([NODE_BIN, "--version"], None)
+    version = float(".".join(out[1:].split(".")[0:2]))
+    if version < 10:
+        status_message("Node.js version is {0}, but 10+ is required".format(version))
 
 
 def setup():

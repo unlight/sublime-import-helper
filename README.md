@@ -167,12 +167,3 @@ sublime.log_input(True); sublime.log_commands(True); sublime.log_result_regex(Tr
 sublime.log_input(False); sublime.log_commands(False); sublime.log_result_regex(False)
 python3 -m black .
 ```
-
-## TODO
-
--   run node check version on startup
--   limit to 100 panel items
--   multiple source folders (import_root setting canbe removed)
--   parse single file
--   handle all selections
--   watch for project file changes
