@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/unlight/sublime-import-helper/compare/v3.0.2...v3.1.0) (2020-06-30)
+
+
+### Bug Fixes
+
+* Some imports from ambient modules are missing ([098fe1b](https://github.com/unlight/sublime-import-helper/commit/098fe1bf90a3049dbcc1b45d2788506b22746ef4))
+
+
+### Features
+
+* Sorted named imports ([12e2370](https://github.com/unlight/sublime-import-helper/commit/12e237049ec30a9f4c951bc5bf02a57d7eff0144)), closes [#48](https://github.com/unlight/sublime-import-helper/issues/48)
+
 ## [3.0.2](https://github.com/unlight/sublime-import-helper/compare/v3.0.1...v3.0.2) (2020-06-12)
 
 
