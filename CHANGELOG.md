@@ -1,3 +1,19 @@
+## [4.0.0](https://github.com/unlight/sublime-import-helper/compare/v3.1.0...v4.0.0) (2021-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* Require Node.js 12.0+
+
+### Features
+
+* Setting to disable semicolon ([4319e8d](https://github.com/unlight/sublime-import-helper/commit/4319e8df9644829b7b6dd6f4ce3e6edabc38fcb2))
+
+
+### Miscellaneous Chores
+
+* Updated packages ([78b8fa1](https://github.com/unlight/sublime-import-helper/commit/78b8fa18e527e89c202f4f5b7d9244a9b858cbd8))
+
 # [3.1.0](https://github.com/unlight/sublime-import-helper/compare/v3.0.2...v3.1.0) (2020-06-30)
 
 
