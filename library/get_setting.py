@@ -1,8 +1,10 @@
 import sublime
 
 
-def get_setting(name, default):
-    result = None
+def get_setting(name, default, settings={}):
+    result = settings.get(name)
+    if result is not None:
+        return result
     project_data = sublime.active_window().project_data()
     if project_data is not None:
         result = project_data.get(name)

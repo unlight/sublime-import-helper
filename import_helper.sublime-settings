@@ -3,6 +3,11 @@
     // - Type: `string`
     // - Default: `'`
     "from_quote": "'",
+
+    // Remove semicolon at the end of `import` string.
+    // - Type: `boolean`
+    // - Default: `false`
+    "no_semicolon": false,
     
     // Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
     // - Type: `string`
@@ -33,3 +38,4 @@
     // - Default: `false`
     "remove_trailing_index": true,
 }
+

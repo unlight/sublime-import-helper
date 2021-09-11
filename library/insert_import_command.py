@@ -8,7 +8,13 @@ from .panel_items import panel_items
 
 
 def insert_import_command(
-    view, point, notify, entry_modules, import_root, name=None, typescript_paths=[],
+    view,
+    point,
+    notify,
+    entry_modules,
+    import_root,
+    name=None,
+    typescript_paths=[],
 ):
     if not name:
         name = get_name_candidate(view, point)

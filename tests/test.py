@@ -42,7 +42,7 @@ class TestDoInsertImport(TestCase):
             },
         )
         first_row = self.getRow(0)
-        self.assertIn("import { Lakia } from './dinah_widdoes'", first_row)
+        self.assertEqual("import { Lakia } from './dinah_widdoes';", first_row)
 
     def test_side_effect_import(self):
         setText(self.view, 'import "rxjs/operators/map"\n')
@@ -188,6 +188,21 @@ class TestDoInsertImport(TestCase):
             },
         )
         self.assertIn("import { Inject } from '@angular/core'", self.getRow(0))
+
+    def test_paste_import_no_semicolon(self):
+        setText(self.view, "")
+        self.view.run_command(
+            "paste_import",
+            {
+                "item": {
+                    "filepath": "mod",
+                    "name": "x",
+                    "isDefault": True,
+                },
+                "settings": {"no_semicolon": True},
+            },
+        )
+        self.assertEqual("import x from './mod'", self.getRow(0))
 
 
 class TestInitializeSetup(TestCase):

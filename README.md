@@ -9,7 +9,7 @@ A Sublime Text Plugin that helps you to import your modules.
 
 ## Requirements
 
--   Node.JS 10.0+
+-   Node.JS 12.0+
 
 ## Installation
 
@@ -85,6 +85,13 @@ What kind of quotes will be used in import statement.
 
 -   Type: `string`
 -   Default: `'`
+
+#### `no_semicolon`
+
+Remove semicolon at the end of `import` string.
+
+-   Type: `boolean`
+-   Default: `false`
 
 #### `node_bin`
 

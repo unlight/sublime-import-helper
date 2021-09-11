@@ -87,13 +87,19 @@ class InsertImportCommand(sublime_plugin.TextCommand):
 
 class PasteImportCommand(sublime_plugin.TextCommand):
     def run(
-        self, edit, item, typescript_paths=TYPESCRIPT_PATHS, test_selected_index=-1
+        self,
+        edit,
+        item,
+        typescript_paths=TYPESCRIPT_PATHS,
+        test_selected_index=-1,
+        settings={},
     ):
         replace_content = paste_import_command(
             view=self.view,
             item=item,
             typescript_paths=typescript_paths,
             test_selected_index=test_selected_index,
+            settings=settings,
         )
         if type(replace_content) == str:
             self.view.replace(

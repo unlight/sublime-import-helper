@@ -8,7 +8,9 @@ from .exec_command import run_command
 
 # view.run_command('paste_import', args=({'item': {'filepath': 'xxx', 'name': 'aaa', 'isDefault': False}, 'typescript_paths': []}))
 # view.run_command('paste_import', args=({'item': {'isDefault': True, 'module': 'worker_threads', 'name': 'worker_threads'}}))
-def paste_import_command(view, item, typescript_paths=[], test_selected_index=-1):
+def paste_import_command(
+    view, item, typescript_paths=[], test_selected_index=-1, settings={}
+):
     debug("paste_import_command:item", item)
     file_name = view.file_name() or "."
     from_paths = get_from_paths(item, file_name, typescript_paths)
@@ -41,7 +43,10 @@ def paste_import_command(view, item, typescript_paths=[], test_selected_index=-1
                 "isDefault": item.get("isDefault"),
             },
             "sourceFileContent": soucefile_content,
-            "manipulationSettings": {"quoteKind": get_setting("from_quote", "'")},
+            "manipulationSettings": {
+                "quoteKind": get_setting("from_quote", "'", settings),
+                "noSemicolon": get_setting("no_semicolon", False, settings),
+            },
             "sorted": True,
         },
     )
