@@ -1,34 +1,64 @@
-name: Main
-on:
-  - push
+name: build
+
+on: [push, pull_request]
+
+env:
+  SUBLIME_TEXT_VERSION: 3
+  PACKAGE: ImportHelper
+
 jobs:
-  test:
+  linux:
     runs-on: ubuntu-latest
+    container:
+      image: sublimetext/unittesting
+      options: --cap-add=NET_ADMIN
     steps:
       - uses: actions/checkout@v1
-      - run: sudo apt-get update
-      - run: sudo apt-get install --no-install-recommends sudo apt-utils  -y
-      - run: sudo apt-get install --no-install-recommends python software-properties-common  -y
-      - run: sudo apt-get install --no-install-recommends git curl xvfb  -y
-      - run: sudo apt-get install --no-install-recommends libglib2.0-0 libgtk-3-0 -y
-      - run: sudo apt-get install --no-install-recommends psmisc -y
-      - run: sudo apt-get install --no-install-recommends locales locales-all -y
-      - run: wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-      - run: sudo apt-add-repository "deb https://download.sublimetext.com/ apt/stable/"
-      - run: sudo apt install sublime-text
-      - run: sudo cp xvfb /etc/init.d/xvfb
-      - run: sudo chmod +x /etc/init.d/xvfb
-      - run: sudo cp docker.sh /docker.sh
-      - run: sudo chmod +x /docker.sh
-      - env:
-          PACKAGE: ${{ secrets.PACKAGE }}
-          SUBLIME_TEXT_VERSION: '3'
-          DISPLAY: ':1'
-          LANGUAGE: 'en_US.UTF-8'
-          LANG: 'en_US.UTF-8'
-        run: |
-          echo PACKAGE = $PACKAGE
-          sudo sh -e /etc/init.d/xvfb start
-          /docker.sh bootstrap
-          /docker.sh install_package_control
-          /docker.sh run_tests --coverage
+      - run: sh -e /etc/init.d/xvfb start
+      - run: curl -OL https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.sh
+      - run: |
+          PATH="$HOME/.local/bin:$PATH"
+          sh github.sh bootstrap
+          sh github.sh install_package_control
+          sh github.sh run_tests --coverage
+          # sh github.sh run_syntax_tests --coverage
+      - run: |
+          apt-get update
+          apt-get install python3-pip -y
+          pip3 install coverage==4.5.4 codecov==2.0.15
+          codecov
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: curl -OL https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.sh
+      - run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          sh github.sh bootstrap
+          sh github.sh install_package_control
+          sh github.sh run_tests --coverage
+          # sh github.sh run_syntax_tests --coverage
+      - run: |
+          pip3 install coverage==4.5.4 codecov==2.0.15
+          codecov
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: (new-object net.webclient).DownloadFile("https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.ps1","github.ps1")
+      - run: |
+          ./github.ps1 "bootstrap" -verbose
+          ./github.ps1 "install_package_control" -verbose
+          ./github.ps1 "run_tests" -coverage -verbose
+          # ./github.ps1 "run_syntax_tests" -coverage -verbose
+      - run: |
+          pip3 install coverage==4.5.4 codecov==2.0.15
+          codecov
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
