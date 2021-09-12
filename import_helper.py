@@ -43,7 +43,7 @@ def initialize():
     (err, out) = exec([NODE_BIN, "--version"], None)
     version = float(".".join(out[1:].split(".")[0:2]))
     if version < 10:
-        status_message("Node.js version is {0}, but 10+ is required".format(version))
+        status_message("Node.js version is {0}, but 12+ is required".format(version))
 
 
 def setup():
