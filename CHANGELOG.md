@@ -1,3 +1,15 @@
+## [4.1.0](https://github.com/unlight/sublime-import-helper/compare/v4.0.0...v4.1.0) (2021-09-16)
+
+
+### Features
+
+* Setting for space in braces `insert_space_in_braces` ([df0d246](https://github.com/unlight/sublime-import-helper/commit/df0d246625eae590081e8823bde9666dfd500933))
+
+
+### Bug Fixes
+
+* Exception must inherit BaseException ([7ceb54f](https://github.com/unlight/sublime-import-helper/commit/7ceb54f0798298baf274631c9889f3e48043930d))
+
 ## [4.0.0](https://github.com/unlight/sublime-import-helper/compare/v3.1.0...v4.0.0) (2021-09-11)
 
 
