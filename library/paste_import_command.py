@@ -46,6 +46,7 @@ def paste_import_command(
             "manipulationSettings": {
                 "quoteKind": get_setting("from_quote", "'", settings),
                 "noSemicolon": get_setting("no_semicolon", False, settings),
+                "insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": get_setting("insert_space_in_braces", True, settings)
             },
             "sorted": True,
         },

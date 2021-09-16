@@ -93,6 +93,13 @@ Remove semicolon at the end of `import` string.
 -   Type: `boolean`
 -   Default: `false`
 
+#### `insert_space_in_braces`
+
+Insert space after opening and before closing non empty braces.
+
+-   Type: `boolean`
+-   Default: `true`
+
 #### `node_bin`
 
 Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)

@@ -204,6 +204,21 @@ class TestDoInsertImport(TestCase):
         )
         self.assertEqual("import x from './mod'", self.getRow(0))
 
+    def test_paste_import_no_spaces_in_braces(self):
+        setText(self.view, "")
+        self.view.run_command(
+            "paste_import",
+            {
+                "item": {
+                    "filepath": "file",
+                    "name": "a",
+                    "isDefault": False,
+                },
+                "settings": {"insert_space_in_braces": False, "no_semicolon": True},
+            },
+        )
+        self.assertEqual("import {a} from './file'", self.getRow(0))
+
 
 class TestInitializeSetup(TestCase):
     def setUp(self):
