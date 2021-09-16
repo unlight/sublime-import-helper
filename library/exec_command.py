@@ -20,7 +20,7 @@ def run_command(command, data=None, callback=None):
     if bool(err):
         if callback is not None:
             return callback(err, None)
-        raise err
+        raise Exception(err)
     # debug('run_command: trying to decode', out)
     result = sublime.decode_value(out)
     if callback is not None:
