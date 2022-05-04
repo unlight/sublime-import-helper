@@ -105,7 +105,7 @@ Insert space after opening and before closing non empty braces.
 Sometimes sublime cannot find node executable, if it happens. Set `node_bin` explicitly (e.g. c:/nodejs/node.exe)
 
 -   Type: `string`
--   Default: 'node' (auto detect)
+-   Default: '' (auto detect)
 
 #### `import_path_mapping`
 

@@ -6,14 +6,14 @@ PROJECT_NAME = "Import Helper"
 PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 RUN_PATH = os.path.join(PACKAGE_PATH, "backend_run.js")
 NODE_BIN = "node"
-NODE_MODULES = []  # Collection of entries
+# Collection of entries
+NODE_MODULES = []
 SOURCE_MODULES = []
 TYPESCRIPT_PATHS = []
 
 from .library.utils import get_time, status_message
 from .library.get_setting import get_setting
 from .library.debug import debug
-from .library.find_executable import find_executable
 from .library.update_source_modules import update_source_modules
 from .library.update_node_modules import update_node_modules
 from .library.list_imports_command import list_imports_command
@@ -22,34 +22,29 @@ from .library.insert_import_command import insert_import_command
 from .library.paste_import_command import paste_import_command
 from .library.update_typescript_paths import update_typescript_paths
 from .library.query_completions_modules import query_completions_modules
-from .library.exec_command import exec
+from .library.get_node_executable import get_node_executable
+from .library.exec_command import exec_sync
 
 
 def plugin_loaded():
     print()
     debug("Plugin loaded", PROJECT_NAME)
-    sublime.set_timeout(initialize, 0)
     sublime.set_timeout(setup, 0)
 
 
-def initialize():
-    global NODE_BIN
-    if NODE_BIN == "node" or not bool(NODE_BIN):
-        NODE_BIN = get_setting("node_bin", "")
-        if not bool(NODE_BIN):
-            NODE_BIN = find_executable("node")
-        if not bool(NODE_BIN):
-            NODE_BIN = "node"
-    (err, out) = exec([NODE_BIN, "--version"], None)
-    version = float(".".join(out[1:].split(".")[0:2]))
-    if version < 10:
-        status_message("Node.js version is {0}, but 12+ is required".format(version))
-
-
 def setup():
+    check_node()
     update_source_modules(SOURCE_MODULES)
     update_node_modules(NODE_MODULES)
     update_typescript_paths(TYPESCRIPT_PATHS)
+
+
+def check_node():
+    node_executable = get_node_executable()
+    (err, out) = exec_sync([node_executable, "--version"], None)
+    version = float(".".join(out[1:].split(".")[0:2]))
+    if version < 12:
+        status_message("Node.js version is {0}, but 12+ is required".format(version))
 
 
 # window.run_command('update_source_modules')
