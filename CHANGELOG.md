@@ -1,3 +1,10 @@
+### [4.1.1](https://github.com/unlight/sublime-import-helper/compare/v4.1.0...v4.1.1) (2022-05-04)
+
+
+### Bug Fixes
+
+* Improve detect node executable ([a10dcca](https://github.com/unlight/sublime-import-helper/commit/a10dccab287abff938323d7152c9fd2adb419561)), closes [#107](https://github.com/unlight/sublime-import-helper/issues/107)
+
 ## [4.1.0](https://github.com/unlight/sublime-import-helper/compare/v4.0.0...v4.1.0) (2021-09-16)
 
 
