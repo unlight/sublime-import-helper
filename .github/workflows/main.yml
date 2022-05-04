@@ -2,83 +2,34 @@ name: build
 
 on: [push, pull_request]
 
-env:
-  SUBLIME_TEXT_VERSION: 3
-  PACKAGE: ImportHelper
-
 jobs:
-  linux:
-    runs-on: ubuntu-latest
-    container:
-      image: sublimetext/unittesting
-      options: --cap-add=NET_ADMIN
+  test:
+    name: 'Test on Sublime ${{ matrix.st-version }} and ${{ matrix.os }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        st-version: [3, 4]
+        os: ['ubuntu-latest', 'macOS-latest', 'windows-latest']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: actions/checkout@v3
-      - run: sh -e /etc/init.d/xvfb start
-      - run: curl -OL https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.sh
-      - run: |
-          PATH="$HOME/.local/bin:$PATH"
-          sh github.sh bootstrap
-          sh github.sh install_package_control
-          sh github.sh run_tests --coverage
-          # sh github.sh run_syntax_tests --coverage
-      - run: |
-          apt-get update
-          apt-get install python3-pip -y
-          pip3 install coverage==4.5.4 codecov==2.0.15
-          codecov
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-
-  macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v2
+      - uses: SublimeText/UnitTesting/actions/setup@v1
         with:
-          node-version: 16
-      - uses: actions/checkout@v3
-      - run: curl -OL https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.sh
-      - run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          sh github.sh bootstrap
-          sh github.sh install_package_control
-          sh github.sh run_tests --coverage
-          # sh github.sh run_syntax_tests --coverage
-      - run: |
-          pip3 install coverage==4.5.4 codecov==2.0.15
-          codecov
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-
-  windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/setup-node@v3
+          sublime-text-version: ${{ matrix.st-version }}
+          package-name: ImportHelper
+      - uses: SublimeText/UnitTesting/actions/run-tests@v1
         with:
-          node-version: 16
-      - uses: actions/checkout@v3
-      - run: (new-object net.webclient).DownloadFile("https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.ps1","github.ps1")
-      - run: |
-          ./github.ps1 "bootstrap" -verbose
-          ./github.ps1 "install_package_control" -verbose
-          ./github.ps1 "run_tests" -coverage -verbose
-          # ./github.ps1 "run_syntax_tests" -coverage -verbose
-      - run: |
-          pip3 install coverage==4.5.4 codecov==2.0.15
-          codecov
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+          package-name: ImportHelper
+          coverage: true
+          codecov-upload: false
 
   release:
     name: 'Release'
     runs-on: ubuntu-latest
-    needs:
-      - linux
-      - macos
-      - windows
+    needs: test
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next')
     steps:
       - name: 'Checkout repository'
