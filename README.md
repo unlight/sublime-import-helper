@@ -139,7 +139,7 @@ Remove index suffix ending in file path
 -   Type: `boolean`
 -   Default: `true`
 
-#### import_strip_extension
+#### `import_strip_extension`
 
 Strip file extension in import statement.
 
