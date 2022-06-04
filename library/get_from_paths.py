@@ -12,7 +12,7 @@ def get_from_paths(item, file_name=None, typescript_paths=[]):
     if not file_name:
         file_name = "."
     from_path = os.path.relpath(item["filepath"], os.path.dirname(file_name))
-    from_path = unixify(from_path)
+    from_path = unixify(from_path, get_setting("import_strip_extension", True))
     if from_path[0] != ".":
         from_path = "./" + from_path
     result = [from_path]
