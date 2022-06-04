@@ -139,6 +139,13 @@ Remove index suffix ending in file path
 -   Type: `boolean`
 -   Default: `true`
 
+#### import_strip_extension
+
+Strip file extension in import statement.
+
+-   Type: `boolean`
+-   Default: `true`
+
 #### `import_root` (project file only)
 
 Path to your project root folder (not source folder). If not set,

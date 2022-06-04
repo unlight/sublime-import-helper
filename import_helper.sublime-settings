@@ -42,5 +42,10 @@
     // - Type: `boolean`  
     // - Default: `false`
     "remove_trailing_index": true,
+
+    // Strip file extension in import statement.
+    // - Type: `boolean`
+    // - Default: true
+    "import_strip_extension": true,
 }
 
