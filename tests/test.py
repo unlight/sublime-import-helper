@@ -5,11 +5,37 @@ from unittest import TestCase
 import_helper = sys.modules["ImportHelper.import_helper"]
 debug = sys.modules["ImportHelper.library.debug"].debug
 
+class TestExample(TestCase):
+    def setUp(self):
+        self.view = sublime.active_window().new_file()
+        # make sure we have a window to work with
+        s = sublime.load_settings("Preferences.sublime-settings")
+        s.set("close_windows_when_empty", False)
+
+    def tearDown(self):
+        if self.view:
+            self.view.set_scratch(True)
+            self.view.window().focus_view(self.view)
+            self.view.window().run_command("close_file")
+
+    def getRow(self, row):
+        return self.view.substr(self.view.line(self.view.text_point(row, 0)))
+
+    def test_smoke(self):
+        self.assertTrue(True)
+
+    def test_hello_world(self):
+        self.view.run_command("hello_world")
+        first_row = self.getRow(0)
+
+def setText(view, string):
+    view.run_command("select_all")
+    view.run_command("left_delete")
+    view.run_command("insert", {"characters": string})
 
 class TestDebugDisabled(TestCase):
     def test_debug_disabled(self):
         self.assertFalse(sys.modules["ImportHelper.library.debug"].is_debug)
-
 
 class TestDoInsertImport(TestCase):
     def setUp(self):
@@ -288,32 +314,16 @@ class TestPasteImport(TestCase):
         )
         self.assertEqual("import { x } from './x/index.js';", self.getRow(0))
 
-
-class TestExample(TestCase):
-    def setUp(self):
-        self.view = sublime.active_window().new_file()
-        # make sure we have a window to work with
-        s = sublime.load_settings("Preferences.sublime-settings")
-        s.set("close_windows_when_empty", False)
-
-    def tearDown(self):
-        if self.view:
-            self.view.set_scratch(True)
-            self.view.window().focus_view(self.view)
-            self.view.window().run_command("close_file")
-
-    def getRow(self, row):
-        return self.view.substr(self.view.line(self.view.text_point(row, 0)))
-
-    def test_smoke(self):
-        self.assertTrue(True)
-
-    def test_hello_world(self):
-        self.view.run_command("hello_world")
-        first_row = self.getRow(0)
-
-
-def setText(view, string):
-    view.run_command("select_all")
-    view.run_command("left_delete")
-    view.run_command("insert", {"characters": string})
+    def test_paste_import_extension_as_is(self):
+        setText(self.view, "")
+        self.view.run_command(
+            "paste_import",
+            {
+                "item": {"filepath": "./a.jsx", "name": "b"},
+                "settings": {
+                    "import_file_extension": "as_is",
+                    "remove_trailing_index": True,
+                },
+            },
+        )
+        self.assertEqual("import { b } from './a.jsx';", self.getRow(0))
