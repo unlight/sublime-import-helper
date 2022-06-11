@@ -1,3 +1,10 @@
+## [4.2.0](https://github.com/unlight/sublime-import-helper/compare/v4.1.1...v4.2.0) (2022-06-11)
+
+
+### Features
+
+* Extension setting ([0dd6a2e](https://github.com/unlight/sublime-import-helper/commit/0dd6a2e90a6dfa9eb200d238dc845d550411893e)), closes [#112](https://github.com/unlight/sublime-import-helper/issues/112)
+
 ### [4.1.1](https://github.com/unlight/sublime-import-helper/compare/v4.1.0...v4.1.1) (2022-05-04)
 
 
