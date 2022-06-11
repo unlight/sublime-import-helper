@@ -246,8 +246,47 @@ class TestPasteImport(TestCase):
             self.view.window().focus_view(self.view)
             self.view.window().run_command("close_file")
 
-    def test_get_import_block(self):
-        pass
+    def getRow(self, row):
+        return self.view.substr(self.view.line(self.view.text_point(row, 0)))
+
+    def getAll(self):
+        return self.view.substr(sublime.Region(0, self.view.size()))
+
+    def test_paste_import_extension_remove(self):
+        setText(self.view, "")
+        self.view.run_command(
+            "paste_import",
+            {
+                "item": {"filepath": "file.tsx", "name": "a"},
+                "settings": {},
+            },
+        )
+        self.assertEqual("import { a } from './file';", self.getRow(0))
+
+    def test_paste_import_extension_js(self):
+        setText(self.view, "")
+        self.view.run_command(
+            "paste_import",
+            {
+                "item": {"filepath": "file.tsx", "name": "a"},
+                "settings": {"import_file_extension": "js"},
+            },
+        )
+        self.assertEqual("import { a } from './file.js';", self.getRow(0))
+
+    def test_paste_import_extension_js_should_not_remove_index(self):
+        setText(self.view, "")
+        self.view.run_command(
+            "paste_import",
+            {
+                "item": {"filepath": "./x/index.tsx", "name": "x"},
+                "settings": {
+                    "import_file_extension": "js",
+                    "remove_trailing_index": True,
+                },
+            },
+        )
+        self.assertEqual("import { x } from './x/index.js';", self.getRow(0))
 
 
 class TestExample(TestCase):

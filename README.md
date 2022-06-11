@@ -145,6 +145,18 @@ Path to your project root folder (not source folder). If not set,
 tries automatically detect. For single souce folder `folders[0].path` will be used,
 for serveral source folders common path will be used.
 
+#### `import_file_extension`
+
+Option what to do with file extension in import statement.
+
+-   Type: `string`
+-   Enum: `['remove', 'js', 'keep']`
+-   Default: `remove`
+
+-   **`remove`** js/ts/jsx/tsx extension will be removed
+-   **`js`** js/ts/jsx/tsx will be replaced to js
+-   **`as_is`** will stay as is
+
 #### Example of settings in project file:
 
 Example of project file:

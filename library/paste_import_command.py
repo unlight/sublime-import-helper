@@ -13,7 +13,11 @@ def paste_import_command(
 ):
     debug("paste_import_command:item", item)
     file_name = view.file_name() or "."
-    from_paths = get_from_paths(item, file_name, typescript_paths)
+    import_file_extension = get_setting("import_file_extension", "remove", settings)
+    remove_trailing_index = get_setting("remove_trailing_index", True, settings)
+    from_paths = get_from_paths(
+        item, file_name, typescript_paths, remove_trailing_index, import_file_extension
+    )
 
     if len(from_paths) > 1:
         choices = [{"item": item, "path": path} for path in from_paths]
