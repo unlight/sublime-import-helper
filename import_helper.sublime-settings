@@ -42,5 +42,14 @@
     // - Type: `boolean`  
     // - Default: `false`
     "remove_trailing_index": true,
+
+    // Option what to do with file extension in import statement.
+    // -   Type: `string`
+    // -   Default: `remove`
+    // Options:
+    // -   **`remove`** js/ts/jsx/tsx extension will be removed
+    // -   **`js`** js/ts/jsx/tsx will be replaced to js
+    // -   **`as_is`** will stay as is
+    "import_file_extension": "remove"
 }
 

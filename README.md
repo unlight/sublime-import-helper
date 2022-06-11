@@ -150,8 +150,9 @@ for serveral source folders common path will be used.
 Option what to do with file extension in import statement.
 
 -   Type: `string`
--   Enum: `['remove', 'js', 'keep']`
 -   Default: `remove`
+
+Options:
 
 -   **`remove`** js/ts/jsx/tsx extension will be removed
 -   **`js`** js/ts/jsx/tsx will be replaced to js
